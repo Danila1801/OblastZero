@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1de3a3c46437084e8b431b4d75b9341, type: 3}
+  m_Name: Crew_Sasha
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.CrewMemberData
+  id: crew_sasha
+  displayName: Sasha
+  designerNotes: 
+  firstName: Aleksandr
+  lastName: Morozov
+  patronymic: Pavlovich
+  background: 0
+  portrait: {fileID: 0}
+  baseStats:
+    maxHealth: 95
+    maxSanity: 85
+    carryCapacityKg: 34
+    sanityRecoveryMultiplier: 1
+    radiationResistanceMultiplier: 1
+    combatResolutionMultiplier: 1
+  startingTraits:
+  - {fileID: 11400000, guid: 99e414f03a932294795d51ff5129b5aa, type: 2}
+  - {fileID: 11400000, guid: 48a42f708428c6543adb78e9e6b4f7a7, type: 2}
+  voiceLineGroup: {fileID: 0}
+  backstoryText: A loner who knows every drainage culvert and collapsed stairwell
+    in the cordon. Trusts the Oblast more than the people in it.

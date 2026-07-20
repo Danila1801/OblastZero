@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c42d08716d4470447b26f3b82787fd8f, type: 3}
+  m_Name: Item_WaterFlask
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.ItemData
+  id: item_water_flask
+  displayName: Water Flask
+  designerNotes: 
+  category: 1
+  icon: {fileID: 0}
+  worldPrefab: {fileID: 0}
+  weightKg: 1
+  durability: 100
+  decayPerDay: 0
+  utilityTags: 01000000
+  radiationContaminated: 0
+  radiationContaminationLevel: 0
+  baseTradeValueScale: 3
+  baseTradeValueCordon: 1
+  baseTradeValueKafedra: 2

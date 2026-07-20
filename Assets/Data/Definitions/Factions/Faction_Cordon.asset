@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b98be531f924814289195ea53eb5f8e, type: 3}
+  m_Name: Faction_Cordon
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.FactionData
+  id: faction_cordon
+  displayName: The 14th Independent Cordon Regiment
+  designerNotes: 
+  factionId: 20
+  factionColor: {r: 0.4, g: 0.44, b: 0.38, a: 1}
+  factionEmblem: {fileID: 0}
+  ideologyTags:
+  - militaristic
+  - containment
+  - interdiction
+  - orders
+  baseRelations:
+  - other: 10
+    defaultStanding: -50
+  - other: 30
+    defaultStanding: 5
+  thresholds:
+  - thresholdName: Shoot On Sight
+    minReputation: -100
+    maxReputation: -60
+  - thresholdName: Hostile
+    minReputation: -59
+    maxReputation: -20
+  - thresholdName: Detained
+    minReputation: -19
+    maxReputation: 19
+  - thresholdName: Auxiliary
+    minReputation: 20
+    maxReputation: 59
+  - thresholdName: Relief
+    minReputation: 60
+    maxReputation: 100
+  radioChatter: {fileID: 0}
+  combatBarks: {fileID: 0}
+  signatureEquipment:
+  - {fileID: 11400000, guid: 3bd21f94c89f80442b0e189e5237d8ed, type: 2}
+  - {fileID: 11400000, guid: ee47f7a41c275564293331d3aedbffb6, type: 2}
+  endgameBranchId: ending_relief

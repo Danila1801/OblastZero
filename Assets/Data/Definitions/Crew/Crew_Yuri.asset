@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1de3a3c46437084e8b431b4d75b9341, type: 3}
+  m_Name: Crew_Yuri
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.CrewMemberData
+  id: crew_yuri
+  displayName: Yuri
+  designerNotes: 
+  firstName: Yuri
+  lastName: Lebedev
+  patronymic: Ignatevich
+  background: 1
+  portrait: {fileID: 0}
+  baseStats:
+    maxHealth: 100
+    maxSanity: 80
+    carryCapacityKg: 28
+    sanityRecoveryMultiplier: 0.9
+    radiationResistanceMultiplier: 1.1
+    combatResolutionMultiplier: 1.3
+  startingTraits:
+  - {fileID: 11400000, guid: 8b81d836a0a4cb6469faca7e9db76e83, type: 2}
+  voiceLineGroup: {fileID: 0}
+  backstoryText: Walked away from a garrison still following its 1981 orders. He
+    does not talk about it, and he still cleans his rifle every night.

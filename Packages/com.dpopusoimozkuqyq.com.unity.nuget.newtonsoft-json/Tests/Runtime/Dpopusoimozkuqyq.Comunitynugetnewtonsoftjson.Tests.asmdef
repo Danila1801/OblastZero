@@ -1,0 +1,11 @@
+{
+    "name": "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson.Tests",
+    "references": [
+        "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

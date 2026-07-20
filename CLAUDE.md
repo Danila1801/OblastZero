@@ -52,6 +52,8 @@ Assets/_Project/Scripts/
     States/      → OblastZero.Core   (the IGameState implementations)
   Services/      → OblastZero.Services (SaveService/SaveSystem, SceneLoader, …)
   Rendering/     → OblastZero.Rendering (HybridDepthRenderPass / RendererFeature / settings)
+  Gameplay/      → OblastZero.Gameplay (run-scoped managers: InventoryManager, CrewManager, … — sole owners of RunData mutations; raise C# events on change)
+  UI/            → OblastZero.UI (HUD / menus / panels)
 
 Assets/Data/Scripts/Definitions/
                  → OblastZero.Data   (all ScriptableObject schemas; base class GameDataObject)

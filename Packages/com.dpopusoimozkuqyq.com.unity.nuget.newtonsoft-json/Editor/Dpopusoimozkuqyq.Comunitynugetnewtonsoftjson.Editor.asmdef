@@ -1,0 +1,10 @@
+{
+    "name": "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson.Editor",
+    "references": [
+      "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

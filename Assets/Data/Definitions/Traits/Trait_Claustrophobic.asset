@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91e80089ae58ebb4791908cfeb8d24de, type: 3}
+  m_Name: Trait_Claustrophobic
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.TraitData
+  id: trait_claustrophobic
+  displayName: Claustrophobic
+  designerNotes: 
+  description: The bunker walls sit closer on some days than others.
+  isAffliction: 1
+  modifiers:
+    maxHealthDelta: 0
+    maxSanityDelta: 0
+    sanityRecoveryBonus: -0.25
+    radiationResistanceBonus: 0
+    combatResolutionBonus: 0
+    carryCapacityBonus: 0
+  behaviorTags:
+  - claustrophobic

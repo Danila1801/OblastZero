@@ -1,0 +1,14 @@
+{
+    "name": "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson.Editor.Tests",
+    "references": [
+        "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson.Editor",
+        "Dpopusoimozkuqyq.Comunitynugetnewtonsoftjson"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

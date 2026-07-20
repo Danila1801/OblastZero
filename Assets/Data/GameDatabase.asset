@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8a97aeeac33544ca23b3eb465291fb, type: 3}
+  m_Name: GameDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.GameDatabase
+  items:
+  - {fileID: 11400000, guid: fc0e2f82e2ee8f34bbfec5e6d9be2cff, type: 2}
+  - {fileID: 11400000, guid: bf73b13575e11944f9bb1456373da428, type: 2}
+  - {fileID: 11400000, guid: 3612c955b11e07849a45c0b8824c6d6e, type: 2}
+  - {fileID: 11400000, guid: 3bd21f94c89f80442b0e189e5237d8ed, type: 2}
+  - {fileID: 11400000, guid: ee47f7a41c275564293331d3aedbffb6, type: 2}
+  - {fileID: 11400000, guid: e1754fdaa6bc2854eb3b4ea30306bb41, type: 2}
+  - {fileID: 11400000, guid: 07ebc56a606c6144ea5adbad54ea9a07, type: 2}
+  - {fileID: 11400000, guid: 99c21717eae53364e83406000070ec4b, type: 2}
+  crew:
+  - {fileID: 11400000, guid: cc9ac26f5cdee9f48891c1e312db2ed2, type: 2}
+  - {fileID: 11400000, guid: 668733716936c18439c0b0af0e7db6b7, type: 2}
+  - {fileID: 11400000, guid: cefa37dc69bbbbd4090be264d1d19f5a, type: 2}
+  traits:
+  - {fileID: 11400000, guid: 8b81d836a0a4cb6469faca7e9db76e83, type: 2}
+  - {fileID: 11400000, guid: 48a42f708428c6543adb78e9e6b4f7a7, type: 2}
+  - {fileID: 11400000, guid: 99e414f03a932294795d51ff5129b5aa, type: 2}
+  voiceGroups: []
+  factions:
+  - {fileID: 11400000, guid: 28ee52723aa3c1549afec9506d571279, type: 2}
+  - {fileID: 11400000, guid: 8b80f9a39115bcb4fa4129506da6075d, type: 2}
+  - {fileID: 11400000, guid: cbb6104baddb5cf4ab4ce8aa8e783f09, type: 2}
+  anomalies: []
+  mutants: []
+  events: []
