@@ -1,0 +1,17 @@
+{
+  "id": "item_decontamination_autoinjector",
+  "displayName": "Decontamination Autoinjector",
+  "category": "Medical",
+  "weightKg": 0.09,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Decontaminate",
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 22,
+  "baseTradeValueKafedra": 35
+}

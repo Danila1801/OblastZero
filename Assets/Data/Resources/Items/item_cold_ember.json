@@ -1,0 +1,17 @@
+{
+  "id": "item_cold_ember",
+  "displayName": "Cold Ember",
+  "category": "Artifact",
+  "weightKg": 1.1,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 29.4,
+  "baseTradeValueScale": 91,
+  "baseTradeValueCordon": 48,
+  "baseTradeValueKafedra": 82
+}

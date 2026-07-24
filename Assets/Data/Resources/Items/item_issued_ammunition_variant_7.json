@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_7",
+  "displayName": "Issued Ammunition Variant 7",
+  "category": "Ammunition",
+  "weightKg": 0.86,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 8
+}

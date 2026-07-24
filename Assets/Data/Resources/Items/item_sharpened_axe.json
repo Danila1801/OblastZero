@@ -1,0 +1,17 @@
+{
+  "id": "item_sharpened_axe",
+  "displayName": "Sharpened Axe",
+  "category": "Weapon",
+  "weightKg": 1.63,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 32,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 22
+}

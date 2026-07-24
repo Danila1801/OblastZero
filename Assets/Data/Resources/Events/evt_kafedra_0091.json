@@ -1,0 +1,99 @@
+{
+  "id": "evt_kafedra_0091",
+  "title": "The observer presents a vial",
+  "narrativeText": "The observer presents a vial. 'For mutual benefit,' they say. 'A sample of the adaptation process.'",
+  "prerequisites": {
+    "minDay": 3,
+    "maxDay": 23,
+    "factionContext": "Kafedra",
+    "minFactionRep": -33,
+    "maxFactionRep": 30,
+    "regionTagsAny": [
+      "abandoned_school",
+      "old_factory"
+    ]
+  },
+  "baseWeight": 2.0,
+  "choices": [
+    {
+      "choiceLabel": "Accept the Kafedra's terms.",
+      "successChance": 0.85,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -6,
+        "fatigueDelta": 0,
+        "radiationDelta": 3,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Demand compensation for cooperation.",
+      "successChance": 0.55,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Report them to the Cordon.",
+      "successChance": 0.7,
+      "requiredTraitsAny": [
+        "trait_iron_stomach"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

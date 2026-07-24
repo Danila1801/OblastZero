@@ -1,0 +1,18 @@
+{
+  "id": "item_improvised_spear",
+  "displayName": "Improvised Spear",
+  "category": "Weapon",
+  "weightKg": 2.99,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 33,
+  "baseTradeValueCordon": 27,
+  "baseTradeValueKafedra": 24
+}

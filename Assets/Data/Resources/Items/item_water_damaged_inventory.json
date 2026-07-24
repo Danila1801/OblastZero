@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_inventory",
+  "displayName": "Water-Damaged Inventory",
+  "category": "Document",
+  "weightKg": 0.2,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 32,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 65
+}

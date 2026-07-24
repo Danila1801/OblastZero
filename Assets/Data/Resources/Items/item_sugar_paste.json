@@ -1,0 +1,16 @@
+{
+  "id": "item_sugar_paste",
+  "displayName": "Sugar Paste",
+  "category": "Food",
+  "weightKg": 0.1,
+  "durability": 80,
+  "decayPerDay": 0.37,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 2
+}

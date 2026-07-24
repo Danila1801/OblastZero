@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_jellyfish",
+  "displayName": "Dormant Jellyfish",
+  "category": "Artifact",
+  "weightKg": 0.55,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 57.4,
+  "baseTradeValueScale": 86,
+  "baseTradeValueCordon": 21,
+  "baseTradeValueKafedra": 108
+}

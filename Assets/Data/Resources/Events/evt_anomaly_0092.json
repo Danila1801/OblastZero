@@ -1,0 +1,99 @@
+{
+  "id": "evt_anomaly_0092",
+  "title": "The anomaly field expands",
+  "narrativeText": "The anomaly field expands. Three new readings where yesterday there were none.",
+  "prerequisites": {
+    "minDay": 5,
+    "maxDay": 37,
+    "factionContext": "",
+    "minFactionRep": -100,
+    "maxFactionRep": 100,
+    "regionTagsAny": [
+      "drainage_tunnel",
+      "collapsed_building"
+    ]
+  },
+  "baseWeight": 1.7,
+  "choices": [
+    {
+      "choiceLabel": "Approach with decontamination gear.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 15,
+        "healthDelta": -20,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Mark it and move on.",
+      "successChance": 0.9,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Build a barrier around it.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [
+        "trait_claustrophobic"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": -10,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

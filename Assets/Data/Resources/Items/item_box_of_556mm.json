@@ -1,0 +1,17 @@
+{
+  "id": "item_box_of_556mm",
+  "displayName": "Box of 5.56mm",
+  "category": "Ammunition",
+  "weightKg": 0.41,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 7
+}

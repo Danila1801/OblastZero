@@ -1,0 +1,97 @@
+{
+  "id": "evt_anomaly_0157",
+  "title": "A electrical anomaly pulses near the access road",
+  "narrativeText": "A electrical anomaly pulses near the access road. The crew reports time distortion.",
+  "prerequisites": {
+    "minDay": 8,
+    "maxDay": 56,
+    "factionContext": "",
+    "minFactionRep": -100,
+    "maxFactionRep": 100,
+    "regionTagsAny": [
+      "perimeter",
+      "collapsed_building"
+    ]
+  },
+  "baseWeight": 1.02,
+  "choices": [
+    {
+      "choiceLabel": "Investigate the anomaly directly.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 15,
+        "healthDelta": -20,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Avoid the anomaly entirely.",
+      "successChance": 0.9,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Use equipment to dampen its effects.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": -10,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

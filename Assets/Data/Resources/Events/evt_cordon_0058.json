@@ -1,0 +1,90 @@
+{
+  "id": "evt_cordon_0058",
+  "title": "The sentry at the perimeter road signals: military vehicle approaching",
+  "narrativeText": "The sentry at the perimeter road signals: military vehicle approaching.",
+  "prerequisites": {
+    "minDay": 7,
+    "maxDay": 36,
+    "factionContext": "Cordon",
+    "minFactionRep": -28,
+    "maxFactionRep": 23,
+    "regionTagsAny": [
+      "forest_edge",
+      "access_road"
+    ]
+  },
+  "baseWeight": 0.6,
+  "choices": [
+    {
+      "choiceLabel": "Provide the requested information.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": 10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Claim the bunker is sealed for decontamination.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 15,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Black out all light and remain silent.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [
+        "trait_claustrophobic"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": -15,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_rusted_spear",
+  "displayName": "Rusted Spear",
+  "category": "Weapon",
+  "weightKg": 2.72,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 48,
+  "baseTradeValueCordon": 38,
+  "baseTradeValueKafedra": 16
+}

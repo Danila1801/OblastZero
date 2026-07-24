@@ -1,0 +1,17 @@
+{
+  "id": "item_modified_carbine",
+  "displayName": "Modified Carbine",
+  "category": "Weapon",
+  "weightKg": 1.12,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 25,
+  "baseTradeValueCordon": 44,
+  "baseTradeValueKafedra": 11
+}

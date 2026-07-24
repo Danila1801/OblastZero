@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_tape_measure",
+  "displayName": "Salvaged Tape Measure",
+  "category": "Tool",
+  "weightKg": 1.37,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 34.1,
+  "baseTradeValueScale": 18,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 10
+}

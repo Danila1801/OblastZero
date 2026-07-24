@@ -1,0 +1,99 @@
+{
+  "id": "evt_bunker_0072",
+  "title": "A pipe bursts in the lower corridor",
+  "narrativeText": "A pipe bursts in the lower corridor. Water pools around stored equipment.",
+  "prerequisites": {
+    "minDay": 2,
+    "maxDay": 57,
+    "factionContext": "",
+    "minFactionRep": -100,
+    "maxFactionRep": 100,
+    "regionTagsAny": [
+      "kitchen_block",
+      "bunker_interior"
+    ]
+  },
+  "baseWeight": 0.64,
+  "choices": [
+    {
+      "choiceLabel": "Improvise with available materials.",
+      "successChance": 0.7,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 8,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 15,
+        "radiationDelta": 0,
+        "healthDelta": -5,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Accept the degradation.",
+      "successChance": 0.95,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": -5,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Form a maintenance team.",
+      "successChance": 0.55,
+      "requiredTraitsAny": [
+        "trait_claustrophobic"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 2,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

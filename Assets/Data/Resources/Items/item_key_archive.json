@@ -1,0 +1,16 @@
+{
+  "id": "item_key_archive",
+  "displayName": "Key: Archive",
+  "category": "Special",
+  "weightKg": 0.14,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": 0.0,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 63,
+  "baseTradeValueCordon": 61,
+  "baseTradeValueKafedra": 58
+}

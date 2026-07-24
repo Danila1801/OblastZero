@@ -1,0 +1,17 @@
+{
+  "id": "item_filtered_fabric",
+  "displayName": "Filtered Fabric",
+  "category": "Crafting",
+  "weightKg": 0.18,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 4
+}

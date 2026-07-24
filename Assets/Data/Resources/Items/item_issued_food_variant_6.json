@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_food_variant_6",
+  "displayName": "Issued Food Variant 6",
+  "category": "Food",
+  "weightKg": 0.97,
+  "durability": 80,
+  "decayPerDay": 0.41,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 3
+}

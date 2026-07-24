@@ -1,0 +1,17 @@
+{
+  "id": "item_modified_sniper_rifle",
+  "displayName": "Modified Sniper Rifle",
+  "category": "Weapon",
+  "weightKg": 0.8,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 35,
+  "baseTradeValueKafedra": 25
+}

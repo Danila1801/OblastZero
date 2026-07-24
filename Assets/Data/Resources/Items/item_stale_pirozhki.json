@@ -1,0 +1,16 @@
+{
+  "id": "item_stale_pirozhki",
+  "displayName": "Stale Pirozhki",
+  "category": "Food",
+  "weightKg": 0.18,
+  "durability": 80,
+  "decayPerDay": 0.42,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 5
+}

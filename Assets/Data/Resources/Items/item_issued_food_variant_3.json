@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_food_variant_3",
+  "displayName": "Issued Food Variant 3",
+  "category": "Food",
+  "weightKg": 0.96,
+  "durability": 80,
+  "decayPerDay": 0.02,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 2
+}

@@ -1,0 +1,18 @@
+{
+  "id": "item_kafedra_specimen_cell_culture",
+  "displayName": "Kafedra Specimen: Cell Culture",
+  "category": "Artifact",
+  "weightKg": 0.41,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual",
+    "Read"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 22.6,
+  "baseTradeValueScale": 68,
+  "baseTradeValueCordon": 22,
+  "baseTradeValueKafedra": 134
+}

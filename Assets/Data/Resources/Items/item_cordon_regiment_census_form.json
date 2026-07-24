@@ -1,0 +1,17 @@
+{
+  "id": "item_cordon_regiment_census_form",
+  "displayName": "Cordon Regiment Census Form",
+  "category": "Document",
+  "weightKg": 0.21,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 70,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 85
+}

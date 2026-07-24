@@ -1,0 +1,16 @@
+{
+  "id": "item_dried_pike",
+  "displayName": "Dried Pike",
+  "category": "Food",
+  "weightKg": 0.19,
+  "durability": 60,
+  "decayPerDay": 0.1,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 4
+}

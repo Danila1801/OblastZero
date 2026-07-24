@@ -1,0 +1,17 @@
+{
+  "id": "item_crowbar",
+  "displayName": "Crowbar",
+  "category": "Weapon",
+  "weightKg": 1.3,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 33,
+  "baseTradeValueCordon": 21,
+  "baseTradeValueKafedra": 25
+}

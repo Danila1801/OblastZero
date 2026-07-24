@@ -1,0 +1,16 @@
+{
+  "id": "item_key_generator_room",
+  "displayName": "Key: Generator Room",
+  "category": "Special",
+  "weightKg": 0.1,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": 0.0,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 45,
+  "baseTradeValueCordon": 36,
+  "baseTradeValueKafedra": 68
+}

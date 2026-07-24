@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_11",
+  "displayName": "Issued Ammunition Variant 11",
+  "category": "Ammunition",
+  "weightKg": 0.81,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 6
+}

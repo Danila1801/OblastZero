@@ -1,0 +1,16 @@
+{
+  "id": "item_9mm_rounds",
+  "displayName": "9mm Rounds",
+  "category": "Ammunition",
+  "weightKg": 0.03,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 9
+}

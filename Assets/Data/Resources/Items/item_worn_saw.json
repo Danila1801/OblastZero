@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_saw",
+  "displayName": "Worn Saw",
+  "category": "Tool",
+  "weightKg": 2.63,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 7
+}

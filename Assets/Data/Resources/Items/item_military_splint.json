@@ -1,0 +1,16 @@
+{
+  "id": "item_military_splint",
+  "displayName": "Military Splint",
+  "category": "Medical",
+  "weightKg": 0.21,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 17
+}

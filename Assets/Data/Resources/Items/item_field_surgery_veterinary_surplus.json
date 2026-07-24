@@ -1,0 +1,16 @@
+{
+  "id": "item_field_surgery_veterinary_surplus",
+  "displayName": "Field Surgery Veterinary-Surplus",
+  "category": "Medical",
+  "weightKg": 0.35,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 26,
+  "baseTradeValueCordon": 24,
+  "baseTradeValueKafedra": 40
+}

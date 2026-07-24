@@ -1,0 +1,17 @@
+{
+  "id": "item_modified_lmg",
+  "displayName": "Modified LMG",
+  "category": "Weapon",
+  "weightKg": 1.14,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 33,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 30
+}

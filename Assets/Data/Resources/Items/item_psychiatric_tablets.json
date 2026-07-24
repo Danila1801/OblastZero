@@ -1,0 +1,16 @@
+{
+  "id": "item_psychiatric_tablets",
+  "displayName": "Psychiatric Tablets",
+  "category": "Medical",
+  "weightKg": 0.02,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 21,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 30
+}

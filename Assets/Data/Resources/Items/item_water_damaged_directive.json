@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_directive",
+  "displayName": "Water-Damaged Directive",
+  "category": "Document",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 42,
+  "baseTradeValueCordon": 14,
+  "baseTradeValueKafedra": 32
+}

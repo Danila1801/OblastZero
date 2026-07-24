@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_leather",
+  "displayName": "Salvaged Leather",
+  "category": "Crafting",
+  "weightKg": 0.49,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 9
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_special_variant_5",
+  "displayName": "Issued Special Variant 5",
+  "category": "Special",
+  "weightKg": 0.17,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 40,
+  "baseTradeValueCordon": 76,
+  "baseTradeValueKafedra": 86
+}

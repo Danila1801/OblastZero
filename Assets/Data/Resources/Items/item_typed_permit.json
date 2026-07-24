@@ -1,0 +1,17 @@
+{
+  "id": "item_typed_permit",
+  "displayName": "Typed Permit",
+  "category": "Document",
+  "weightKg": 0.08,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 23,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 31
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_well_water_canteen",
+  "displayName": "Well Water Canteen",
+  "category": "Water",
+  "weightKg": 1.25,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 4
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_pickled_squash",
+  "displayName": "Pickled Squash",
+  "category": "Food",
+  "weightKg": 0.64,
+  "durability": 60,
+  "decayPerDay": 0.15,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 2
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_field_kit",
+  "displayName": "Issued Field Kit",
+  "category": "Medical",
+  "weightKg": 0.36,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 26
+}

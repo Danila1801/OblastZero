@@ -1,0 +1,17 @@
+{
+  "id": "item_unclassified_key",
+  "displayName": "Unclassified Key",
+  "category": "Special",
+  "weightKg": 0.75,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 22.1,
+  "baseTradeValueScale": 37,
+  "baseTradeValueCordon": 36,
+  "baseTradeValueKafedra": 120
+}

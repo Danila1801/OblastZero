@@ -1,0 +1,97 @@
+{
+  "id": "evt_kafedra_0139",
+  "title": "A researcher arrives with a portable microscope and a questionnaire about recent dreams",
+  "narrativeText": "A researcher arrives with a portable microscope and a questionnaire about recent dreams.",
+  "prerequisites": {
+    "minDay": 8,
+    "maxDay": 24,
+    "factionContext": "Kafedra",
+    "minFactionRep": -40,
+    "maxFactionRep": 23,
+    "regionTagsAny": [
+      "bunker_interior",
+      "old_factory"
+    ]
+  },
+  "baseWeight": 1.45,
+  "choices": [
+    {
+      "choiceLabel": "Take the offered substance.",
+      "successChance": 0.85,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -6,
+        "fatigueDelta": 0,
+        "radiationDelta": 3,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Request time to consider.",
+      "successChance": 0.55,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Destroy their equipment.",
+      "successChance": 0.7,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

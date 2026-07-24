@@ -1,0 +1,88 @@
+{
+  "id": "evt_cordon_0067",
+  "title": "A radio operator approaches the bunker under a white flag",
+  "narrativeText": "A radio operator approaches the bunker under a white flag. Standard identification procedures.",
+  "prerequisites": {
+    "minDay": 3,
+    "maxDay": 49,
+    "factionContext": "Cordon",
+    "minFactionRep": -37,
+    "maxFactionRep": 31,
+    "regionTagsAny": [
+      "access_road",
+      "forest_edge"
+    ]
+  },
+  "baseWeight": 1.65,
+  "choices": [
+    {
+      "choiceLabel": "Cooperate with the inspection.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": 10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Claim the bunker is sealed for decontamination.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 15,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Use the secondary exit.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": -15,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

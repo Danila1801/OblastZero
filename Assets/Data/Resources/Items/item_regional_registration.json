@@ -1,0 +1,17 @@
+{
+  "id": "item_regional_registration",
+  "displayName": "Regional Registration",
+  "category": "Document",
+  "weightKg": 0.16,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 75,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 70
+}

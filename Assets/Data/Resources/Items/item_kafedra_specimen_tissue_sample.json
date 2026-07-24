@@ -1,0 +1,18 @@
+{
+  "id": "item_kafedra_specimen_tissue_sample",
+  "displayName": "Kafedra Specimen: Tissue Sample",
+  "category": "Artifact",
+  "weightKg": 0.76,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual",
+    "Read"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 44.7,
+  "baseTradeValueScale": 55,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 115
+}

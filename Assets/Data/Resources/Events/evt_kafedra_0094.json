@@ -1,0 +1,99 @@
+{
+  "id": "evt_kafedra_0094",
+  "title": "A collector arrives with electrode pads and a notebook full of questions about sleep patterns",
+  "narrativeText": "A collector arrives with electrode pads and a notebook full of questions about sleep patterns.",
+  "prerequisites": {
+    "minDay": 6,
+    "maxDay": 29,
+    "factionContext": "Kafedra",
+    "minFactionRep": -12,
+    "maxFactionRep": 36,
+    "regionTagsAny": [
+      "abandoned_school",
+      "old_factory"
+    ]
+  },
+  "baseWeight": 0.98,
+  "choices": [
+    {
+      "choiceLabel": "Cooperate with the research protocol.",
+      "successChance": 0.85,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -6,
+        "fatigueDelta": 0,
+        "radiationDelta": 3,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Request time to consider.",
+      "successChance": 0.55,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Refuse all contact with the Kafedra.",
+      "successChance": 0.7,
+      "requiredTraitsAny": [
+        "trait_steady_hands"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

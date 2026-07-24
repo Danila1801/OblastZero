@@ -1,0 +1,97 @@
+{
+  "id": "evt_kafedra_0126",
+  "title": "A specimen collector arrives",
+  "narrativeText": "A specimen collector arrives. They have your bunker's file — it is thick.",
+  "prerequisites": {
+    "minDay": 7,
+    "maxDay": 79,
+    "factionContext": "Kafedra",
+    "minFactionRep": -13,
+    "maxFactionRep": 53,
+    "regionTagsAny": [
+      "abandoned_school",
+      "bunker_interior"
+    ]
+  },
+  "baseWeight": 1.97,
+  "choices": [
+    {
+      "choiceLabel": "Accept the Kafedra's terms.",
+      "successChance": 0.85,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -6,
+        "fatigueDelta": 0,
+        "radiationDelta": 3,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Counter-propose an alternative arrangement.",
+      "successChance": 0.55,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": 5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Report them to the Cordon.",
+      "successChance": 0.7,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "Kafedra",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

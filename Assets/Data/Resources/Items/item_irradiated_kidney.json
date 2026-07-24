@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_kidney",
+  "displayName": "Irradiated Kidney",
+  "category": "Food",
+  "weightKg": 0.45,
+  "durability": 90,
+  "decayPerDay": 0.06,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 38.6,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 5
+}

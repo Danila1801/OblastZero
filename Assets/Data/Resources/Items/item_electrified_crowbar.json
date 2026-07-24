@@ -1,0 +1,17 @@
+{
+  "id": "item_electrified_crowbar",
+  "displayName": "Electrified Crowbar",
+  "category": "Weapon",
+  "weightKg": 2.35,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 38.5,
+  "baseTradeValueScale": 44,
+  "baseTradeValueCordon": 39,
+  "baseTradeValueKafedra": 23
+}

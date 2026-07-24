@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_5",
+  "displayName": "Issued Artifact Variant 5",
+  "category": "Artifact",
+  "weightKg": 0.93,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 91,
+  "baseTradeValueCordon": 41,
+  "baseTradeValueKafedra": 74
+}

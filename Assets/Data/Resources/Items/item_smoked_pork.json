@@ -1,0 +1,17 @@
+{
+  "id": "item_smoked_pork",
+  "displayName": "Smoked Pork",
+  "category": "Food",
+  "weightKg": 0.34,
+  "durability": 60,
+  "decayPerDay": 0.25,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 2
+}

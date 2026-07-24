@@ -1,0 +1,17 @@
+{
+  "id": "item_tinned_beef",
+  "displayName": "Tinned Beef",
+  "category": "Food",
+  "weightKg": 0.5,
+  "durability": 80,
+  "decayPerDay": 0.17,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 6
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_district_incident_report",
+  "displayName": "District Incident Report",
+  "category": "Document",
+  "weightKg": 0.29,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 38,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 49
+}

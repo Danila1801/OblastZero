@@ -1,0 +1,90 @@
+{
+  "id": "evt_cordon_0175",
+  "title": "An officer from the 14th arrives with documents requiring countersignature",
+  "narrativeText": "An officer from the 14th arrives with documents requiring countersignature.",
+  "prerequisites": {
+    "minDay": 1,
+    "maxDay": 36,
+    "factionContext": "Cordon",
+    "minFactionRep": -16,
+    "maxFactionRep": 55,
+    "regionTagsAny": [
+      "perimeter",
+      "access_road"
+    ]
+  },
+  "baseWeight": 1.76,
+  "choices": [
+    {
+      "choiceLabel": "Allow the patrol entry.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": 10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Plead illness.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 15,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Use the secondary exit.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [
+        "trait_steady_hands"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": -15,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

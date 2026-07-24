@@ -1,0 +1,16 @@
+{
+  "id": "item_wild_lichen",
+  "displayName": "Wild Lichen",
+  "category": "Food",
+  "weightKg": 0.12,
+  "durability": 80,
+  "decayPerDay": 0.05,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 3
+}

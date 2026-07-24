@@ -1,0 +1,17 @@
+{
+  "id": "item_silent_mica",
+  "displayName": "Silent Mica",
+  "category": "Artifact",
+  "weightKg": 0.76,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 37.4,
+  "baseTradeValueScale": 111,
+  "baseTradeValueCordon": 48,
+  "baseTradeValueKafedra": 125
+}

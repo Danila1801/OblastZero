@@ -1,0 +1,17 @@
+{
+  "id": "item_sidearm_bolt_action",
+  "displayName": "Sidearm Bolt-Action",
+  "category": "Weapon",
+  "weightKg": 0.53,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 22,
+  "baseTradeValueCordon": 33,
+  "baseTradeValueKafedra": 25
+}

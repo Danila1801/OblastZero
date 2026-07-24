@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_document_variant_13",
+  "displayName": "Issued Document Variant 13",
+  "category": "Document",
+  "weightKg": 0.31,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 30,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 53
+}

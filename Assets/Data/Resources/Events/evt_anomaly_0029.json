@@ -1,0 +1,99 @@
+{
+  "id": "evt_anomaly_0029",
+  "title": "A spatial anomaly pulses near the access road",
+  "narrativeText": "A spatial anomaly pulses near the access road. The crew reports skin irritation.",
+  "prerequisites": {
+    "minDay": 3,
+    "maxDay": 20,
+    "factionContext": "",
+    "minFactionRep": -100,
+    "maxFactionRep": 100,
+    "regionTagsAny": [
+      "collapsed_building",
+      "perimeter"
+    ]
+  },
+  "baseWeight": 1.58,
+  "choices": [
+    {
+      "choiceLabel": "Approach with decontamination gear.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 15,
+        "healthDelta": -20,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Wait for the anomaly to dissipate.",
+      "successChance": 0.9,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Experiment with countermeasures.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [
+        "trait_claustrophobic"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": -10,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

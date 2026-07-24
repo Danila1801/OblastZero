@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_shard",
+  "displayName": "Artifact: Shard",
+  "category": "Artifact",
+  "weightKg": 1.38,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 52.9,
+  "baseTradeValueScale": 69,
+  "baseTradeValueCordon": 57,
+  "baseTradeValueKafedra": 135
+}

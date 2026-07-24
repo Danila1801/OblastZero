@@ -1,0 +1,17 @@
+{
+  "id": "item_night_vision",
+  "displayName": "Night Vision",
+  "category": "Tool",
+  "weightKg": 1.0,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 8
+}

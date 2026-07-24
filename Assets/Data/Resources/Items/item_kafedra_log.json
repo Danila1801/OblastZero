@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_log",
+  "displayName": "Kafedra Log",
+  "category": "Document",
+  "weightKg": 0.17,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 67,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 80
+}

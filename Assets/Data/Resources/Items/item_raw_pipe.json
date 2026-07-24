@@ -1,0 +1,16 @@
+{
+  "id": "item_raw_pipe",
+  "displayName": "Raw Pipe",
+  "category": "Crafting",
+  "weightKg": 0.47,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

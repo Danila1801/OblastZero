@@ -1,0 +1,88 @@
+{
+  "id": "evt_cordon_0161",
+  "title": "Two soldiers set up an observation post on the ridge overlooking the bunker",
+  "narrativeText": "Two soldiers set up an observation post on the ridge overlooking the bunker.",
+  "prerequisites": {
+    "minDay": 10,
+    "maxDay": 63,
+    "factionContext": "Cordon",
+    "minFactionRep": -31,
+    "maxFactionRep": 26,
+    "regionTagsAny": [
+      "forest_edge",
+      "access_road"
+    ]
+  },
+  "baseWeight": 1.93,
+  "choices": [
+    {
+      "choiceLabel": "Follow military protocol.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": 10,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Claim the bunker is sealed for decontamination.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -5,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 15,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -15,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Create a diversion.",
+      "successChance": 0.45,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -25,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": -15,
+        "reputationFaction": "Cordon",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

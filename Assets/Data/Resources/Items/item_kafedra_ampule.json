@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_ampule",
+  "displayName": "Kafedra Ampule",
+  "category": "Medical",
+  "weightKg": 0.04,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 23,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 25
+}

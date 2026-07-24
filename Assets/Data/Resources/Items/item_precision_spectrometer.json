@@ -1,0 +1,17 @@
+{
+  "id": "item_precision_spectrometer",
+  "displayName": "Precision Spectrometer",
+  "category": "Tool",
+  "weightKg": 0.35,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 15
+}

@@ -1,0 +1,90 @@
+{
+  "id": "evt_scalesociety_0112",
+  "title": "A grey envelope slides under the door",
+  "narrativeText": "A grey envelope slides under the door. Inside: Form 631, revision 8. Sign and return.",
+  "prerequisites": {
+    "minDay": 2,
+    "maxDay": 78,
+    "factionContext": "ScaleSociety",
+    "minFactionRep": -21,
+    "maxFactionRep": 28,
+    "regionTagsAny": [
+      "access_road",
+      "bunker_interior"
+    ]
+  },
+  "baseWeight": 1.81,
+  "choices": [
+    {
+      "choiceLabel": "Accept the revised assessment.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -4,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": 12,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Decline, citing an absence of countersignature.",
+      "successChance": 0.65,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -8,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -15,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Lock the bunker and wait them out.",
+      "successChance": 0.5,
+      "requiredTraitsAny": [
+        "trait_steady_hands"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": -25,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -35,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_21",
+  "displayName": "Issued Ammunition Variant 21",
+  "category": "Ammunition",
+  "weightKg": 0.7,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 3
+}

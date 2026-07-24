@@ -1,0 +1,16 @@
+{
+  "id": "item_unknown_source_water_field_bottle",
+  "displayName": "Unknown-Source Water Field Bottle",
+  "category": "Water",
+  "weightKg": 1.82,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 48.8,
+  "baseTradeValueScale": 1,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 1
+}

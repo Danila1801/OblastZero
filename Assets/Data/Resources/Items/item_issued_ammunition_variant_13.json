@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_13",
+  "displayName": "Issued Ammunition Variant 13",
+  "category": "Ammunition",
+  "weightKg": 0.97,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 3
+}

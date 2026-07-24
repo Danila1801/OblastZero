@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_water_thermos",
+  "displayName": "Emergency Water Thermos",
+  "category": "Water",
+  "weightKg": 1.36,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 5
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_issued_chisel",
+  "displayName": "Issued Chisel",
+  "category": "Tool",
+  "weightKg": 1.71,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 17,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 14
+}

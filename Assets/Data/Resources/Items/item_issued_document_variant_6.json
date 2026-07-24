@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_document_variant_6",
+  "displayName": "Issued Document Variant 6",
+  "category": "Document",
+  "weightKg": 0.88,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 72,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 40
+}

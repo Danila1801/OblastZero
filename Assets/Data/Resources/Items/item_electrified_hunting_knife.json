@@ -1,0 +1,17 @@
+{
+  "id": "item_electrified_hunting_knife",
+  "displayName": "Electrified Hunting Knife",
+  "category": "Weapon",
+  "weightKg": 1.53,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 27.2,
+  "baseTradeValueScale": 55,
+  "baseTradeValueCordon": 21,
+  "baseTradeValueKafedra": 13
+}

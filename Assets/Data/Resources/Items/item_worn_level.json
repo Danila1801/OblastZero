@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_level",
+  "displayName": "Worn Level",
+  "category": "Tool",
+  "weightKg": 0.76,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 10
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_classified_report",
+  "displayName": "Classified Report",
+  "category": "Document",
+  "weightKg": 0.26,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 27,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 64
+}

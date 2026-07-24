@@ -1,0 +1,16 @@
+{
+  "id": "item_rye_porridge_mix",
+  "displayName": "Rye Porridge Mix",
+  "category": "Food",
+  "weightKg": 0.33,
+  "durability": 70,
+  "decayPerDay": 0.27,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 2
+}

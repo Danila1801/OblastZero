@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_signal_receiver",
+  "displayName": "Kafedra Signal Receiver",
+  "category": "Tool",
+  "weightKg": 0.43,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 13
+}

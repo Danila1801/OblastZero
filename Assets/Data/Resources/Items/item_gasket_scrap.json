@@ -1,0 +1,16 @@
+{
+  "id": "item_gasket_scrap",
+  "displayName": "Gasket Scrap",
+  "category": "Crafting",
+  "weightKg": 0.2,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 8
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_decontamination_vial",
+  "displayName": "Decontamination Vial",
+  "category": "Medical",
+  "weightKg": 0.18,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Decontaminate",
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 18,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 14
+}

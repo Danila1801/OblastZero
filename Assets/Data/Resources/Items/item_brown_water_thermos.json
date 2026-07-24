@@ -1,0 +1,16 @@
+{
+  "id": "item_brown_water_thermos",
+  "displayName": "Brown Water Thermos",
+  "category": "Water",
+  "weightKg": 0.79,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 45.1,
+  "baseTradeValueScale": 1,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 1
+}

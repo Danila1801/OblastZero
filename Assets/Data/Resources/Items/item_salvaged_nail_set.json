@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_nail_set",
+  "displayName": "Salvaged Nail Set",
+  "category": "Tool",
+  "weightKg": 0.57,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 9
+}

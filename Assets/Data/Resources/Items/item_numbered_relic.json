@@ -1,0 +1,17 @@
+{
+  "id": "item_numbered_relic",
+  "displayName": "Numbered Relic",
+  "category": "Special",
+  "weightKg": 0.94,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 19.9,
+  "baseTradeValueScale": 90,
+  "baseTradeValueCordon": 28,
+  "baseTradeValueKafedra": 87
+}

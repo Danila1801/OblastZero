@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_sedative",
+  "displayName": "Emergency Sedative",
+  "category": "Medical",
+  "weightKg": 0.01,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 17,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 14
+}

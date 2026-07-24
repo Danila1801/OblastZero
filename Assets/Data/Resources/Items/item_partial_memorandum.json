@@ -1,0 +1,16 @@
+{
+  "id": "item_partial_memorandum",
+  "displayName": "Partial Memorandum",
+  "category": "Document",
+  "weightKg": 0.06,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 72,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 83
+}

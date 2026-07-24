@@ -1,0 +1,17 @@
+{
+  "id": "item_classified_incident_report",
+  "displayName": "Classified Incident Report",
+  "category": "Document",
+  "weightKg": 0.12,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 60,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 61
+}

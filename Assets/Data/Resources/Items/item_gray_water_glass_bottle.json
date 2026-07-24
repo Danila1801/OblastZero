@@ -1,0 +1,16 @@
+{
+  "id": "item_gray_water_glass_bottle",
+  "displayName": "Gray Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 0.52,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 24.2,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 1
+}

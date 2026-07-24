@@ -1,0 +1,17 @@
+{
+  "id": "item_permit_zone_boundary",
+  "displayName": "Permit: Zone Boundary",
+  "category": "Document",
+  "weightKg": 0.08,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 50,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 87
+}

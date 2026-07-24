@@ -1,0 +1,16 @@
+{
+  "id": "item_foraged_lichen",
+  "displayName": "Foraged Lichen",
+  "category": "Food",
+  "weightKg": 0.17,
+  "durability": 100,
+  "decayPerDay": 0.24,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 3
+}

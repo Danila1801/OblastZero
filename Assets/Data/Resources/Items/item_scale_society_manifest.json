@@ -1,0 +1,17 @@
+{
+  "id": "item_scale_society_manifest",
+  "displayName": "Scale Society Manifest",
+  "category": "Document",
+  "weightKg": 0.23,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 51,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 85
+}

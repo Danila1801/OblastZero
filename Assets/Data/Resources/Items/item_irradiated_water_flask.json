@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_water_flask",
+  "displayName": "Irradiated Water Flask",
+  "category": "Water",
+  "weightKg": 0.95,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 32.5,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 1
+}

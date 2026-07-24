@@ -1,0 +1,16 @@
+{
+  "id": "item_distilled_water_glass_bottle",
+  "displayName": "Distilled Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 1.51,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 3
+}

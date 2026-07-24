@@ -1,0 +1,16 @@
+{
+  "id": "item_expired_field_kit",
+  "displayName": "Expired Field Kit",
+  "category": "Medical",
+  "weightKg": 0.16,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 18,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 34
+}

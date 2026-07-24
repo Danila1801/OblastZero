@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_syringe",
+  "displayName": "Kafedra Syringe",
+  "category": "Medical",
+  "weightKg": 0.05,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 11,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 20
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_smoked_mussel",
+  "displayName": "Smoked Mussel",
+  "category": "Food",
+  "weightKg": 0.34,
+  "durability": 70,
+  "decayPerDay": 0.39,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 29.4,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 2
+}

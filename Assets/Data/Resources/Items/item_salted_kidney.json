@@ -1,0 +1,17 @@
+{
+  "id": "item_salted_kidney",
+  "displayName": "Salted Kidney",
+  "category": "Food",
+  "weightKg": 0.37,
+  "durability": 100,
+  "decayPerDay": 0.11,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 11,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 5
+}

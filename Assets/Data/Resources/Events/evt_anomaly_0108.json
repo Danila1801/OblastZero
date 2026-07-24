@@ -1,0 +1,97 @@
+{
+  "id": "evt_anomaly_0108",
+  "title": "The spatial anomaly emits a violet light",
+  "narrativeText": "The spatial anomaly emits a violet light. It pulses at exactly 73 Hz.",
+  "prerequisites": {
+    "minDay": 7,
+    "maxDay": 31,
+    "factionContext": "",
+    "minFactionRep": -100,
+    "maxFactionRep": 100,
+    "regionTagsAny": [
+      "perimeter",
+      "forest_edge"
+    ]
+  },
+  "baseWeight": 1.5,
+  "choices": [
+    {
+      "choiceLabel": "Approach with decontamination gear.",
+      "successChance": 0.6,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 0,
+        "radiationDelta": 5,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -10,
+        "fatigueDelta": 0,
+        "radiationDelta": 15,
+        "healthDelta": -20,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Wait for the anomaly to dissipate.",
+      "successChance": 0.9,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -2,
+        "fatigueDelta": 5,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -5,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Attempt to contain the anomaly. [Technical]",
+      "successChance": 0.45,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -3,
+        "fatigueDelta": 10,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 8,
+        "healthDelta": -10,
+        "reputationFaction": "",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

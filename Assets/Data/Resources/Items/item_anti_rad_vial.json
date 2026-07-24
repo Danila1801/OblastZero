@@ -1,0 +1,17 @@
+{
+  "id": "item_anti_rad_vial",
+  "displayName": "Anti-Rad Vial",
+  "category": "Medical",
+  "weightKg": 0.04,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 29,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 21
+}

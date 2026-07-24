@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_geiger_counter",
+  "displayName": "Kafedra Geiger Counter",
+  "category": "Tool",
+  "weightKg": 0.81,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 38.8,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 9
+}

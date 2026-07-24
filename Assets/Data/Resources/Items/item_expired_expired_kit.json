@@ -1,0 +1,16 @@
+{
+  "id": "item_expired_expired_kit",
+  "displayName": "Expired Expired Kit",
+  "category": "Medical",
+  "weightKg": 0.18,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 29,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 15
+}

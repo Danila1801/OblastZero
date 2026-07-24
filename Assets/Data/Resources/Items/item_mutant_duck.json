@@ -1,0 +1,16 @@
+{
+  "id": "item_mutant_duck",
+  "displayName": "Mutant Duck",
+  "category": "Food",
+  "weightKg": 0.57,
+  "durability": 70,
+  "decayPerDay": 0.27,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 4
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_filtered_water_glass_bottle",
+  "displayName": "Filtered Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 0.96,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 5
+}

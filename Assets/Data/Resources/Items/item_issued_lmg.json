@@ -1,0 +1,18 @@
+{
+  "id": "item_issued_lmg",
+  "displayName": "Issued LMG",
+  "category": "Weapon",
+  "weightKg": 1.28,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 48,
+  "baseTradeValueCordon": 43,
+  "baseTradeValueKafedra": 26
+}

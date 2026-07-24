@@ -1,0 +1,16 @@
+{
+  "id": "item_partial_census_form",
+  "displayName": "Partial Census Form",
+  "category": "Document",
+  "weightKg": 0.09,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 74,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 39
+}

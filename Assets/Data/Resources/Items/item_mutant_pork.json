@@ -1,0 +1,16 @@
+{
+  "id": "item_mutant_pork",
+  "displayName": "Mutant Pork",
+  "category": "Food",
+  "weightKg": 0.31,
+  "durability": 100,
+  "decayPerDay": 0.04,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 2
+}

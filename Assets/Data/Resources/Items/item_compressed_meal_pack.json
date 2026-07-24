@@ -1,0 +1,16 @@
+{
+  "id": "item_compressed_meal_pack",
+  "displayName": "Compressed Meal Pack",
+  "category": "Food",
+  "weightKg": 0.15,
+  "durability": 60,
+  "decayPerDay": 0.46,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 4
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_flashlight",
+  "displayName": "Kafedra Flashlight",
+  "category": "Tool",
+  "weightKg": 0.37,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 10
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_distilled_water_flask",
+  "displayName": "Distilled Water Flask",
+  "category": "Water",
+  "weightKg": 1.13,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 3
+}

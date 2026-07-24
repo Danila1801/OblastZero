@@ -1,0 +1,16 @@
+{
+  "id": "item_dried_tongue",
+  "displayName": "Dried Tongue",
+  "category": "Food",
+  "weightKg": 0.27,
+  "durability": 70,
+  "decayPerDay": 0.19,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 1
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_mutant_mutton",
+  "displayName": "Mutant Mutton",
+  "category": "Food",
+  "weightKg": 0.5,
+  "durability": 60,
+  "decayPerDay": 0.17,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 4
+}

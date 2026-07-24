@@ -1,0 +1,16 @@
+{
+  "id": "item_processed_tube",
+  "displayName": "Processed Tube",
+  "category": "Crafting",
+  "weightKg": 0.25,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 11
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_scattered_9mm",
+  "displayName": "Scattered 9mm",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 4
+}

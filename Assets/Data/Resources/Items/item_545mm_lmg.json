@@ -1,0 +1,18 @@
+{
+  "id": "item_545mm_lmg",
+  "displayName": "5.45mm LMG",
+  "category": "Weapon",
+  "weightKg": 0.75,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 57,
+  "baseTradeValueCordon": 48,
+  "baseTradeValueKafedra": 15
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_powdered_curd",
+  "displayName": "Powdered Curd",
+  "category": "Food",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.43,
+  "utilityTags": [
+    "Eat",
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 5
+}

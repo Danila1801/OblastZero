@@ -1,0 +1,17 @@
+{
+  "id": "item_tinned_tongue",
+  "displayName": "Tinned Tongue",
+  "category": "Food",
+  "weightKg": 0.54,
+  "durability": 90,
+  "decayPerDay": 0.2,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 4
+}

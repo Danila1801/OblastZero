@@ -1,0 +1,16 @@
+{
+  "id": "item_distilled_water_sealed_pouch",
+  "displayName": "Distilled Water Sealed Pouch",
+  "category": "Water",
+  "weightKg": 1.1,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 1
+}

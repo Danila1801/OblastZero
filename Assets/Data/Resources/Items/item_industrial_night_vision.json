@@ -1,0 +1,17 @@
+{
+  "id": "item_industrial_night_vision",
+  "displayName": "Industrial Night Vision",
+  "category": "Tool",
+  "weightKg": 1.57,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 12
+}

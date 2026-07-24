@@ -1,0 +1,17 @@
+{
+  "id": "item_classified_manifest",
+  "displayName": "Classified Manifest",
+  "category": "Document",
+  "weightKg": 0.08,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 42,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 69
+}

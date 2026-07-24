@@ -1,0 +1,16 @@
+{
+  "id": "item_boiled_water_field_bottle",
+  "displayName": "Boiled Water Field Bottle",
+  "category": "Water",
+  "weightKg": 0.81,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 4
+}

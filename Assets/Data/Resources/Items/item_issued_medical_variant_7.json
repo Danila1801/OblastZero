@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_medical_variant_7",
+  "displayName": "Issued Medical Variant 7",
+  "category": "Medical",
+  "weightKg": 0.91,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 32
+}

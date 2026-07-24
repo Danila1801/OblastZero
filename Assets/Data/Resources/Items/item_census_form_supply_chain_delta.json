@@ -1,0 +1,17 @@
+{
+  "id": "item_census_form_supply_chain_delta",
+  "displayName": "Census Form: Supply Chain Delta",
+  "category": "Document",
+  "weightKg": 0.08,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 32,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 65
+}

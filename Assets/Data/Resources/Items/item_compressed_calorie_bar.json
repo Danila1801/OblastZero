@@ -1,0 +1,16 @@
+{
+  "id": "item_compressed_calorie_bar",
+  "displayName": "Compressed Calorie Bar",
+  "category": "Food",
+  "weightKg": 0.18,
+  "durability": 70,
+  "decayPerDay": 0.28,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

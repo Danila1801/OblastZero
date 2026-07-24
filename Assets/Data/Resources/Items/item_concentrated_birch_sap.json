@@ -1,0 +1,17 @@
+{
+  "id": "item_concentrated_birch_sap",
+  "displayName": "Concentrated Birch Sap",
+  "category": "Food",
+  "weightKg": 0.23,
+  "durability": 90,
+  "decayPerDay": 0.1,
+  "utilityTags": [
+    "Eat",
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 3
+}

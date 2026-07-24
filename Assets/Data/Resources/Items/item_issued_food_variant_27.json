@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_food_variant_27",
+  "displayName": "Issued Food Variant 27",
+  "category": "Food",
+  "weightKg": 0.43,
+  "durability": 100,
+  "decayPerDay": 0.44,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 4
+}

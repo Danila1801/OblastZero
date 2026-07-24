@@ -1,0 +1,16 @@
+{
+  "id": "item_industrial_torch",
+  "displayName": "Industrial Torch",
+  "category": "Tool",
+  "weightKg": 2.81,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 18,
+  "baseTradeValueCordon": 14,
+  "baseTradeValueKafedra": 11
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_module",
+  "displayName": "Module",
+  "category": "Special",
+  "weightKg": 0.33,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": 0.02,
+  "radiationContaminationLevel": 15.7,
+  "baseTradeValueScale": 82,
+  "baseTradeValueCordon": 49,
+  "baseTradeValueKafedra": 58
+}

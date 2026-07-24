@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_sheet_metal",
+  "displayName": "Salvaged Sheet Metal",
+  "category": "Crafting",
+  "weightKg": 0.19,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 5
+}

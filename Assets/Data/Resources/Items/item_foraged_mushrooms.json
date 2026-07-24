@@ -1,0 +1,16 @@
+{
+  "id": "item_foraged_mushrooms",
+  "displayName": "Foraged Mushrooms",
+  "category": "Food",
+  "weightKg": 0.2,
+  "durability": 60,
+  "decayPerDay": 0.38,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 6
+}

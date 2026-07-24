@@ -1,0 +1,16 @@
+{
+  "id": "item_key_vault_3",
+  "displayName": "Key: Vault 3",
+  "category": "Special",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": 0.0,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 77,
+  "baseTradeValueCordon": 47,
+  "baseTradeValueKafedra": 118
+}

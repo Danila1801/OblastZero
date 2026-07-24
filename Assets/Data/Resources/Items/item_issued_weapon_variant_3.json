@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_3",
+  "displayName": "Issued Weapon Variant 3",
+  "category": "Weapon",
+  "weightKg": 0.66,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 31,
+  "baseTradeValueCordon": 35,
+  "baseTradeValueKafedra": 13
+}

@@ -1,0 +1,88 @@
+{
+  "id": "evt_scalesociety_0106",
+  "title": "A transfer order arrives from the central office",
+  "narrativeText": "A transfer order arrives from the central office. Personnel relocation, effective immediately.",
+  "prerequisites": {
+    "minDay": 2,
+    "maxDay": 27,
+    "factionContext": "ScaleSociety",
+    "minFactionRep": -30,
+    "maxFactionRep": 56,
+    "regionTagsAny": [
+      "access_road",
+      "bunker_interior"
+    ]
+  },
+  "baseWeight": 1.18,
+  "choices": [
+    {
+      "choiceLabel": "Comply with the audit requirements.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -4,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": 12,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Request proper authorization documents.",
+      "successChance": 0.65,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -8,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -15,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Destroy the forms in their presence.",
+      "successChance": 0.5,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": -25,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -35,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

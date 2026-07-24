@@ -1,0 +1,17 @@
+{
+  "id": "item_municipal_permit",
+  "displayName": "Municipal Permit",
+  "category": "Document",
+  "weightKg": 0.14,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 54,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 40
+}

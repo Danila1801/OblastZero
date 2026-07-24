@@ -1,0 +1,17 @@
+{
+  "id": "item_anomaly_fragment_quartz",
+  "displayName": "Anomaly Fragment: Quartz",
+  "category": "Artifact",
+  "weightKg": 0.61,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 20.1,
+  "baseTradeValueScale": 58,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 119
+}

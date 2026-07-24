@@ -1,0 +1,16 @@
+{
+  "id": "item_condensed_water_bladder",
+  "displayName": "Condensed Water Bladder",
+  "category": "Water",
+  "weightKg": 1.83,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 3
+}

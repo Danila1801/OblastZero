@@ -1,0 +1,16 @@
+{
+  "id": "item_stagnant_water_field_bottle",
+  "displayName": "Stagnant Water Field Bottle",
+  "category": "Water",
+  "weightKg": 1.85,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 28.2,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 2
+}

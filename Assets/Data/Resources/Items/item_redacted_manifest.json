@@ -1,0 +1,17 @@
+{
+  "id": "item_redacted_manifest",
+  "displayName": "Redacted Manifest",
+  "category": "Document",
+  "weightKg": 0.14,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 37,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 56
+}

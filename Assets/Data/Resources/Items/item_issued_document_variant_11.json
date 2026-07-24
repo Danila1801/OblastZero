@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_document_variant_11",
+  "displayName": "Issued Document Variant 11",
+  "category": "Document",
+  "weightKg": 0.8,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 35,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 73
+}

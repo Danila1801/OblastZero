@@ -1,0 +1,17 @@
+{
+  "id": "item_field_antiseptic",
+  "displayName": "Field Antiseptic",
+  "category": "Medical",
+  "weightKg": 0.19,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 27,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 29
+}

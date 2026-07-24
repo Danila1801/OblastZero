@@ -1,0 +1,17 @@
+{
+  "id": "item_anti_rad_autoinjector",
+  "displayName": "Anti-Rad Autoinjector",
+  "category": "Medical",
+  "weightKg": 0.03,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 28,
+  "baseTradeValueCordon": 24,
+  "baseTradeValueKafedra": 34
+}

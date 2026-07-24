@@ -1,0 +1,17 @@
+{
+  "id": "item_classified_registration",
+  "displayName": "Classified Registration",
+  "category": "Document",
+  "weightKg": 0.28,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 40,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 41
+}

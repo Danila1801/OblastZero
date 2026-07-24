@@ -1,0 +1,17 @@
+{
+  "id": "item_warm_echo",
+  "displayName": "Warm Echo",
+  "category": "Artifact",
+  "weightKg": 0.43,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 27.2,
+  "baseTradeValueScale": 95,
+  "baseTradeValueCordon": 51,
+  "baseTradeValueKafedra": 111
+}

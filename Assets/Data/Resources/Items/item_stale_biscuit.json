@@ -1,0 +1,16 @@
+{
+  "id": "item_stale_biscuit",
+  "displayName": "Stale Biscuit",
+  "category": "Food",
+  "weightKg": 0.17,
+  "durability": 60,
+  "decayPerDay": 0.11,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

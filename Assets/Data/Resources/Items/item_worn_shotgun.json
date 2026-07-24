@@ -1,0 +1,17 @@
+{
+  "id": "item_worn_shotgun",
+  "displayName": "Worn Shotgun",
+  "category": "Weapon",
+  "weightKg": 0.58,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 40,
+  "baseTradeValueCordon": 24,
+  "baseTradeValueKafedra": 12
+}

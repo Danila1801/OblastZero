@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_chisel",
+  "displayName": "Worn Chisel",
+  "category": "Tool",
+  "weightKg": 1.77,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 14,
+  "baseTradeValueKafedra": 12
+}

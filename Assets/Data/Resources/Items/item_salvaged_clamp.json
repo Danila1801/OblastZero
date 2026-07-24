@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_clamp",
+  "displayName": "Salvaged Clamp",
+  "category": "Tool",
+  "weightKg": 1.33,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 12
+}

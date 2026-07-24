@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_stimulant",
+  "displayName": "Issued Stimulant",
+  "category": "Medical",
+  "weightKg": 0.01,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 30,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 40
+}

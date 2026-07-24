@@ -1,0 +1,16 @@
+{
+  "id": "item_contaminated_plastic",
+  "displayName": "Contaminated Plastic",
+  "category": "Crafting",
+  "weightKg": 0.39,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 10
+}

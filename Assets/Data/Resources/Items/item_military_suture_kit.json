@@ -1,0 +1,16 @@
+{
+  "id": "item_military_suture_kit",
+  "displayName": "Military Suture Kit",
+  "category": "Medical",
+  "weightKg": 0.07,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 21,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 31
+}

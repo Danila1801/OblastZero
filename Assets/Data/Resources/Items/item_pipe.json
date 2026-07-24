@@ -1,0 +1,17 @@
+{
+  "id": "item_pipe",
+  "displayName": "Pipe",
+  "category": "Weapon",
+  "weightKg": 2.04,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 49,
+  "baseTradeValueCordon": 47,
+  "baseTradeValueKafedra": 19
+}

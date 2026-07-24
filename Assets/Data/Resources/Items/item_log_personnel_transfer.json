@@ -1,0 +1,17 @@
+{
+  "id": "item_log_personnel_transfer",
+  "displayName": "Log: Personnel Transfer",
+  "category": "Document",
+  "weightKg": 0.1,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 32,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 67
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_sealed_manifest",
+  "displayName": "Sealed Manifest",
+  "category": "Document",
+  "weightKg": 0.2,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 62,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 37
+}

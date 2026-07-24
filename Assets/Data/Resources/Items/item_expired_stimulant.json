@@ -1,0 +1,16 @@
+{
+  "id": "item_expired_stimulant",
+  "displayName": "Expired Stimulant",
+  "category": "Medical",
+  "weightKg": 0.02,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 11,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 13
+}

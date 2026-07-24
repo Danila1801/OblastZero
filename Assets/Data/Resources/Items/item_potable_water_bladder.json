@@ -1,0 +1,16 @@
+{
+  "id": "item_potable_water_bladder",
+  "displayName": "Potable Water Bladder",
+  "category": "Water",
+  "weightKg": 1.67,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 1
+}

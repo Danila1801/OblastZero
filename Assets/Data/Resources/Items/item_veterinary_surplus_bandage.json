@@ -1,0 +1,16 @@
+{
+  "id": "item_veterinary_surplus_bandage",
+  "displayName": "Veterinary-Surplus Bandage",
+  "category": "Medical",
+  "weightKg": 0.1,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 19,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 39
+}

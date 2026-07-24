@@ -1,0 +1,16 @@
+{
+  "id": "item_contaminated_epoxy",
+  "displayName": "Contaminated Epoxy",
+  "category": "Crafting",
+  "weightKg": 0.29,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 5
+}

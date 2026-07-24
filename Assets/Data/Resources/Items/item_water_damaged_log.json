@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_log",
+  "displayName": "Water-Damaged Log",
+  "category": "Document",
+  "weightKg": 0.21,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 42
+}

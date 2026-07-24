@@ -1,0 +1,17 @@
+{
+  "id": "item_sharpened_pipe",
+  "displayName": "Sharpened Pipe",
+  "category": "Weapon",
+  "weightKg": 1.12,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 32,
+  "baseTradeValueCordon": 43,
+  "baseTradeValueKafedra": 22
+}

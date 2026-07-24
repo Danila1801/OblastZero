@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_special_variant_2",
+  "displayName": "Issued Special Variant 2",
+  "category": "Special",
+  "weightKg": 0.38,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 80,
+  "baseTradeValueCordon": 59,
+  "baseTradeValueKafedra": 94
+}

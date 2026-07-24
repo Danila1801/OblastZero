@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_carp",
+  "displayName": "Irradiated Carp",
+  "category": "Food",
+  "weightKg": 0.35,
+  "durability": 80,
+  "decayPerDay": 0.43,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 22.3,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 5
+}

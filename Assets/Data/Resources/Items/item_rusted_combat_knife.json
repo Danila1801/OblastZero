@@ -1,0 +1,16 @@
+{
+  "id": "item_rusted_combat_knife",
+  "displayName": "Rusted Combat Knife",
+  "category": "Weapon",
+  "weightKg": 2.13,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 38,
+  "baseTradeValueCordon": 28,
+  "baseTradeValueKafedra": 27
+}

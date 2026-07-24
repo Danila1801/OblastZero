@@ -1,0 +1,17 @@
+{
+  "id": "item_transfer_order_supply_chain_delta",
+  "displayName": "Transfer Order: Supply Chain Delta",
+  "category": "Document",
+  "weightKg": 0.21,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 61,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 44
+}

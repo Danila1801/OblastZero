@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_screwdriver",
+  "displayName": "Salvaged Screwdriver",
+  "category": "Tool",
+  "weightKg": 1.37,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 11
+}

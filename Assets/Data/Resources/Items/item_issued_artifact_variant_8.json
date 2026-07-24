@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_8",
+  "displayName": "Issued Artifact Variant 8",
+  "category": "Artifact",
+  "weightKg": 0.4,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 96,
+  "baseTradeValueCordon": 55,
+  "baseTradeValueKafedra": 113
+}

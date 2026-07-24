@@ -1,0 +1,17 @@
+{
+  "id": "item_whispering_battery",
+  "displayName": "Whispering Battery",
+  "category": "Artifact",
+  "weightKg": 1.86,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 49.0,
+  "baseTradeValueScale": 96,
+  "baseTradeValueCordon": 46,
+  "baseTradeValueKafedra": 142
+}

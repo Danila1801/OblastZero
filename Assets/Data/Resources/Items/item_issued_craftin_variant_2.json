@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_craftin_variant_2",
+  "displayName": "Issued Craftin Variant 2",
+  "category": "Crafting",
+  "weightKg": 0.28,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 7
+}

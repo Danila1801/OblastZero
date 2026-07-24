@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_pliers",
+  "displayName": "Worn Pliers",
+  "category": "Tool",
+  "weightKg": 1.37,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 15
+}

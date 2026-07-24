@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_15",
+  "displayName": "Issued Ammunition Variant 15",
+  "category": "Ammunition",
+  "weightKg": 0.43,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 7
+}

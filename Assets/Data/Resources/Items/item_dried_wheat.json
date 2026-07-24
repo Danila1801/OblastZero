@@ -1,0 +1,16 @@
+{
+  "id": "item_dried_wheat",
+  "displayName": "Dried Wheat",
+  "category": "Food",
+  "weightKg": 0.33,
+  "durability": 80,
+  "decayPerDay": 0.15,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 21.2,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 5
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_mustard_paste",
+  "displayName": "Mustard Paste",
+  "category": "Food",
+  "weightKg": 0.08,
+  "durability": 90,
+  "decayPerDay": 0.37,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 6
+}

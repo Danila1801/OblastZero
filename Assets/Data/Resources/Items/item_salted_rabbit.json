@@ -1,0 +1,17 @@
+{
+  "id": "item_salted_rabbit",
+  "displayName": "Salted Rabbit",
+  "category": "Food",
+  "weightKg": 0.46,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 6
+}

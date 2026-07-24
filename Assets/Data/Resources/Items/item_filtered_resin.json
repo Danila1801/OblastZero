@@ -1,0 +1,17 @@
+{
+  "id": "item_filtered_resin",
+  "displayName": "Filtered Resin",
+  "category": "Crafting",
+  "weightKg": 0.12,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 9
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_brown_water_flask",
+  "displayName": "Brown Water Flask",
+  "category": "Water",
+  "weightKg": 1.05,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 48.7,
+  "baseTradeValueScale": 1,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 3
+}

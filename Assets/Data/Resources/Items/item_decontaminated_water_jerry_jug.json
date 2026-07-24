@@ -1,0 +1,16 @@
+{
+  "id": "item_decontaminated_water_jerry_jug",
+  "displayName": "Decontaminated Water Jerry Jug",
+  "category": "Water",
+  "weightKg": 0.97,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 4
+}

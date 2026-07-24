@@ -1,0 +1,16 @@
+{
+  "id": "item_canned_cucumber",
+  "displayName": "Canned Cucumber",
+  "category": "Food",
+  "weightKg": 0.47,
+  "durability": 70,
+  "decayPerDay": 0.24,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 6
+}

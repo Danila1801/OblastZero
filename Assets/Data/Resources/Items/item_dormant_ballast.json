@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_ballast",
+  "displayName": "Dormant Ballast",
+  "category": "Artifact",
+  "weightKg": 0.97,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 34.4,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 52,
+  "baseTradeValueKafedra": 107
+}

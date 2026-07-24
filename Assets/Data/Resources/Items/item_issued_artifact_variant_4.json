@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_4",
+  "displayName": "Issued Artifact Variant 4",
+  "category": "Artifact",
+  "weightKg": 0.85,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 56,
+  "baseTradeValueCordon": 46,
+  "baseTradeValueKafedra": 91
+}

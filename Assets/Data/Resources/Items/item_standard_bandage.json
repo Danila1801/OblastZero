@@ -1,0 +1,16 @@
+{
+  "id": "item_standard_bandage",
+  "displayName": "Standard Bandage",
+  "category": "Medical",
+  "weightKg": 0.1,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 34
+}

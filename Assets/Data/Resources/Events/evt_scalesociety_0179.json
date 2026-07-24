@@ -1,0 +1,90 @@
+{
+  "id": "evt_scalesociety_0179",
+  "title": "A courier delivers a sealed envelope bearing the faded seal of the Scale Society",
+  "narrativeText": "A courier delivers a sealed envelope bearing the faded seal of the Scale Society. No return address.",
+  "prerequisites": {
+    "minDay": 3,
+    "maxDay": 21,
+    "factionContext": "ScaleSociety",
+    "minFactionRep": -25,
+    "maxFactionRep": 48,
+    "regionTagsAny": [
+      "perimeter",
+      "bunker_interior"
+    ]
+  },
+  "baseWeight": 1.03,
+  "choices": [
+    {
+      "choiceLabel": "Submit the registration as requested.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -4,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": 12,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Request proper authorization documents.",
+      "successChance": 0.65,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -8,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -15,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Destroy the forms in their presence.",
+      "successChance": 0.5,
+      "requiredTraitsAny": [
+        "trait_iron_stomach"
+      ],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": -25,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -35,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

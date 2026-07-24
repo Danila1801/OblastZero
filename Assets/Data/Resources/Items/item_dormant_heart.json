@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_heart",
+  "displayName": "Dormant Heart",
+  "category": "Artifact",
+  "weightKg": 0.63,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 29.3,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 30,
+  "baseTradeValueKafedra": 149
+}

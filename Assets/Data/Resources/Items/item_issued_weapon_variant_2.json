@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_2",
+  "displayName": "Issued Weapon Variant 2",
+  "category": "Weapon",
+  "weightKg": 0.45,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 30
+}

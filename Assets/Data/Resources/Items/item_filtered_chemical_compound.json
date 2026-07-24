@@ -1,0 +1,17 @@
+{
+  "id": "item_filtered_chemical_compound",
+  "displayName": "Filtered Chemical Compound",
+  "category": "Crafting",
+  "weightKg": 0.09,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 9
+}

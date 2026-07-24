@@ -1,0 +1,16 @@
+{
+  "id": "item_potable_water_jerry_jug",
+  "displayName": "Potable Water Jerry Jug",
+  "category": "Water",
+  "weightKg": 0.87,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 2
+}

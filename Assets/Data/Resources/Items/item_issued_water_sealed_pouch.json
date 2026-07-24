@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_water_sealed_pouch",
+  "displayName": "Issued Water Sealed Pouch",
+  "category": "Water",
+  "weightKg": 0.97,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 1
+}

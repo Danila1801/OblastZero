@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_11",
+  "displayName": "Issued Artifact Variant 11",
+  "category": "Artifact",
+  "weightKg": 0.16,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 58,
+  "baseTradeValueCordon": 32,
+  "baseTradeValueKafedra": 79
+}

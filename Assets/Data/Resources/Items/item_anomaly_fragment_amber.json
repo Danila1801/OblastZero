@@ -1,0 +1,17 @@
+{
+  "id": "item_anomaly_fragment_amber",
+  "displayName": "Anomaly Fragment: Amber",
+  "category": "Artifact",
+  "weightKg": 0.47,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 31.5,
+  "baseTradeValueScale": 64,
+  "baseTradeValueCordon": 23,
+  "baseTradeValueKafedra": 66
+}

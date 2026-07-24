@@ -1,0 +1,17 @@
+{
+  "id": "item_tinned_pike",
+  "displayName": "Tinned Pike",
+  "category": "Food",
+  "weightKg": 0.44,
+  "durability": 100,
+  "decayPerDay": 0.15,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 4
+}

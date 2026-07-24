@@ -1,0 +1,16 @@
+{
+  "id": "item_dried_semolina",
+  "displayName": "Dried Semolina",
+  "category": "Food",
+  "weightKg": 0.21,
+  "durability": 90,
+  "decayPerDay": 0.39,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 2
+}

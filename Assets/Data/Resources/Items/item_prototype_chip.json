@@ -1,0 +1,17 @@
+{
+  "id": "item_prototype_chip",
+  "displayName": "Prototype Chip",
+  "category": "Special",
+  "weightKg": 0.42,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 26.1,
+  "baseTradeValueScale": 87,
+  "baseTradeValueCordon": 21,
+  "baseTradeValueKafedra": 40
+}

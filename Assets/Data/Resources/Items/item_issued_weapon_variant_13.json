@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_13",
+  "displayName": "Issued Weapon Variant 13",
+  "category": "Weapon",
+  "weightKg": 0.42,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 56,
+  "baseTradeValueCordon": 39,
+  "baseTradeValueKafedra": 28
+}

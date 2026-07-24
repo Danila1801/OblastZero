@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_bandage",
+  "displayName": "Issued Bandage",
+  "category": "Medical",
+  "weightKg": 0.07,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 29,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 16
+}

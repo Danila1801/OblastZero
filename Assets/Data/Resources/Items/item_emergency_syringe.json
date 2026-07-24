@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_syringe",
+  "displayName": "Emergency Syringe",
+  "category": "Medical",
+  "weightKg": 0.02,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 24,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 32
+}

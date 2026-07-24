@@ -1,0 +1,17 @@
+{
+  "id": "item_salted_catfish",
+  "displayName": "Salted Catfish",
+  "category": "Food",
+  "weightKg": 0.46,
+  "durability": 90,
+  "decayPerDay": 0.09,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 3
+}

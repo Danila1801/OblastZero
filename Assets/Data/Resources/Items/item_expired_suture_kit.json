@@ -1,0 +1,16 @@
+{
+  "id": "item_expired_suture_kit",
+  "displayName": "Expired Suture Kit",
+  "category": "Medical",
+  "weightKg": 0.1,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 29,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 28
+}

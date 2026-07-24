@@ -1,0 +1,17 @@
+{
+  "id": "item_map_personnel_transfer",
+  "displayName": "Map: Personnel Transfer",
+  "category": "Document",
+  "weightKg": 0.05,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 36,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 72
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_545mm_rounds",
+  "displayName": "5.45mm Rounds",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 5
+}

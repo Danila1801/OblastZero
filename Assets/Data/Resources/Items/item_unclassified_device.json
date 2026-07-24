@@ -1,0 +1,17 @@
+{
+  "id": "item_unclassified_device",
+  "displayName": "Unclassified Device",
+  "category": "Special",
+  "weightKg": 0.92,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 17.0,
+  "baseTradeValueScale": 97,
+  "baseTradeValueCordon": 71,
+  "baseTradeValueKafedra": 51
+}

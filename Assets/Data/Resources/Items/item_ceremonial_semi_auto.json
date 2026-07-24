@@ -1,0 +1,18 @@
+{
+  "id": "item_ceremonial_semi_auto",
+  "displayName": "Ceremonial Semi-Auto",
+  "category": "Weapon",
+  "weightKg": 1.08,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 30,
+  "baseTradeValueCordon": 23,
+  "baseTradeValueKafedra": 22
+}

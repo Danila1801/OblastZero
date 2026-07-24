@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_heart",
+  "displayName": "Artifact: Heart",
+  "category": "Artifact",
+  "weightKg": 0.43,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 20.9,
+  "baseTradeValueScale": 113,
+  "baseTradeValueCordon": 51,
+  "baseTradeValueKafedra": 145
+}

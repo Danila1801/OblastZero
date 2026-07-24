@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_ration",
+  "displayName": "Emergency Ration",
+  "category": "Food",
+  "weightKg": 0.16,
+  "durability": 90,
+  "decayPerDay": 0.08,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 6
+}

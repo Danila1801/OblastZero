@@ -1,0 +1,18 @@
+{
+  "id": "item_ceremonial_rifle",
+  "displayName": "Ceremonial Rifle",
+  "category": "Weapon",
+  "weightKg": 1.19,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 60,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 17
+}

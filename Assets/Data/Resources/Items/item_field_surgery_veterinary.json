@@ -1,0 +1,16 @@
+{
+  "id": "item_field_surgery_veterinary",
+  "displayName": "Field Surgery Veterinary",
+  "category": "Medical",
+  "weightKg": 0.35,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 18,
+  "baseTradeValueCordon": 21,
+  "baseTradeValueKafedra": 20
+}

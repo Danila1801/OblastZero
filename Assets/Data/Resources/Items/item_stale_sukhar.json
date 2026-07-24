@@ -1,0 +1,16 @@
+{
+  "id": "item_stale_sukhar",
+  "displayName": "Stale Sukhar",
+  "category": "Food",
+  "weightKg": 0.2,
+  "durability": 60,
+  "decayPerDay": 0.31,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 5
+}

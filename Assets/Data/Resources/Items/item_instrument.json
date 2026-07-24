@@ -1,0 +1,16 @@
+{
+  "id": "item_instrument",
+  "displayName": "Instrument",
+  "category": "Special",
+  "weightKg": 0.15,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": 0.02,
+  "radiationContaminationLevel": 29.1,
+  "baseTradeValueScale": 34,
+  "baseTradeValueCordon": 69,
+  "baseTradeValueKafedra": 111
+}

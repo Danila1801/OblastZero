@@ -1,0 +1,17 @@
+{
+  "id": "item_numbered_module",
+  "displayName": "Numbered Module",
+  "category": "Special",
+  "weightKg": 0.34,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 16.1,
+  "baseTradeValueScale": 91,
+  "baseTradeValueCordon": 24,
+  "baseTradeValueKafedra": 111
+}

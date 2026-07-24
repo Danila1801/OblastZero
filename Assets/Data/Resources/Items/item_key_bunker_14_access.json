@@ -1,0 +1,16 @@
+{
+  "id": "item_key_bunker_14_access",
+  "displayName": "Key: Bunker 14 Access",
+  "category": "Special",
+  "weightKg": 0.19,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": 0.0,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 73,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 56
+}

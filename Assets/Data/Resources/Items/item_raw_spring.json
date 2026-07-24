@@ -1,0 +1,16 @@
+{
+  "id": "item_raw_spring",
+  "displayName": "Raw Spring",
+  "category": "Crafting",
+  "weightKg": 0.54,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 8
+}

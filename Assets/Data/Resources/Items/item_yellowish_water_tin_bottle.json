@@ -1,0 +1,16 @@
+{
+  "id": "item_yellowish_water_tin_bottle",
+  "displayName": "Yellowish Water Tin Bottle",
+  "category": "Water",
+  "weightKg": 1.71,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 59.4,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 3
+}

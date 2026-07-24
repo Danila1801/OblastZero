@@ -1,0 +1,16 @@
+{
+  "id": "item_pickled_beet",
+  "displayName": "Pickled Beet",
+  "category": "Food",
+  "weightKg": 0.69,
+  "durability": 100,
+  "decayPerDay": 0.41,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 5
+}

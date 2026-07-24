@@ -1,0 +1,16 @@
+{
+  "id": "item_filtered_water_jerry_jug",
+  "displayName": "Filtered Water Jerry Jug",
+  "category": "Water",
+  "weightKg": 0.79,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 1
+}

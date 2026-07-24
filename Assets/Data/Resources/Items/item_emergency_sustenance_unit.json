@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_sustenance_unit",
+  "displayName": "Emergency Sustenance Unit",
+  "category": "Food",
+  "weightKg": 0.2,
+  "durability": 70,
+  "decayPerDay": 0.35,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 4
+}

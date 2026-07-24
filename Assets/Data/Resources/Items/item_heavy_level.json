@@ -1,0 +1,16 @@
+{
+  "id": "item_heavy_level",
+  "displayName": "Heavy Level",
+  "category": "Tool",
+  "weightKg": 1.5,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 14
+}

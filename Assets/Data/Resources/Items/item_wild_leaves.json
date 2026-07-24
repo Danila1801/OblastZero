@@ -1,0 +1,16 @@
+{
+  "id": "item_wild_leaves",
+  "displayName": "Wild Leaves",
+  "category": "Food",
+  "weightKg": 0.05,
+  "durability": 100,
+  "decayPerDay": 0.08,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 5
+}

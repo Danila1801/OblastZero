@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_7",
+  "displayName": "Issued Weapon Variant 7",
+  "category": "Weapon",
+  "weightKg": 0.21,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 31,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 24
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_post_incident_log",
+  "displayName": "Post-Incident Log",
+  "category": "Document",
+  "weightKg": 0.26,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 74,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 34
+}

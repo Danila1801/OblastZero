@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_6",
+  "displayName": "Issued Weapon Variant 6",
+  "category": "Weapon",
+  "weightKg": 0.31,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 41,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 22
+}

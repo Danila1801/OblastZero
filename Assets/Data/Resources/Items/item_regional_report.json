@@ -1,0 +1,17 @@
+{
+  "id": "item_regional_report",
+  "displayName": "Regional Report",
+  "category": "Document",
+  "weightKg": 0.2,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 54,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 35
+}

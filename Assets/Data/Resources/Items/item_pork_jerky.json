@@ -1,0 +1,16 @@
+{
+  "id": "item_pork_jerky",
+  "displayName": "Pork Jerky",
+  "category": "Food",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.16,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 4
+}

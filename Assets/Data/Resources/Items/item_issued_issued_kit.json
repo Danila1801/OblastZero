@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_issued_kit",
+  "displayName": "Issued Issued Kit",
+  "category": "Medical",
+  "weightKg": 0.38,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 30,
+  "baseTradeValueCordon": 25,
+  "baseTradeValueKafedra": 40
+}

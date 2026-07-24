@@ -1,0 +1,17 @@
+{
+  "id": "item_handloaded_9mm",
+  "displayName": "Handloaded 9mm",
+  "category": "Ammunition",
+  "weightKg": 0.03,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 3
+}

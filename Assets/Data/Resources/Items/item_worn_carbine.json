@@ -1,0 +1,17 @@
+{
+  "id": "item_worn_carbine",
+  "displayName": "Worn Carbine",
+  "category": "Weapon",
+  "weightKg": 0.52,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 51,
+  "baseTradeValueCordon": 25,
+  "baseTradeValueKafedra": 22
+}

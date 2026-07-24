@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_memorandum",
+  "displayName": "Water-Damaged Memorandum",
+  "category": "Document",
+  "weightKg": 0.28,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 76,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 53
+}

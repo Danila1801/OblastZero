@@ -1,0 +1,17 @@
+{
+  "id": "item_prototype_beacon",
+  "displayName": "Prototype Beacon",
+  "category": "Special",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 48.8,
+  "baseTradeValueScale": 63,
+  "baseTradeValueCordon": 79,
+  "baseTradeValueKafedra": 61
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_anti_rad_syringe",
+  "displayName": "Anti-Rad Syringe",
+  "category": "Medical",
+  "weightKg": 0.02,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 23,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 33
+}

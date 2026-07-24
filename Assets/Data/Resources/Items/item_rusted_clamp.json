@@ -1,0 +1,16 @@
+{
+  "id": "item_rusted_clamp",
+  "displayName": "Rusted Clamp",
+  "category": "Tool",
+  "weightKg": 1.16,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 17,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 9
+}

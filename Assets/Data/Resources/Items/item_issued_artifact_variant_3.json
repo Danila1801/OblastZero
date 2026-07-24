@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_3",
+  "displayName": "Issued Artifact Variant 3",
+  "category": "Artifact",
+  "weightKg": 0.28,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 115,
+  "baseTradeValueCordon": 47,
+  "baseTradeValueKafedra": 95
+}

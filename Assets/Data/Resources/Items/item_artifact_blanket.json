@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_blanket",
+  "displayName": "Artifact: Blanket",
+  "category": "Artifact",
+  "weightKg": 0.76,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 35.7,
+  "baseTradeValueScale": 116,
+  "baseTradeValueCordon": 48,
+  "baseTradeValueKafedra": 126
+}

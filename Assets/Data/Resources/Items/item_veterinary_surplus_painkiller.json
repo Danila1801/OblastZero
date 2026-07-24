@@ -1,0 +1,16 @@
+{
+  "id": "item_veterinary_surplus_painkiller",
+  "displayName": "Veterinary-Surplus Painkiller",
+  "category": "Medical",
+  "weightKg": 0.02,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 14,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 19
+}

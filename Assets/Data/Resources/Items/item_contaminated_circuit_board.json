@@ -1,0 +1,16 @@
+{
+  "id": "item_contaminated_circuit_board",
+  "displayName": "Contaminated Circuit Board",
+  "category": "Crafting",
+  "weightKg": 0.16,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 8
+}

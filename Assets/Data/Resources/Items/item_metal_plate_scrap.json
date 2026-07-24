@@ -1,0 +1,16 @@
+{
+  "id": "item_metal_plate_scrap",
+  "displayName": "Metal Plate Scrap",
+  "category": "Crafting",
+  "weightKg": 0.26,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 10
+}

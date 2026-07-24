@@ -1,0 +1,18 @@
+{
+  "id": "item_ceremonial_shotgun",
+  "displayName": "Ceremonial Shotgun",
+  "category": "Weapon",
+  "weightKg": 0.85,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 48,
+  "baseTradeValueCordon": 50,
+  "baseTradeValueKafedra": 26
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_preserved_perch",
+  "displayName": "Preserved Perch",
+  "category": "Food",
+  "weightKg": 0.41,
+  "durability": 100,
+  "decayPerDay": 0.13,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 5
+}

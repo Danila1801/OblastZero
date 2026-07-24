@@ -1,0 +1,16 @@
+{
+  "id": "item_mutant_venison",
+  "displayName": "Mutant Venison",
+  "category": "Food",
+  "weightKg": 0.33,
+  "durability": 90,
+  "decayPerDay": 0.34,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 1
+}

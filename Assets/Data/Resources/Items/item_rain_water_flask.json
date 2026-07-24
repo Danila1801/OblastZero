@@ -1,0 +1,16 @@
+{
+  "id": "item_rain_water_flask",
+  "displayName": "Rain Water Flask",
+  "category": "Water",
+  "weightKg": 0.56,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 4
+}

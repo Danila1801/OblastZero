@@ -1,0 +1,16 @@
+{
+  "id": "item_veterinary_surplus_splint",
+  "displayName": "Veterinary-Surplus Splint",
+  "category": "Medical",
+  "weightKg": 0.1,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 18
+}

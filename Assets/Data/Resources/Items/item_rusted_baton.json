@@ -1,0 +1,16 @@
+{
+  "id": "item_rusted_baton",
+  "displayName": "Rusted Baton",
+  "category": "Weapon",
+  "weightKg": 1.57,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 51,
+  "baseTradeValueCordon": 44,
+  "baseTradeValueKafedra": 21
+}

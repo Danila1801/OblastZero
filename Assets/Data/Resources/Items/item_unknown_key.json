@@ -1,0 +1,17 @@
+{
+  "id": "item_unknown_key",
+  "displayName": "Unknown Key",
+  "category": "Special",
+  "weightKg": 0.85,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 43.5,
+  "baseTradeValueScale": 60,
+  "baseTradeValueCordon": 25,
+  "baseTradeValueKafedra": 119
+}

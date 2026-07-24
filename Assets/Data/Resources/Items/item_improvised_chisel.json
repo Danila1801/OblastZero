@@ -1,0 +1,16 @@
+{
+  "id": "item_improvised_chisel",
+  "displayName": "Improvised Chisel",
+  "category": "Tool",
+  "weightKg": 1.6,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 9
+}

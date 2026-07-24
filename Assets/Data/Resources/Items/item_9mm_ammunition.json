@@ -1,0 +1,16 @@
+{
+  "id": "item_9mm_ammunition",
+  "displayName": "9mm Ammunition",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 4
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_contaminated_insulation",
+  "displayName": "Contaminated Insulation",
+  "category": "Crafting",
+  "weightKg": 0.29,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 5
+}

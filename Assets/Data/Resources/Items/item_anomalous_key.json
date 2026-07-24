@@ -1,0 +1,17 @@
+{
+  "id": "item_anomalous_key",
+  "displayName": "Anomalous Key",
+  "category": "Special",
+  "weightKg": 0.12,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 46.1,
+  "baseTradeValueScale": 86,
+  "baseTradeValueCordon": 38,
+  "baseTradeValueKafedra": 84
+}

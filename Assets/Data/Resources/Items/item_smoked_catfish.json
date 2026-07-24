@@ -1,0 +1,17 @@
+{
+  "id": "item_smoked_catfish",
+  "displayName": "Smoked Catfish",
+  "category": "Food",
+  "weightKg": 0.34,
+  "durability": 90,
+  "decayPerDay": 0.02,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 1
+}

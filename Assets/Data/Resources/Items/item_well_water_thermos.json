@@ -1,0 +1,16 @@
+{
+  "id": "item_well_water_thermos",
+  "displayName": "Well Water Thermos",
+  "category": "Water",
+  "weightKg": 0.8,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 5
+}

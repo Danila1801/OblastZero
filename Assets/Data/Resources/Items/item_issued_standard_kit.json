@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_standard_kit",
+  "displayName": "Issued Standard Kit",
+  "category": "Medical",
+  "weightKg": 0.36,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 14,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 28
+}

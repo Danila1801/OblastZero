@@ -1,0 +1,16 @@
+{
+  "id": "item_condensed_water_glass_bottle",
+  "displayName": "Condensed Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 1.58,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 5
+}

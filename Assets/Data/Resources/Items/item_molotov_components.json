@@ -1,0 +1,16 @@
+{
+  "id": "item_molotov_components",
+  "displayName": "Molotov Components",
+  "category": "Ammunition",
+  "weightKg": 0.52,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 3
+}

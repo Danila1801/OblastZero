@@ -1,0 +1,16 @@
+{
+  "id": "item_improvised_stimulant",
+  "displayName": "Improvised Stimulant",
+  "category": "Medical",
+  "weightKg": 0.03,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 27
+}

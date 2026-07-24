@@ -1,0 +1,16 @@
+{
+  "id": "item_field_surgery_military",
+  "displayName": "Field Surgery Military",
+  "category": "Medical",
+  "weightKg": 0.43,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 25,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 36
+}

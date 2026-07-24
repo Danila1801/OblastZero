@@ -1,0 +1,16 @@
+{
+  "id": "item_salvaged_bolt_cutter",
+  "displayName": "Salvaged Bolt Cutter",
+  "category": "Tool",
+  "weightKg": 0.57,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 8
+}

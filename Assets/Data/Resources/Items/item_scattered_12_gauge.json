@@ -1,0 +1,16 @@
+{
+  "id": "item_scattered_12_gauge",
+  "displayName": "Scattered 12 Gauge",
+  "category": "Ammunition",
+  "weightKg": 0.01,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 8
+}

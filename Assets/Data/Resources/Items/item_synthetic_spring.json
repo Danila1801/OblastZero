@@ -1,0 +1,16 @@
+{
+  "id": "item_synthetic_spring",
+  "displayName": "Synthetic Spring",
+  "category": "Crafting",
+  "weightKg": 0.44,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 9
+}

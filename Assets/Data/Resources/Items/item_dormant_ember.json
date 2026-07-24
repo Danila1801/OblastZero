@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_ember",
+  "displayName": "Dormant Ember",
+  "category": "Artifact",
+  "weightKg": 0.72,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 27.9,
+  "baseTradeValueScale": 72,
+  "baseTradeValueCordon": 34,
+  "baseTradeValueKafedra": 130
+}

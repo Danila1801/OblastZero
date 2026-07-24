@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_8",
+  "displayName": "Issued Weapon Variant 8",
+  "category": "Weapon",
+  "weightKg": 0.49,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 48,
+  "baseTradeValueCordon": 27,
+  "baseTradeValueKafedra": 30
+}

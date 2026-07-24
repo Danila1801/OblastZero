@@ -1,0 +1,16 @@
+{
+  "id": "item_potable_water_glass_bottle",
+  "displayName": "Potable Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 0.96,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 4
+}

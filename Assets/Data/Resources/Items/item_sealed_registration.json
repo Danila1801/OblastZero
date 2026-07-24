@@ -1,0 +1,17 @@
+{
+  "id": "item_sealed_registration",
+  "displayName": "Sealed Registration",
+  "category": "Document",
+  "weightKg": 0.1,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 36,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 82
+}

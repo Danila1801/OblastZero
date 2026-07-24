@@ -1,0 +1,16 @@
+{
+  "id": "item_compressed_field_meal",
+  "displayName": "Compressed Field Meal",
+  "category": "Food",
+  "weightKg": 0.17,
+  "durability": 70,
+  "decayPerDay": 0.07,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 6
+}

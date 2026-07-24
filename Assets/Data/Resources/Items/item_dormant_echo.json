@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_echo",
+  "displayName": "Dormant Echo",
+  "category": "Artifact",
+  "weightKg": 0.26,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 58.3,
+  "baseTradeValueScale": 73,
+  "baseTradeValueCordon": 35,
+  "baseTradeValueKafedra": 138
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_7",
+  "displayName": "Issued Artifact Variant 7",
+  "category": "Artifact",
+  "weightKg": 0.66,
+  "durability": 80,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 106,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 107
+}

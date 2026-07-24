@@ -1,0 +1,16 @@
+{
+  "id": "item_improvised_veterinary_kit",
+  "displayName": "Improvised Veterinary Kit",
+  "category": "Medical",
+  "weightKg": 0.19,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 36
+}

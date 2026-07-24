@@ -1,0 +1,16 @@
+{
+  "id": "item_dried_oat",
+  "displayName": "Dried Oat",
+  "category": "Food",
+  "weightKg": 0.24,
+  "durability": 70,
+  "decayPerDay": 0.43,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 4
+}

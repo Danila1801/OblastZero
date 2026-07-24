@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_document_variant_9",
+  "displayName": "Issued Document Variant 9",
+  "category": "Document",
+  "weightKg": 0.17,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 62,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 57
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_yellowish_water_canteen",
+  "displayName": "Yellowish Water Canteen",
+  "category": "Water",
+  "weightKg": 1.45,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 53.0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 3
+}

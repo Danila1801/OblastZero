@@ -1,0 +1,17 @@
+{
+  "id": "item_salvaged_gasket",
+  "displayName": "Salvaged Gasket",
+  "category": "Crafting",
+  "weightKg": 0.25,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 11
+}

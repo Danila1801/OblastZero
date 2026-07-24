@@ -1,0 +1,16 @@
+{
+  "id": "item_foraged_roots",
+  "displayName": "Foraged Roots",
+  "category": "Food",
+  "weightKg": 0.11,
+  "durability": 80,
+  "decayPerDay": 0.21,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 5
+}

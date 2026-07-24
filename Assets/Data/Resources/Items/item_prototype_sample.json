@@ -1,0 +1,17 @@
+{
+  "id": "item_prototype_sample",
+  "displayName": "Prototype Sample",
+  "category": "Special",
+  "weightKg": 0.23,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": 0.05,
+  "radiationContaminationLevel": 30.9,
+  "baseTradeValueScale": 63,
+  "baseTradeValueCordon": 60,
+  "baseTradeValueKafedra": 48
+}

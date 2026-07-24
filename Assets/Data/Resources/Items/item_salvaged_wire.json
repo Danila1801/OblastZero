@@ -1,0 +1,17 @@
+{
+  "id": "item_salvaged_wire",
+  "displayName": "Salvaged Wire",
+  "category": "Crafting",
+  "weightKg": 0.26,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 4
+}

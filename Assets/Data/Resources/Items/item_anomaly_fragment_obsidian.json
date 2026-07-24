@@ -1,0 +1,17 @@
+{
+  "id": "item_anomaly_fragment_obsidian",
+  "displayName": "Anomaly Fragment: Obsidian",
+  "category": "Artifact",
+  "weightKg": 0.2,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 41.4,
+  "baseTradeValueScale": 80,
+  "baseTradeValueCordon": 25,
+  "baseTradeValueKafedra": 79
+}

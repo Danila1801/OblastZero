@@ -1,0 +1,18 @@
+{
+  "id": "item_ceremonial_bolt_action",
+  "displayName": "Ceremonial Bolt-Action",
+  "category": "Weapon",
+  "weightKg": 1.19,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 50,
+  "baseTradeValueCordon": 36,
+  "baseTradeValueKafedra": 11
+}

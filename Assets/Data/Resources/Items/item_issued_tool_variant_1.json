@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_tool_variant_1",
+  "displayName": "Issued Tool Variant 1",
+  "category": "Tool",
+  "weightKg": 0.25,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 13
+}

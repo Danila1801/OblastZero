@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_artifact_variant_13",
+  "displayName": "Issued Artifact Variant 13",
+  "category": "Artifact",
+  "weightKg": 0.54,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 63,
+  "baseTradeValueCordon": 52,
+  "baseTradeValueKafedra": 118
+}

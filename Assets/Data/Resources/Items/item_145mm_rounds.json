@@ -1,0 +1,16 @@
+{
+  "id": "item_145mm_rounds",
+  "displayName": "14.5mm Rounds",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 7
+}

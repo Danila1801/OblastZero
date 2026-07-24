@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_registration",
+  "displayName": "Kafedra Registration",
+  "category": "Document",
+  "weightKg": 0.18,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 80,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 32
+}

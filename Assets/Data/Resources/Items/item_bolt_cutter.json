@@ -1,0 +1,17 @@
+{
+  "id": "item_bolt_cutter",
+  "displayName": "Bolt Cutter",
+  "category": "Tool",
+  "weightKg": 0.89,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 17,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 7
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_veterinary_kit",
+  "displayName": "Issued Veterinary Kit",
+  "category": "Medical",
+  "weightKg": 0.27,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 30,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 10
+}

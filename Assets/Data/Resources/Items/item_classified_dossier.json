@@ -1,0 +1,17 @@
+{
+  "id": "item_classified_dossier",
+  "displayName": "Classified Dossier",
+  "category": "Document",
+  "weightKg": 0.25,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 65,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 47
+}

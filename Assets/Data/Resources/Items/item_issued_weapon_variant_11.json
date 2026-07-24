@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_weapon_variant_11",
+  "displayName": "Issued Weapon Variant 11",
+  "category": "Weapon",
+  "weightKg": 0.51,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 24,
+  "baseTradeValueCordon": 34,
+  "baseTradeValueKafedra": 15
+}

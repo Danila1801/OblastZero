@@ -1,0 +1,16 @@
+{
+  "id": "item_boiled_water_bladder",
+  "displayName": "Boiled Water Bladder",
+  "category": "Water",
+  "weightKg": 1.91,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 3
+}

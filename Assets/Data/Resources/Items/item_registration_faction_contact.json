@@ -1,0 +1,17 @@
+{
+  "id": "item_registration_faction_contact",
+  "displayName": "Registration: Faction Contact",
+  "category": "Document",
+  "weightKg": 0.13,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 31
+}

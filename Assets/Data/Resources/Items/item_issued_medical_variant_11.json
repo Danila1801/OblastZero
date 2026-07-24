@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_medical_variant_11",
+  "displayName": "Issued Medical Variant 11",
+  "category": "Medical",
+  "weightKg": 0.2,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 27,
+  "baseTradeValueCordon": 16,
+  "baseTradeValueKafedra": 20
+}

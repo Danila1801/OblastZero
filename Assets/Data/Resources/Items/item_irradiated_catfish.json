@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_catfish",
+  "displayName": "Irradiated Catfish",
+  "category": "Food",
+  "weightKg": 0.42,
+  "durability": 70,
+  "decayPerDay": 0.15,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 39.8,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 1
+}

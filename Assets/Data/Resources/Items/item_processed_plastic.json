@@ -1,0 +1,16 @@
+{
+  "id": "item_processed_plastic",
+  "displayName": "Processed Plastic",
+  "category": "Crafting",
+  "weightKg": 0.12,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 11
+}

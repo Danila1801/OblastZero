@@ -1,0 +1,17 @@
+{
+  "id": "item_issued_saw",
+  "displayName": "Issued Saw",
+  "category": "Tool",
+  "weightKg": 2.04,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 8
+}

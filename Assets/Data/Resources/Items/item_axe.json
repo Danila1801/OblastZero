@@ -1,0 +1,17 @@
+{
+  "id": "item_axe",
+  "displayName": "Axe",
+  "category": "Weapon",
+  "weightKg": 1.8,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 56,
+  "baseTradeValueCordon": 22,
+  "baseTradeValueKafedra": 21
+}

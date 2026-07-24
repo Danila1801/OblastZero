@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_vial",
+  "displayName": "Emergency Vial",
+  "category": "Medical",
+  "weightKg": 0.03,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 12
+}

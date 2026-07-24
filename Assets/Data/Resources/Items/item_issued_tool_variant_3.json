@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_tool_variant_3",
+  "displayName": "Issued Tool Variant 3",
+  "category": "Tool",
+  "weightKg": 0.84,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 15
+}

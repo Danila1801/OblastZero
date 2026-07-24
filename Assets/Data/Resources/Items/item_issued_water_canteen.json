@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_water_canteen",
+  "displayName": "Issued Water Canteen",
+  "category": "Water",
+  "weightKg": 1.38,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 5
+}

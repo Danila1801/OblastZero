@@ -1,0 +1,16 @@
+{
+  "id": "item_contaminated_wire",
+  "displayName": "Contaminated Wire",
+  "category": "Crafting",
+  "weightKg": 0.24,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 13.4,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 12
+}

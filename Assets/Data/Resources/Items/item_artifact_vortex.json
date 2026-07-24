@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_vortex",
+  "displayName": "Artifact: Vortex",
+  "category": "Artifact",
+  "weightKg": 0.66,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 40.7,
+  "baseTradeValueScale": 84,
+  "baseTradeValueCordon": 50,
+  "baseTradeValueKafedra": 82
+}

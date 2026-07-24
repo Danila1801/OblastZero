@@ -1,0 +1,16 @@
+{
+  "id": "item_condensed_water_jerrycan",
+  "displayName": "Condensed Water Jerrycan",
+  "category": "Water",
+  "weightKg": 0.78,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 2
+}

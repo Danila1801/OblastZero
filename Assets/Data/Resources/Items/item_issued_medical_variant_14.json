@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_medical_variant_14",
+  "displayName": "Issued Medical Variant 14",
+  "category": "Medical",
+  "weightKg": 0.5,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 25
+}

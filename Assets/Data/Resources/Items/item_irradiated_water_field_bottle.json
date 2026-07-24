@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_water_field_bottle",
+  "displayName": "Irradiated Water Field Bottle",
+  "category": "Water",
+  "weightKg": 0.85,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 50.0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 1
+}

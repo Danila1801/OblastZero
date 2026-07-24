@@ -1,0 +1,16 @@
+{
+  "id": "item_pickled_potato",
+  "displayName": "Pickled Potato",
+  "category": "Food",
+  "weightKg": 0.41,
+  "durability": 70,
+  "decayPerDay": 0.08,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 5
+}

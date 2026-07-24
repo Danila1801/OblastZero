@@ -1,0 +1,17 @@
+{
+  "id": "item_inventory_faction_contact",
+  "displayName": "Inventory: Faction Contact",
+  "category": "Document",
+  "weightKg": 0.25,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 72,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 30
+}

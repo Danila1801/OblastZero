@@ -1,0 +1,16 @@
+{
+  "id": "item_792mm_ammunition",
+  "displayName": "7.92mm Ammunition",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 20,
+  "baseTradeValueKafedra": 4
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_forged_manifest",
+  "displayName": "Forged Manifest",
+  "category": "Document",
+  "weightKg": 0.1,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 68,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 78
+}

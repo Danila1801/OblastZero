@@ -1,0 +1,16 @@
+{
+  "id": "item_kafedra_issue_drill_bit",
+  "displayName": "Kafedra-Issue Drill Bit",
+  "category": "Tool",
+  "weightKg": 3.15,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 11,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 8
+}

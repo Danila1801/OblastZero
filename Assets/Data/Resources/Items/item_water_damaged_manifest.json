@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_manifest",
+  "displayName": "Water-Damaged Manifest",
+  "category": "Document",
+  "weightKg": 0.15,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 74,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 48
+}

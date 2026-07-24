@@ -1,0 +1,16 @@
+{
+  "id": "item_rain_water_glass_bottle",
+  "displayName": "Rain Water Glass Bottle",
+  "category": "Water",
+  "weightKg": 0.68,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 3
+}

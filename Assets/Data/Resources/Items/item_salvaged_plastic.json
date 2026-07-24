@@ -1,0 +1,17 @@
+{
+  "id": "item_salvaged_plastic",
+  "displayName": "Salvaged Plastic",
+  "category": "Crafting",
+  "weightKg": 0.34,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 5
+}

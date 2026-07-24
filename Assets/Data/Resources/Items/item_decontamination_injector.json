@@ -1,0 +1,17 @@
+{
+  "id": "item_decontamination_injector",
+  "displayName": "Decontamination Injector",
+  "category": "Medical",
+  "weightKg": 0.11,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Decontaminate",
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 21,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 34
+}

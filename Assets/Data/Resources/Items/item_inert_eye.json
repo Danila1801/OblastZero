@@ -1,0 +1,16 @@
+{
+  "id": "item_inert_eye",
+  "displayName": "Inert Eye",
+  "category": "Artifact",
+  "weightKg": 0.88,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 62,
+  "baseTradeValueCordon": 27,
+  "baseTradeValueKafedra": 106
+}

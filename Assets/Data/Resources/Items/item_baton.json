@@ -1,0 +1,17 @@
+{
+  "id": "item_baton",
+  "displayName": "Baton",
+  "category": "Weapon",
+  "weightKg": 1.87,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 40,
+  "baseTradeValueCordon": 22,
+  "baseTradeValueKafedra": 24
+}

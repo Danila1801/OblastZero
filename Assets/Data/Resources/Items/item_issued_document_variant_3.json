@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_document_variant_3",
+  "displayName": "Issued Document Variant 3",
+  "category": "Document",
+  "weightKg": 0.68,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 58,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 51
+}

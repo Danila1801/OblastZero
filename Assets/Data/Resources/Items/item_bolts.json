@@ -1,0 +1,16 @@
+{
+  "id": "item_bolts",
+  "displayName": "Bolts",
+  "category": "Ammunition",
+  "weightKg": 0.03,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 9
+}

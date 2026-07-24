@@ -1,0 +1,17 @@
+{
+  "id": "item_issued_field_meal",
+  "displayName": "Issued Field Meal",
+  "category": "Food",
+  "weightKg": 0.38,
+  "durability": 70,
+  "decayPerDay": 0.06,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

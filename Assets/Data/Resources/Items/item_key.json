@@ -1,0 +1,16 @@
+{
+  "id": "item_key",
+  "displayName": "Key",
+  "category": "Special",
+  "weightKg": 0.48,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": 0.02,
+  "radiationContaminationLevel": 53.9,
+  "baseTradeValueScale": 88,
+  "baseTradeValueCordon": 57,
+  "baseTradeValueKafedra": 109
+}

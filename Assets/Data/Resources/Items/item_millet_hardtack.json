@@ -1,0 +1,16 @@
+{
+  "id": "item_millet_hardtack",
+  "displayName": "Millet Hardtack",
+  "category": "Food",
+  "weightKg": 0.21,
+  "durability": 60,
+  "decayPerDay": 0.46,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 3
+}

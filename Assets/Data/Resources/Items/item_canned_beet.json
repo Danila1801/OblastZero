@@ -1,0 +1,16 @@
+{
+  "id": "item_canned_beet",
+  "displayName": "Canned Beet",
+  "category": "Food",
+  "weightKg": 0.33,
+  "durability": 60,
+  "decayPerDay": 0.42,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 6
+}

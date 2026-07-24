@@ -1,0 +1,17 @@
+{
+  "id": "item_smoked_rabbit",
+  "displayName": "Smoked Rabbit",
+  "category": "Food",
+  "weightKg": 0.24,
+  "durability": 90,
+  "decayPerDay": 0.25,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 4
+}

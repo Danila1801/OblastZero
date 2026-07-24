@@ -1,0 +1,16 @@
+{
+  "id": "item_emergency_bunker_provisions",
+  "displayName": "Emergency Bunker Provisions",
+  "category": "Food",
+  "weightKg": 0.18,
+  "durability": 90,
+  "decayPerDay": 0.36,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

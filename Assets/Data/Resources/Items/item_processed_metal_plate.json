@@ -1,0 +1,16 @@
+{
+  "id": "item_processed_metal_plate",
+  "displayName": "Processed Metal Plate",
+  "category": "Crafting",
+  "weightKg": 0.2,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 7
+}

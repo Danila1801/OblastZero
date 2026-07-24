@@ -1,0 +1,16 @@
+{
+  "id": "item_rain_water_tin_bottle",
+  "displayName": "Rain Water Tin Bottle",
+  "category": "Water",
+  "weightKg": 0.68,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 2
+}

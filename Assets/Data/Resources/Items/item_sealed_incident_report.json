@@ -1,0 +1,17 @@
+{
+  "id": "item_sealed_incident_report",
+  "displayName": "Sealed Incident Report",
+  "category": "Document",
+  "weightKg": 0.1,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 61,
+  "baseTradeValueCordon": 18,
+  "baseTradeValueKafedra": 41
+}

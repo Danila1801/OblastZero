@@ -1,0 +1,16 @@
+{
+  "id": "item_wild_herbs",
+  "displayName": "Wild Herbs",
+  "category": "Food",
+  "weightKg": 0.08,
+  "durability": 60,
+  "decayPerDay": 0.11,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 2,
+  "baseTradeValueKafedra": 4
+}

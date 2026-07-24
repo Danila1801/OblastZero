@@ -1,0 +1,17 @@
+{
+  "id": "item_concentrated_nettle",
+  "displayName": "Concentrated Nettle",
+  "category": "Food",
+  "weightKg": 0.23,
+  "durability": 80,
+  "decayPerDay": 0.08,
+  "utilityTags": [
+    "Eat",
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 1
+}

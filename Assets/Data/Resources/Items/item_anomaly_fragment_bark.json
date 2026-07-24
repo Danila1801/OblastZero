@@ -1,0 +1,17 @@
+{
+  "id": "item_anomaly_fragment_bark",
+  "displayName": "Anomaly Fragment: Bark",
+  "category": "Artifact",
+  "weightKg": 0.12,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 20.9,
+  "baseTradeValueScale": 92,
+  "baseTradeValueCordon": 50,
+  "baseTradeValueKafedra": 66
+}

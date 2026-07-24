@@ -1,0 +1,16 @@
+{
+  "id": "item_water_damaged_dossier",
+  "displayName": "Water-Damaged Dossier",
+  "category": "Document",
+  "weightKg": 0.2,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 39,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 52
+}

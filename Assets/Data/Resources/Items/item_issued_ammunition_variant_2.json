@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_2",
+  "displayName": "Issued Ammunition Variant 2",
+  "category": "Ammunition",
+  "weightKg": 0.53,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 7
+}

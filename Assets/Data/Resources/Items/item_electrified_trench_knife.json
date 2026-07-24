@@ -1,0 +1,17 @@
+{
+  "id": "item_electrified_trench_knife",
+  "displayName": "Electrified Trench Knife",
+  "category": "Weapon",
+  "weightKg": 2.01,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 12.7,
+  "baseTradeValueScale": 43,
+  "baseTradeValueCordon": 43,
+  "baseTradeValueKafedra": 23
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_issued_meal_pack",
+  "displayName": "Issued Meal Pack",
+  "category": "Food",
+  "weightKg": 0.21,
+  "durability": 80,
+  "decayPerDay": 0.14,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 1
+}

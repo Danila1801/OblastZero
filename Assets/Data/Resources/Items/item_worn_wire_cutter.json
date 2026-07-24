@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_wire_cutter",
+  "displayName": "Worn Wire Cutter",
+  "category": "Tool",
+  "weightKg": 0.9,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 16,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 15
+}

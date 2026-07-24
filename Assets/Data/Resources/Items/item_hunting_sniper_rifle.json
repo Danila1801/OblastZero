@@ -1,0 +1,17 @@
+{
+  "id": "item_hunting_sniper_rifle",
+  "displayName": "Hunting Sniper Rifle",
+  "category": "Weapon",
+  "weightKg": 1.31,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 25,
+  "baseTradeValueCordon": 23,
+  "baseTradeValueKafedra": 11
+}

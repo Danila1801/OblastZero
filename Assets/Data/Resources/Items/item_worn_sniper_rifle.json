@@ -1,0 +1,17 @@
+{
+  "id": "item_worn_sniper_rifle",
+  "displayName": "Worn Sniper Rifle",
+  "category": "Weapon",
+  "weightKg": 0.86,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 52,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 28
+}

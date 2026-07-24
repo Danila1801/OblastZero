@@ -1,0 +1,17 @@
+{
+  "id": "item_salvaged_solder",
+  "displayName": "Salvaged Solder",
+  "category": "Crafting",
+  "weightKg": 0.19,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 8
+}

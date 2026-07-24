@@ -44,7 +44,16 @@ namespace OblastZero.Data
         {
             if (_initialized && !force) return;
 
+            // Load JSON items and merge with authored SO items.
+            var jsonItems = ItemJsonLoader.LoadItemsFromResources();
+            if (jsonItems != null && jsonItems.Count > 0)
+            {
+                items = new List<ItemData>(items ?? new List<ItemData>());
+                items.AddRange(jsonItems);
+            }
+
             _itemsById = BuildIndex(items, "ItemData");
+
             _crewById = BuildIndex(crew, "CrewMemberData");
             _traitsById = BuildIndex(traits, "TraitData");
             _voiceById = BuildIndex(voiceGroups, "VoiceLineGroup");

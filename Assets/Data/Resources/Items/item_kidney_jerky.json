@@ -1,0 +1,16 @@
+{
+  "id": "item_kidney_jerky",
+  "displayName": "Kidney Jerky",
+  "category": "Food",
+  "weightKg": 0.23,
+  "durability": 80,
+  "decayPerDay": 0.19,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 6
+}

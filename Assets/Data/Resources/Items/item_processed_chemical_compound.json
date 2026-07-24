@@ -1,0 +1,16 @@
+{
+  "id": "item_processed_chemical_compound",
+  "displayName": "Processed Chemical Compound",
+  "category": "Crafting",
+  "weightKg": 0.19,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 5
+}

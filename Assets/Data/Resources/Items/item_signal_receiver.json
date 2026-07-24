@@ -1,0 +1,17 @@
+{
+  "id": "item_signal_receiver",
+  "displayName": "Signal Receiver",
+  "category": "Tool",
+  "weightKg": 0.31,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 13
+}

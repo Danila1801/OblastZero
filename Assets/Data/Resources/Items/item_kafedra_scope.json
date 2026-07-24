@@ -1,0 +1,17 @@
+{
+  "id": "item_kafedra_scope",
+  "displayName": "Kafedra Scope",
+  "category": "Tool",
+  "weightKg": 0.92,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Ritual"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 9
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_partial_manifest",
+  "displayName": "Partial Manifest",
+  "category": "Document",
+  "weightKg": 0.14,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 62,
+  "baseTradeValueCordon": 19,
+  "baseTradeValueKafedra": 37
+}

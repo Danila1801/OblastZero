@@ -1,0 +1,17 @@
+{
+  "id": "item_preserved_duck",
+  "displayName": "Preserved Duck",
+  "category": "Food",
+  "weightKg": 0.4,
+  "durability": 90,
+  "decayPerDay": 0.46,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 18.7,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 6
+}

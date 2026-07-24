@@ -1,0 +1,16 @@
+{
+  "id": "item_crude_tube",
+  "displayName": "Crude Tube",
+  "category": "Crafting",
+  "weightKg": 0.11,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 11
+}

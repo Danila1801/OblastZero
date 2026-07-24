@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_wrench",
+  "displayName": "Worn Wrench",
+  "category": "Tool",
+  "weightKg": 0.63,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 14,
+  "baseTradeValueKafedra": 11
+}

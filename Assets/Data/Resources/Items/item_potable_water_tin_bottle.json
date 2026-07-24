@@ -1,0 +1,16 @@
+{
+  "id": "item_potable_water_tin_bottle",
+  "displayName": "Potable Water Tin Bottle",
+  "category": "Water",
+  "weightKg": 1.92,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 3
+}

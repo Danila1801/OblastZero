@@ -1,0 +1,17 @@
+{
+  "id": "item_issued_sustenance_unit",
+  "displayName": "Issued Sustenance Unit",
+  "category": "Food",
+  "weightKg": 0.31,
+  "durability": 90,
+  "decayPerDay": 0.19,
+  "utilityTags": [
+    "Eat",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 1,
+  "baseTradeValueKafedra": 6
+}

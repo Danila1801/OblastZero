@@ -1,0 +1,17 @@
+{
+  "id": "item_worn_bolt_action",
+  "displayName": "Worn Bolt-Action",
+  "category": "Weapon",
+  "weightKg": 0.98,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 28,
+  "baseTradeValueCordon": 41,
+  "baseTradeValueKafedra": 18
+}

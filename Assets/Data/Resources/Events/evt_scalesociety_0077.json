@@ -1,0 +1,88 @@
+{
+  "id": "evt_scalesociety_0077",
+  "title": "The clerk reads from a ledger",
+  "narrativeText": "The clerk reads from a ledger. Your bunker's entries do not match their records.",
+  "prerequisites": {
+    "minDay": 3,
+    "maxDay": 41,
+    "factionContext": "ScaleSociety",
+    "minFactionRep": -13,
+    "maxFactionRep": 31,
+    "regionTagsAny": [
+      "bunker_interior",
+      "perimeter"
+    ]
+  },
+  "baseWeight": 1.16,
+  "choices": [
+    {
+      "choiceLabel": "Submit the registration as requested.",
+      "successChance": 1.0,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -4,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": 12,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {}
+    },
+    {
+      "choiceLabel": "Request proper authorization documents.",
+      "successChance": 0.65,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -8,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": -15,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -20,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    },
+    {
+      "choiceLabel": "Confront the auditors directly. [Combat]",
+      "successChance": 0.5,
+      "requiredTraitsAny": [],
+      "blockedByTraits": [],
+      "successOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": 0,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -30,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      },
+      "failureOutcome": {
+        "sanityDelta": 0,
+        "fatigueDelta": 0,
+        "radiationDelta": 0,
+        "healthDelta": -25,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": -35,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
+    }
+  ]
+}

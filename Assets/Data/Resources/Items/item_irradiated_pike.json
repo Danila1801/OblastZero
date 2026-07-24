@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_pike",
+  "displayName": "Irradiated Pike",
+  "category": "Food",
+  "weightKg": 0.49,
+  "durability": 90,
+  "decayPerDay": 0.29,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 28.8,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 3
+}

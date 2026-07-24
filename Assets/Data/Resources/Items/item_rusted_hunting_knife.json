@@ -1,0 +1,16 @@
+{
+  "id": "item_rusted_hunting_knife",
+  "displayName": "Rusted Hunting Knife",
+  "category": "Weapon",
+  "weightKg": 2.96,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 36,
+  "baseTradeValueCordon": 47,
+  "baseTradeValueKafedra": 13
+}

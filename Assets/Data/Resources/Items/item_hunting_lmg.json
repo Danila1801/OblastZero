@@ -1,0 +1,17 @@
+{
+  "id": "item_hunting_lmg",
+  "displayName": "Hunting LMG",
+  "category": "Weapon",
+  "weightKg": 1.46,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 33,
+  "baseTradeValueCordon": 41,
+  "baseTradeValueKafedra": 24
+}

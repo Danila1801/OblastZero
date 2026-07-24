@@ -1,0 +1,16 @@
+{
+  "id": "item_inert_graviton",
+  "displayName": "Inert Graviton",
+  "category": "Artifact",
+  "weightKg": 0.79,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 76,
+  "baseTradeValueCordon": 33,
+  "baseTradeValueKafedra": 90
+}

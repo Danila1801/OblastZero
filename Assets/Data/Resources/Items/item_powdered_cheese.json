@@ -1,0 +1,17 @@
+{
+  "id": "item_powdered_cheese",
+  "displayName": "Powdered Cheese",
+  "category": "Food",
+  "weightKg": 0.23,
+  "durability": 70,
+  "decayPerDay": 0.3,
+  "utilityTags": [
+    "Eat",
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 6
+}

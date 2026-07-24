@@ -1,0 +1,17 @@
+{
+  "id": "item_redacted_audit_sheet",
+  "displayName": "Redacted Audit Sheet",
+  "category": "Document",
+  "weightKg": 0.19,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 26,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 57
+}

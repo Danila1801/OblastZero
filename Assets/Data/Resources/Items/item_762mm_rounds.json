@@ -1,0 +1,16 @@
+{
+  "id": "item_762mm_rounds",
+  "displayName": "7.62mm Rounds",
+  "category": "Ammunition",
+  "weightKg": 0.03,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 4
+}

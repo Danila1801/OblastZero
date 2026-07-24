@@ -1,0 +1,17 @@
+{
+  "id": "item_powdered_milk",
+  "displayName": "Powdered Milk",
+  "category": "Food",
+  "weightKg": 0.13,
+  "durability": 70,
+  "decayPerDay": 0.02,
+  "utilityTags": [
+    "Eat",
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 1
+}

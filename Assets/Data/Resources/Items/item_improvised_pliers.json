@@ -1,0 +1,16 @@
+{
+  "id": "item_improvised_pliers",
+  "displayName": "Improvised Pliers",
+  "category": "Tool",
+  "weightKg": 0.95,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 7,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 13
+}

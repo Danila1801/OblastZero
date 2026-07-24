@@ -1,0 +1,17 @@
+{
+  "id": "item_flashlight",
+  "displayName": "Flashlight",
+  "category": "Tool",
+  "weightKg": 1.14,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 15,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 10
+}

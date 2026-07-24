@@ -1,0 +1,16 @@
+{
+  "id": "item_filtered_water_tin_bottle",
+  "displayName": "Filtered Water Tin Bottle",
+  "category": "Water",
+  "weightKg": 1.05,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 5
+}

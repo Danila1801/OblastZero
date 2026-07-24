@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_water_tin_bottle",
+  "displayName": "Issued Water Tin Bottle",
+  "category": "Water",
+  "weightKg": 1.77,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 3,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 2
+}

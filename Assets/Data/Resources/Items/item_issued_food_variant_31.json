@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_food_variant_31",
+  "displayName": "Issued Food Variant 31",
+  "category": "Food",
+  "weightKg": 0.78,
+  "durability": 70,
+  "decayPerDay": 0.08,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 2
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_worn_bolt_cutter",
+  "displayName": "Worn Bolt Cutter",
+  "category": "Tool",
+  "weightKg": 1.51,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 12,
+  "baseTradeValueKafedra": 12
+}

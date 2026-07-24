@@ -1,0 +1,16 @@
+{
+  "id": "item_processed_rubber",
+  "displayName": "Processed Rubber",
+  "category": "Crafting",
+  "weightKg": 0.21,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 3,
+  "baseTradeValueKafedra": 5
+}

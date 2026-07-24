@@ -1,0 +1,16 @@
+{
+  "id": "item_irradiated_water_jerry_jug",
+  "displayName": "Irradiated Water Jerry Jug",
+  "category": "Water",
+  "weightKg": 0.57,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 22.4,
+  "baseTradeValueScale": 1,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 1
+}

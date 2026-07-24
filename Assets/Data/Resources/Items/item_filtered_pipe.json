@@ -1,0 +1,17 @@
+{
+  "id": "item_filtered_pipe",
+  "displayName": "Filtered Pipe",
+  "category": "Crafting",
+  "weightKg": 0.18,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Decontaminate"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 4,
+  "baseTradeValueCordon": 4,
+  "baseTradeValueKafedra": 4
+}

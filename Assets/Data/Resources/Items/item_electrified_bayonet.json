@@ -1,0 +1,17 @@
+{
+  "id": "item_electrified_bayonet",
+  "displayName": "Electrified Bayonet",
+  "category": "Weapon",
+  "weightKg": 1.07,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 37.6,
+  "baseTradeValueScale": 54,
+  "baseTradeValueCordon": 30,
+  "baseTradeValueKafedra": 30
+}

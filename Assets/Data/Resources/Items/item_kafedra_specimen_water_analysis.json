@@ -1,0 +1,18 @@
+{
+  "id": "item_kafedra_specimen_water_analysis",
+  "displayName": "Kafedra Specimen: Water Analysis",
+  "category": "Artifact",
+  "weightKg": 0.48,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual",
+    "Read"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 32.5,
+  "baseTradeValueScale": 115,
+  "baseTradeValueCordon": 28,
+  "baseTradeValueKafedra": 62
+}

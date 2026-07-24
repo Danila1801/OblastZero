@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_crown",
+  "displayName": "Dormant Crown",
+  "category": "Artifact",
+  "weightKg": 0.96,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 34.5,
+  "baseTradeValueScale": 79,
+  "baseTradeValueCordon": 38,
+  "baseTradeValueKafedra": 67
+}

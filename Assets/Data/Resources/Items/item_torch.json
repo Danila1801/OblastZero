@@ -1,0 +1,17 @@
+{
+  "id": "item_torch",
+  "displayName": "Torch",
+  "category": "Tool",
+  "weightKg": 1.82,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 13
+}

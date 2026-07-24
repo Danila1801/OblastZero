@@ -1,0 +1,16 @@
+{
+  "id": "item_well_water_jerry_jug",
+  "displayName": "Well Water Jerry Jug",
+  "category": "Water",
+  "weightKg": 1.02,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Drink"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 8,
+  "baseTradeValueCordon": 6,
+  "baseTradeValueKafedra": 1
+}

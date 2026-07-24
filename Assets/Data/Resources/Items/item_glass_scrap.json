@@ -1,0 +1,16 @@
+{
+  "id": "item_glass_scrap",
+  "displayName": "Glass Scrap",
+  "category": "Crafting",
+  "weightKg": 0.1,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 2,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 11
+}

@@ -1,0 +1,16 @@
+{
+  "id": "item_wheat_hardtack",
+  "displayName": "Wheat Hardtack",
+  "category": "Food",
+  "weightKg": 0.17,
+  "durability": 60,
+  "decayPerDay": 0.16,
+  "utilityTags": [
+    "Eat"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 9,
+  "baseTradeValueCordon": 5,
+  "baseTradeValueKafedra": 2
+}

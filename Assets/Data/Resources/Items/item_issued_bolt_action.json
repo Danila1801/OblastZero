@@ -1,0 +1,18 @@
+{
+  "id": "item_issued_bolt_action",
+  "displayName": "Issued Bolt-Action",
+  "category": "Weapon",
+  "weightKg": 1.01,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 54,
+  "baseTradeValueCordon": 27,
+  "baseTradeValueKafedra": 26
+}

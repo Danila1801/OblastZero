@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_tool_variant_8",
+  "displayName": "Issued Tool Variant 8",
+  "category": "Tool",
+  "weightKg": 0.65,
+  "durability": 100,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 13
+}

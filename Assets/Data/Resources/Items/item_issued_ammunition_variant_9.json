@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_ammunition_variant_9",
+  "displayName": "Issued Ammunition Variant 9",
+  "category": "Ammunition",
+  "weightKg": 0.98,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 14,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 3
+}

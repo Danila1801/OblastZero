@@ -1,0 +1,17 @@
+{
+  "id": "item_sidearm_pistol",
+  "displayName": "Sidearm Pistol",
+  "category": "Weapon",
+  "weightKg": 0.54,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 22,
+  "baseTradeValueCordon": 45,
+  "baseTradeValueKafedra": 23
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_pre_incident_permit",
+  "displayName": "Pre-Incident Permit",
+  "category": "Document",
+  "weightKg": 0.26,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 26,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 66
+}

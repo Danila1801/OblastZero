@@ -1,0 +1,17 @@
+{
+  "id": "item_hunting_semi_auto",
+  "displayName": "Hunting Semi-Auto",
+  "category": "Weapon",
+  "weightKg": 1.37,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 56,
+  "baseTradeValueCordon": 44,
+  "baseTradeValueKafedra": 19
+}

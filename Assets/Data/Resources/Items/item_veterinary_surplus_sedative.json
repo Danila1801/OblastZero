@@ -1,0 +1,16 @@
+{
+  "id": "item_veterinary_surplus_sedative",
+  "displayName": "Veterinary-Surplus Sedative",
+  "category": "Medical",
+  "weightKg": 0.04,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 28,
+  "baseTradeValueCordon": 25,
+  "baseTradeValueKafedra": 21
+}

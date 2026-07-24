@@ -1,0 +1,18 @@
+{
+  "id": "item_12_gauge_carbine",
+  "displayName": "12 Gauge Carbine",
+  "category": "Weapon",
+  "weightKg": 0.73,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 57,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 23
+}

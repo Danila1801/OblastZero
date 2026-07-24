@@ -1,0 +1,16 @@
+{
+  "id": "item_raw_metal_plate",
+  "displayName": "Raw Metal Plate",
+  "category": "Crafting",
+  "weightKg": 0.73,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 11
+}

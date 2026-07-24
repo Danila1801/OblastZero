@@ -1,0 +1,17 @@
+{
+  "id": "item_sharpened_trench_knife",
+  "displayName": "Sharpened Trench Knife",
+  "category": "Weapon",
+  "weightKg": 1.45,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 20,
+  "baseTradeValueCordon": 47,
+  "baseTradeValueKafedra": 13
+}

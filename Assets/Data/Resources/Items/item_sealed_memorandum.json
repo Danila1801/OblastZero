@@ -1,0 +1,17 @@
+{
+  "id": "item_sealed_memorandum",
+  "displayName": "Sealed Memorandum",
+  "category": "Document",
+  "weightKg": 0.16,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 43,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 82
+}

@@ -1,0 +1,17 @@
+{
+  "id": "item_drill_bit",
+  "displayName": "Drill Bit",
+  "category": "Tool",
+  "weightKg": 2.35,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 13,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 14
+}

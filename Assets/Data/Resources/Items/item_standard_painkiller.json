@@ -1,0 +1,16 @@
+{
+  "id": "item_standard_painkiller",
+  "displayName": "Standard Painkiller",
+  "category": "Medical",
+  "weightKg": 0.05,
+  "durability": 70,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 14,
+  "baseTradeValueCordon": 11,
+  "baseTradeValueKafedra": 12
+}

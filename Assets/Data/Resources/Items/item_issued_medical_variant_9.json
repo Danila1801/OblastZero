@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_medical_variant_9",
+  "displayName": "Issued Medical Variant 9",
+  "category": "Medical",
+  "weightKg": 0.34,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 23,
+  "baseTradeValueCordon": 17,
+  "baseTradeValueKafedra": 24
+}

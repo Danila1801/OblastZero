@@ -1,0 +1,18 @@
+{
+  "id": "item_improvised_hunting_knife",
+  "displayName": "Improvised Hunting Knife",
+  "category": "Weapon",
+  "weightKg": 2.26,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 49,
+  "baseTradeValueCordon": 44,
+  "baseTradeValueKafedra": 23
+}

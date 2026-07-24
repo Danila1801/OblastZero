@@ -1,0 +1,17 @@
+{
+  "id": "item_worn_smg",
+  "displayName": "Worn SMG",
+  "category": "Weapon",
+  "weightKg": 0.75,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Defend"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 60,
+  "baseTradeValueCordon": 50,
+  "baseTradeValueKafedra": 10
+}

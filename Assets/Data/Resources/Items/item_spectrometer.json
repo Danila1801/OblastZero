@@ -1,0 +1,17 @@
+{
+  "id": "item_spectrometer",
+  "displayName": "Spectrometer",
+  "category": "Tool",
+  "weightKg": 0.39,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Repair"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 12,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 15
+}

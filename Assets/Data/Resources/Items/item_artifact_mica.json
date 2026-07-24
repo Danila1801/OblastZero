@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_mica",
+  "displayName": "Artifact: Mica",
+  "category": "Artifact",
+  "weightKg": 0.56,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 48.0,
+  "baseTradeValueScale": 82,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 147
+}

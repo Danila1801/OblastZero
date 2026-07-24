@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_tool_variant_6",
+  "displayName": "Issued Tool Variant 6",
+  "category": "Tool",
+  "weightKg": 0.67,
+  "durability": 70,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 11,
+  "baseTradeValueCordon": 13,
+  "baseTradeValueKafedra": 8
+}

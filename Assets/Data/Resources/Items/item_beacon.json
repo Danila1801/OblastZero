@@ -1,0 +1,16 @@
+{
+  "id": "item_beacon",
+  "displayName": "Beacon",
+  "category": "Special",
+  "weightKg": 0.39,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": 0.02,
+  "radiationContaminationLevel": 22.7,
+  "baseTradeValueScale": 43,
+  "baseTradeValueCordon": 53,
+  "baseTradeValueKafedra": 106
+}

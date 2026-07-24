@@ -1,0 +1,16 @@
+{
+  "id": "item_field_suture_kit",
+  "displayName": "Field Suture Kit",
+  "category": "Medical",
+  "weightKg": 0.09,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Heal"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 19,
+  "baseTradeValueCordon": 8,
+  "baseTradeValueKafedra": 23
+}

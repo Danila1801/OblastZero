@@ -1,0 +1,16 @@
+{
+  "id": "item_partial_registration",
+  "displayName": "Partial Registration",
+  "category": "Document",
+  "weightKg": 0.05,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 49,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 52
+}

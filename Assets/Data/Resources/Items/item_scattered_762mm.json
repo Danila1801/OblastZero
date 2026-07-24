@@ -1,0 +1,16 @@
+{
+  "id": "item_scattered_762mm",
+  "displayName": "Scattered 7.62mm",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 10,
+  "baseTradeValueCordon": 10,
+  "baseTradeValueKafedra": 3
+}

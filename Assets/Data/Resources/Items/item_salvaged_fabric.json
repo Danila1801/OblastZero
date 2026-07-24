@@ -1,0 +1,17 @@
+{
+  "id": "item_salvaged_fabric",
+  "displayName": "Salvaged Fabric",
+  "category": "Crafting",
+  "weightKg": 0.13,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Repair",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 6,
+  "baseTradeValueCordon": 7,
+  "baseTradeValueKafedra": 11
+}

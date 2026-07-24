@@ -1,0 +1,17 @@
+{
+  "id": "item_artifact_ember",
+  "displayName": "Artifact: Ember",
+  "category": "Artifact",
+  "weightKg": 0.65,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 38.6,
+  "baseTradeValueScale": 71,
+  "baseTradeValueCordon": 34,
+  "baseTradeValueKafedra": 124
+}

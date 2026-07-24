@@ -1,0 +1,16 @@
+{
+  "id": "item_relic",
+  "displayName": "Relic",
+  "category": "Special",
+  "weightKg": 0.18,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": 0.02,
+  "radiationContaminationLevel": 36.0,
+  "baseTradeValueScale": 60,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 118
+}

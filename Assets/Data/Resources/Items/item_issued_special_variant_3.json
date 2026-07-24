@@ -1,0 +1,16 @@
+{
+  "id": "item_issued_special_variant_3",
+  "displayName": "Issued Special Variant 3",
+  "category": "Special",
+  "weightKg": 0.54,
+  "durability": 90,
+  "decayPerDay": 0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 55,
+  "baseTradeValueCordon": 66,
+  "baseTradeValueKafedra": 43
+}

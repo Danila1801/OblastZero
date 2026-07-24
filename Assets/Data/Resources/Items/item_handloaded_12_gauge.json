@@ -1,0 +1,17 @@
+{
+  "id": "item_handloaded_12_gauge",
+  "displayName": "Handloaded 12 Gauge",
+  "category": "Ammunition",
+  "weightKg": 0.02,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Fight",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 5,
+  "baseTradeValueCordon": 9,
+  "baseTradeValueKafedra": 4
+}

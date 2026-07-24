@@ -1,0 +1,17 @@
+{
+  "id": "item_sealed_audit_sheet",
+  "displayName": "Sealed Audit Sheet",
+  "category": "Document",
+  "weightKg": 0.18,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Read",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 36,
+  "baseTradeValueCordon": 15,
+  "baseTradeValueKafedra": 82
+}
