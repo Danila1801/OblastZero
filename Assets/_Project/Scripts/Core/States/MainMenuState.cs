@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using OblastZero.Data;
 
 namespace OblastZero.Core.States
 {
