@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5965944a20359894788b1fea179e4974, type: 3}
+  m_Name: SteamConfig
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Steam.SteamConfig
+  appId: 480
+  achvFirstRun: ACHV_FIRST_RUN
+  achvFirstWipe: ACHV_FIRST_WIPE
+  achvSurvive10Days: ACHV_SURVIVE_10
+  achvSurvive30Days: ACHV_SURVIVE_30
+  achvSurvive60Days: ACHV_SURVIVE_60
+  achvFirstVictory: ACHV_FIRST_VICTORY
+  achvMaxRepScaleSociety: ACHV_MAX_REP_SCALE
+  achvMaxRepCordon: ACHV_MAX_REP_CORDON
+  achvMaxRepKafedra: ACHV_MAX_REP_KAFEDRA
+  achvAllEndings: ACHV_ALL_ENDINGS
+  statRunsStarted: stat_runs_started
+  statRunsEnded: stat_runs_ended
+  statDaysSurvivedTotal: stat_days_survived_total
+  statCrewDeathsTotal: stat_crew_deaths_total
+  statLongestRunDays: stat_longest_run_days
+  statHighestRep: stat_highest_rep
