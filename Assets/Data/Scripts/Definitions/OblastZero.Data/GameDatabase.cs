@@ -1,6 +1,7 @@
 // Assets/Data/Scripts/Definitions/GameDatabase.cs
 using System.Collections.Generic;
 using UnityEngine;
+using OblastZero.Services;
 
 namespace OblastZero.Data
 {
@@ -50,6 +51,15 @@ namespace OblastZero.Data
             _factionsById = BuildIndex(factions, "FactionData");
             _anomaliesById = BuildIndex(anomalies, "AnomalyData");
             _mutantsById = BuildIndex(mutants, "MutantData");
+
+            // Load JSON events and merge with authored events.
+            var jsonEvents = EventJsonLoader.LoadEventsFromResources(this);
+            if (jsonEvents != null && jsonEvents.Count > 0)
+            {
+                events = new List<ExpeditionEventData>(events ?? new List<ExpeditionEventData>());
+                events.AddRange(jsonEvents);
+            }
+
             _eventsById = BuildIndex(events, "ExpeditionEventData");
 
             // Secondary index: factions are also reached by their enum id (reputation is enum-driven).
@@ -132,6 +142,7 @@ namespace OblastZero.Data
         public IReadOnlyList<ItemData> AllItems => items;
         public IReadOnlyList<CrewMemberData> AllCrew => crew;
         public IReadOnlyList<ExpeditionEventData> AllEvents => events;
+        public List<CrewMemberData> allCrewMembers => crew; // Convenience for UI.
 
         private T Lookup<T>(Dictionary<string, T> dict, string id, string label) where T : GameDataObject
         {
