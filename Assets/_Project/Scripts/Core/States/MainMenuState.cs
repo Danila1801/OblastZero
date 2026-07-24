@@ -127,7 +127,8 @@ namespace OblastZero.Core.States
             buttonPanelGo.transform.SetParent(_root.transform, false);
             var buttonPanel = buttonPanelGo.AddComponent<VerticalLayoutGroup>();
             buttonPanel.spacing = 20;
-            buttonPanel.childControlSize = new Vector2(1, 0);
+            buttonPanel.childControlWidth = true;
+            buttonPanel.childControlHeight = false;
             buttonPanel.childForceExpandHeight = false;
             buttonPanel.padding = new RectOffset(0, 0, 0, 0);
 

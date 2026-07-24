@@ -201,8 +201,9 @@ namespace OblastZero.Services
                         delta.lootGained.Add(new WeightedItem
                         {
                             item = itemData,
-                            weight = weight,
-                            quantity = quantity,
+                            dropChance = weight,
+                            minQty = quantity,
+                            maxQty = quantity,
                         });
                     }
                 }

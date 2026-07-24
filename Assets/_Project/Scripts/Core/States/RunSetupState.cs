@@ -122,9 +122,10 @@ namespace OblastZero.Core.States
             containerLayout.preferredHeight = 700;
             var containerVLayout = containerGo.AddComponent<VerticalLayoutGroup>();
             containerVLayout.spacing = 30;
-            containerVLayout.padding = new RectOffset(40, 40, 40, 40);
-            containerVLayout.childControlSize = new Vector2(1, 0);
-            containerVLayout.childForceExpandHeight = false;
+                        containerVLayout.padding = new RectOffset(40, 40, 40, 40);
+                        containerVLayout.childControlWidth = true;
+                        containerVLayout.childControlHeight = false;
+                        containerVLayout.childForceExpandHeight = false;
 
             // Title.
             var titleGo = new GameObject("Title");
@@ -146,7 +147,8 @@ namespace OblastZero.Core.States
             crewButtonsGo.transform.SetParent(containerGo.transform, false);
             var crewHLayout = crewButtonsGo.AddComponent<HorizontalLayoutGroup>();
             crewHLayout.spacing = 15;
-            crewHLayout.childControlSize = new Vector2(0, 1);
+            crewHLayout.childControlWidth = false;
+            crewHLayout.childControlHeight = true;
             crewHLayout.childForceExpandWidth = false;
 
             // Populate crew from database.
@@ -212,7 +214,8 @@ namespace OblastZero.Core.States
             bottomButtonsGo.transform.SetParent(containerGo.transform, false);
             var bottomHLayout = bottomButtonsGo.AddComponent<HorizontalLayoutGroup>();
             bottomHLayout.spacing = 20;
-            bottomHLayout.childControlSize = new Vector2(0, 1);
+            bottomHLayout.childControlWidth = false;
+            bottomHLayout.childControlHeight = true;
             bottomHLayout.childForceExpandWidth = false;
 
             CreateSetupButton(bottomButtonsGo, "Begin Expedition", 200, 80, () =>
