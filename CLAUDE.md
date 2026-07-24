@@ -176,6 +176,16 @@ Post-**administrative**, not post-apocalyptic. Soviet/post-Soviet bureaucratic r
 
 ## 12. Verifying a compile WITHOUT Unity (learned the hard way, 24 Jul 2026)
 
+**Just run this — it does everything below for you:**
+
+```bash
+cd ~/projects/OblastZero && python3 tools/verify_steam_layer.py
+```
+
+39 checks: single-DLL staging, plugin metas, dead-API grep, DLL symbol existence, SO guid wiring, `dotnet build` with zero `error CS`, and type presence in the produced assembly. Exit 0 = green. It self-cleans its scratch files. Verified to actually fail on a deliberately reintroduced `Facepunch.*` call (negative control), so a green run means something.
+
+The manual procedure it automates, and why the naive routes fail:
+
 Unity holds an exclusive project lock while the Editor is open, so `Unity.exe -batchmode` will refuse to run and you cannot trust `Editor.log` alone — **it interleaves stale errors from previous compiles**, so old fixed errors look live. Always confirm which errors are current by comparing line numbers against the last `Asset Pipeline Refresh` entry.
 
 To get a real, independent compile check while Unity stays open:
