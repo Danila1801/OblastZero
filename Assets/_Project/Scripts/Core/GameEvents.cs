@@ -112,4 +112,35 @@ namespace OblastZero.Core
         public int OldRep;
         public int NewRep;
     }
+
+    // ─── Event engine (Phase B narrative) ─────────────────────────────────────
+    // Raised by ManagerEventBridge when the EventEngine presents an event to the player.
+    public struct EventPresentedEvent
+    {
+        public string EventId;
+    }
+
+    // Raised by ManagerEventBridge when the EventEngine finishes applying a resolved choice.
+    public struct EventResolvedEvent
+    {
+        public string EventId;
+        public int ChoiceIndex;
+        public bool Success;
+        public string ActingCrewInstanceId;
+        public string FollowUpEventId;
+    }
+
+    // ─── Bunker UI intents (UI → logic) ───────────────────────────────────────
+    // The bunker HUD raises these; SurvivalPhase2DState is the sole subscriber that turns them into
+    // BunkerPhaseController calls. UI never touches game logic directly — it only raises intents.
+
+    // "End Day" pressed. Advances the bunker turn (and may present an event).
+    public struct EndDayRequestedEvent { }
+
+    // A choice button pressed on the presented event. ActingCrewInstanceId may be null (bunker-wide).
+    public struct EventChoiceSelectedEvent
+    {
+        public int ChoiceIndex;
+        public string ActingCrewInstanceId;
+    }
 }

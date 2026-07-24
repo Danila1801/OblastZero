@@ -18,14 +18,23 @@ namespace OblastZero.Gameplay
     {
         private InventoryManager _inventory;
         private CrewManager _crew;
+        private FactionReputationManager _reputation;
+        private EventEngine _events;
         private bool _connected;
 
-        public void Connect(InventoryManager inventory, CrewManager crew)
+        /// <summary>
+        /// Wires the manager C# events onto the global EventBus. <paramref name="reputation"/> and
+        /// <paramref name="events"/> are optional so lightweight test harnesses can bridge just inventory/crew.
+        /// </summary>
+        public void Connect(InventoryManager inventory, CrewManager crew,
+                            FactionReputationManager reputation = null, EventEngine events = null)
         {
             if (_connected) Disconnect();
 
             _inventory = inventory;
             _crew = crew;
+            _reputation = reputation;
+            _events = events;
 
             _inventory.ItemAdded += OnItemAdded;
             _inventory.ItemRemoved += OnBunkerInventoryTouched;
@@ -35,6 +44,13 @@ namespace OblastZero.Gameplay
             _crew.CrewAdded += OnCrewAdded;
             _crew.CrewStatsChanged += OnCrewStatsChanged;
             _crew.CrewDied += OnCrewDied;
+
+            if (_reputation != null) _reputation.ReputationChanged += OnReputationChanged;
+            if (_events != null)
+            {
+                _events.EventPresented += OnEventPresented;
+                _events.EventResolved += OnEventResolved;
+            }
 
             _connected = true;
             Debug.Log("[ManagerEventBridge] Connected manager events to EventBus.");
@@ -52,6 +68,13 @@ namespace OblastZero.Gameplay
             _crew.CrewAdded -= OnCrewAdded;
             _crew.CrewStatsChanged -= OnCrewStatsChanged;
             _crew.CrewDied -= OnCrewDied;
+
+            if (_reputation != null) _reputation.ReputationChanged -= OnReputationChanged;
+            if (_events != null)
+            {
+                _events.EventPresented -= OnEventPresented;
+                _events.EventResolved -= OnEventResolved;
+            }
 
             _connected = false;
             Debug.Log("[ManagerEventBridge] Disconnected manager events from EventBus.");
@@ -95,5 +118,30 @@ namespace OblastZero.Gameplay
 
         private void OnCrewDied(CrewInstance c)
             => EventBus.Raise(new CrewDiedEvent { CrewInstanceId = c.instanceId, CrewDataId = c.crewDataId });
+
+        // ---- Faction reputation ----
+
+        private void OnReputationChanged(FactionId faction, int oldRep, int newRep)
+            => EventBus.Raise(new FactionReputationChangedEvent
+            {
+                FactionId = faction.ToString(),
+                OldRep = oldRep,
+                NewRep = newRep
+            });
+
+        // ---- Event engine ----
+
+        private void OnEventPresented(ExpeditionEventData evt)
+            => EventBus.Raise(new EventPresentedEvent { EventId = evt != null ? evt.id : null });
+
+        private void OnEventResolved(EventResolution res)
+            => EventBus.Raise(new EventResolvedEvent
+            {
+                EventId = res.eventId,
+                ChoiceIndex = res.choiceIndex,
+                Success = res.success,
+                ActingCrewInstanceId = res.actingCrewInstanceId,
+                FollowUpEventId = res.followUpQueued
+            });
     }
 }

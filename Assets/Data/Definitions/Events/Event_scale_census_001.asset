@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb22a860d66bd64fab0ee5688b2b1eb, type: 3}
+  m_Name: Event_scale_census_001
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.ExpeditionEventData
+  id: evt_scale_census_001
+  displayName: 
+  designerNotes: 
+  titleKey: A Registered Irregularity
+  narrativeTextKey: "A grey sedan idles at the access road. Two clerks. The senior
+    \u2014 registration 1148 \u2014 presents a folder listing this bunker's nominal
+    coordinates, dated last week, and requests a voluntary supplementary registration
+    of all personnel currently residing in the area. He does not raise his voice.
+    He writes."
+  prerequisites:
+    minDay: 1
+    maxDay: 0
+    factionContext: 0
+    minFactionRep: 0
+    maxFactionRep: 0
+    requiredCrewTraitIds: []
+    requiredItemsAny: []
+    regionTagsAny: []
+  baseWeight: 1
+  choices:
+  - choiceLabelKey: Submit the registration as requested.
+    requiredTraitsAny: []
+    blockedByTraits: []
+    successOutcome:
+      sanityDelta: -4
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained:
+      - item: {fileID: 11400000, guid: fc0e2f82e2ee8f34bbfec5e6d9be2cff, type: 2}
+        dropChance: 1
+        minQty: 2
+        maxQty: 2
+      itemsLost: []
+      reputationFaction: 10
+      reputationDelta: 12
+      followUpEventId: 
+      crewDeathChance: 0
+    failureOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 0
+      reputationDelta: 0
+      followUpEventId: 
+      crewDeathChance: 0
+    successChance: 1
+    successChanceFormula: 
+  - choiceLabelKey: Decline, citing an absence of countersignature.
+    requiredTraitsAny: []
+    blockedByTraits: []
+    successOutcome:
+      sanityDelta: -8
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 10
+      reputationDelta: -8
+      followUpEventId: 
+      crewDeathChance: 0
+    failureOutcome:
+      sanityDelta: -15
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 10
+      reputationDelta: -20
+      followUpEventId: 
+      crewDeathChance: 0
+    successChance: 0.65
+    successChanceFormula: 0.35 + 0.4 * (crew.charisma / 100)
+  - choiceLabelKey: 'Turn them away at the perimeter. [Steady Hands]'
+    requiredTraitsAny:
+    - trait_steady_hands
+    blockedByTraits: []
+    successOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained:
+      - item: {fileID: 11400000, guid: 07ebc56a606c6144ea5adbad54ea9a07, type: 2}
+        dropChance: 1
+        minQty: 1
+        maxQty: 1
+      itemsLost: []
+      reputationFaction: 10
+      reputationDelta: -30
+      followUpEventId: 
+      crewDeathChance: 0
+    failureOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: -25
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 10
+      reputationDelta: -35
+      followUpEventId: 
+      crewDeathChance: 0
+    successChance: 0.5
+    successChanceFormula: 0.2 + 0.5 * (crew.combat / 100)
+  sourceJsonPath: 

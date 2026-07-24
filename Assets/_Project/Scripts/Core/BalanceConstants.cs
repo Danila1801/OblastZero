@@ -51,6 +51,12 @@ namespace OblastZero.Core
         public const int RADIATION_SICKNESS_THRESHOLD = 60;
         public const int SANITY_AFFLICTION_THRESHOLD = 25;
 
+        // ─── Faction Reputation ─────────────────────────────────────────────────
+        /// <summary>Lower bound for any tracked faction's reputation (matches the [-100,100] SO Range attributes).</summary>
+        public const int REPUTATION_MIN = -100;
+        /// <summary>Upper bound for any tracked faction's reputation.</summary>
+        public const int REPUTATION_MAX = 100;
+
         // ─── Save System ────────────────────────────────────────────────────────
         public const string SAVE_FOLDER_NAME = "Saves";
         public const string PROFILE_SAVE_FILE = "profile.json";

@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb22a860d66bd64fab0ee5688b2b1eb, type: 3}
+  m_Name: Event_cordon_interdiction_001
+  m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Data.ExpeditionEventData
+  id: evt_cordon_interdiction_001
+  displayName: 
+  designerNotes: 
+  titleKey: The 14th Files a Report
+  narrativeTextKey: 'A Cordon patrol halts at the perimeter marker. The sergeant
+    reads from a clipboard: an interdiction notice, unsigned, effective pending review.
+    He does not explain what is being interdicted. He waits for you to make it his
+    problem.'
+  prerequisites:
+    minDay: 1
+    maxDay: 0
+    factionContext: 0
+    minFactionRep: 0
+    maxFactionRep: 0
+    requiredCrewTraitIds: []
+    requiredItemsAny: []
+    regionTagsAny: []
+  baseWeight: 1
+  choices:
+  - choiceLabelKey: Cooperate with the interdiction.
+    requiredTraitsAny: []
+    blockedByTraits: []
+    successOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost:
+      - {fileID: 11400000, guid: ee47f7a41c275564293331d3aedbffb6, type: 2}
+      reputationFaction: 20
+      reputationDelta: 10
+      followUpEventId: 
+      crewDeathChance: 0
+    failureOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 0
+      reputationDelta: 0
+      followUpEventId: 
+      crewDeathChance: 0
+    successChance: 1
+    successChanceFormula: 
+  - choiceLabelKey: Offer trade for continued passage.
+    requiredTraitsAny: []
+    blockedByTraits: []
+    successOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained:
+      - item: {fileID: 11400000, guid: 3bd21f94c89f80442b0e189e5237d8ed, type: 2}
+        dropChance: 1
+        minQty: 1
+        maxQty: 1
+      itemsLost: []
+      reputationFaction: 20
+      reputationDelta: 6
+      followUpEventId: 
+      crewDeathChance: 0
+    failureOutcome:
+      sanityDelta: 0
+      fatigueDelta: 0
+      radiationDelta: 0
+      healthDelta: 0
+      lootGained: []
+      itemsLost: []
+      reputationFaction: 20
+      reputationDelta: -12
+      followUpEventId: 
+      crewDeathChance: 0
+    successChance: 0.6
+    successChanceFormula: 0.3 + 0.5 * (crew.charisma / 100)
+  sourceJsonPath: 

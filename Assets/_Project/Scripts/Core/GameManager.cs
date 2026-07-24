@@ -26,6 +26,8 @@ namespace OblastZero.Core
 
         private InventoryManager _inventory;
         private CrewManager _crew;
+        private FactionReputationManager _reputation;
+        private EventEngine _events;
         private ManagerEventBridge _bridge;
 
         public GameStateMachine StateMachine => stateMachine;
@@ -35,6 +37,8 @@ namespace OblastZero.Core
         public GameDatabase Database => gameDatabase;
         public InventoryManager Inventory => _inventory;
         public CrewManager Crew => _crew;
+        public FactionReputationManager Reputation => _reputation;
+        public EventEngine Events => _events;
 
         private void Awake()
         {
@@ -92,11 +96,13 @@ namespace OblastZero.Core
 
             _inventory = new InventoryManager(gameDatabase);
             _crew = new CrewManager(gameDatabase);
+            _reputation = new FactionReputationManager();
+            _events = new EventEngine(gameDatabase, _inventory, _crew, _reputation);
 
             _bridge = new ManagerEventBridge();
-            _bridge.Connect(_inventory, _crew);
+            _bridge.Connect(_inventory, _crew, _reputation, _events);
 
-            Debug.Log("[GameManager] Data layer wired: GameDatabase + Inventory/Crew managers + EventBus bridge.");
+            Debug.Log("[GameManager] Data layer wired: GameDatabase + Inventory/Crew/Reputation managers + EventEngine + EventBus bridge.");
         }
 
         /// <summary>
@@ -124,6 +130,8 @@ namespace OblastZero.Core
             // Point the run-scoped managers at the fresh run.
             _inventory?.Bind(newRun);
             _crew?.Bind(newRun);
+            _reputation?.Bind(newRun);
+            _events?.Bind(newRun);
 
             Debug.Log($"[GameManager] New run begun. id={newRun.runId} site={scavengeSiteId} seed={rngSeed}");
 
