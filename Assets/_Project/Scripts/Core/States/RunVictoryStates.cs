@@ -72,8 +72,8 @@ namespace OblastZero.Core.States
         protected override string EndingTitle => "— STABILIZATION PROTOCOL COMPLETE —";
         protected override string EndingNarrative =>
             "The bunker is sealed. The Scale Society has filed your report.\n\n" +
-            "\"Expeditionary tenure concluded. All objectives met per Protocol 7. \" +
-            "Commendation level: Administrative. Your crew is transferred to the Reserve Registry.\n\n" +
+            "\"Expeditionary tenure concluded. All objectives met per Protocol 7. " +
+            "Commendation level: Administrative. Your crew is transferred to the Reserve Registry.\"\n\n" +
             "The buses will arrive tomorrow. Or the day after. The forms do not specify.";
     }
 
@@ -87,8 +87,8 @@ namespace OblastZero.Core.States
         protected override string EndingTitle => "— EXTRACTION PROTOCOL AUTHORIZED —";
         protected override string EndingNarrative =>
             "The Cordon checkpoint lights turn green. A vehicle radio crackles.\n\n" +
-            "\"Relief convoy en route. Stand by for extraction in twelve hours. \" +
-            "Pack what you can carry. Leave the rest.\n\n" +
+            "\"Relief convoy en route. Stand by for extraction in twelve hours. " +
+            "Pack what you can carry. Leave the rest.\"\n\n" +
             "Your crew has survived. The objective is complete. The rest is paperwork.";
     }
 
