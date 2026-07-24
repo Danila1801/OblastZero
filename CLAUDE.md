@@ -4,6 +4,45 @@ Always-on rules for every Claude Code session in this repo. Read this first. It 
 
 ---
 
+## 0. Status & timeline — update this section every session
+
+**Deadline: content-complete beta by 31 Aug 2026 (~6 weeks from 20 Jul 2026) → Early Access ship mid-September 2026.** Early Access is the ship vehicle, not a scope cut.
+
+**Verified build status** (confirmed by reading the actual code on 20 Jul 2026, not assumed):
+
+| Layer | Status |
+|---|---|
+| Core framework (state machine, EventBus, ServiceLocator, GameManager, bifurcated save) | ✅ Built |
+| Data schemas (ItemData, ExpeditionEventData, FactionData, AnomalyData, MutantData, CrewMemberData, TraitData, GameDatabase) | ✅ Built |
+| Content instances (actual `.asset` files using those schemas) | 🔶 ~14 seed assets + 3 seed events (`Assets/Data/Definitions/Events/`, in Oblast voice, referencing seed items/factions) — need 500+ items / 1000+ events |
+| Scenes & bootstrap rig | ✅ Built 21 Jul 2026 — `Assets/Scenes/_Bootstrap.unity` (GameManager + GameStateMachine + all 6 implemented state components as children + EventSystem/InputSystemUIInputModule, `gameDatabase`+`stateMachine` refs wired) and `Assets/Scenes/Bunker.unity` (camera + `BunkerUI` GameObject with both HUDs). Both in Build Settings (`_Bootstrap`=0, `Bunker`=1). `SurvivalPhase2DState` loads/unloads `Bunker` additively via `ISceneLoader`. **Play from `_Bootstrap`.** No scavenge scene yet (3D phase runs headless). |
+| Scavenge phase, Phase 1 (3D) | ✅ Substantial — controller, pickup, player controller, emission timer, inventory/crew managers, has tests |
+| Hybrid 2.5D rendering (`HybridDepthRenderPass`) | ✅ Implemented, not a stub |
+| Bunker day loop, Phase 2 (2D) | ✅ Built 20 Jul 2026 — `BunkerDayController` (day tick) + `BunkerPhaseController` (turn = day tick → present event → resolve; blocks a new day while an event is pending; `IsWipe`). `SurvivalPhase2DState` drives it from UI intents (`EndDayRequestedEvent`/`EventChoiceSelectedEvent`) and resolves run-end. `BunkerPhaseSmokeTest` 17/17 pass. |
+| Event engine (resolves `ExpeditionEventData` branching choices) | ✅ Built 20 Jul 2026 — `EventEngine` (selection/gating/resolution) + `RunRng` (deterministic seed+counter) + `FormulaEvaluator` (`successChanceFormula`) + `CrewFormulaContext`. Wired into `GameManager` (`.Events`), bridged to EventBus. `EventEngineSmokeTest` 24/24 pass. Owns `CompletedEventIds`/`QueuedEventIds`; all other effects delegate to managers. |
+| Faction reputation manager | ✅ Built 20 Jul 2026 — `FactionReputationManager` (sole owner of `repScaleSociety/Cordon/Kafedra`, clamps to `BalanceConstants.REPUTATION_MIN/MAX`, bridged to EventBus). `GameManager.Reputation`. |
+| UI | 🔶 Built 20 Jul, live-verified 21 Jul 2026 — `BunkerHUD` (day/crew/rations/reputation readouts + End Day button) and `EventModalUI` (title/narrative/choice buttons with gated-choice disabling + outcome panel), both self-building EventBus-driven canvases like `ScavengeHUD`, raising intents only. Placed in `Bunker.unity`. **Still missing: main menu, run-setup, run-summary screens.** Localization keys render raw via `LocalizedStrings` until a language table loads. |
+| Save/load round-trip test | ✅ Verified 20 Jul 2026 — `DataLayerSmokeTest` 24/24, `BunkerDayLoopTest` runs clean (6-day starvation loop, deaths + EventBus events fire). NOTE: these are `[ContextMenu]` MonoBehaviours, NOT NUnit — Test Runner doesn't see them; run via `execute_code`. |
+| Steamworks integration | ❌ Not started |
+| Repo ↔ GitHub sync | ✅ Fixed 20 Jul 2026 — `main` matches `origin/main`, full project committed, `Books_STALKER/` correctly gitignored |
+| Unity MCP bridge | ✅ Connected 20 Jul 2026 — Claude Code must be launched from this folder (`C:\Users\danil\projects\OblastZero`) for the bridge to attach |
+
+**Next steps, in priority order:**
+1. Compile + console health check (no errors) — cheap, do at the start of every session.
+2. ✅ done 20–21 Jul: save/load smoke tests · Event Engine · FactionReputationManager · day-loop event presentation (`BunkerPhaseController`) · bunker UI (`BunkerHUD` + `EventModalUI`) · 3 seed events · `_Bootstrap`+`Bunker` scenes & wiring · **live Play-mode test of the full loop** (boot → BeginNewRun → simulated haul → cutscene handoff → bunker scene loads → End Day → day tick consumes ration + drains sanity → census event presented in modal → resolve choice → rep +12 / sanity −4 / +2 loot applied → outcome panel → Continue → Day 2 presents next event; zero console errors).
+3. **Missing run-end states**: `GameState.RunFailed` / `RunVictory_*` have NO `IGameState` implementations, so `SurvivalPhase2DState.EndRun`→`RequestTransition(RunFailed)` will log "No state registered". Build `RunFailedState` + the 4 victory states (run summary → meta rewards → back to MainMenu) before a run can actually end. **Highest priority** — a wipe currently dead-ends.
+4. **Menu/flow screens**: `MainMenuState`/`RunSetupState` have no UI, and there's no scavenge scene (3D phase is headless — `DebugRunLauncher` jumps straight in). Build main menu, run-setup (crew/site/seed) so a run can start without driving the state machine by hand.
+5. **JSON event ingestion**: a loader that deserializes `Assets/Data/Resources/Events/*.json` (bible §6.2 schema — note JSON uses `narrativeText`/`itemId`/`reputationFactionSecondary`, which the current `ExpeditionEventData` SO does not all model 1:1) into `GameDatabase.events`, plus a `LocalizedStrings` population pass. The engine is source-agnostic; it already consumes whatever the database holds.
+6. Content blitz: generate the 500+ items / 1000+ events to schema (worth its own Skill).
+7. Steamworks (Facepunch.Steamworks) integration.
+8. Polish pass, ship Early Access.
+
+**Bunker UI ↔ logic contract** (for scene/flow work): HUD raises `EndDayRequestedEvent` and `EventChoiceSelectedEvent`; `SurvivalPhase2DState` is the ONLY subscriber that turns them into `BunkerPhaseController` calls. HUDs refresh off `DayAdvancedEvent`, `CrewStatChangedEvent`, `CrewDiedEvent`, `BunkerInventoryChangedEvent`, `FactionReputationChangedEvent`, `EventPresentedEvent`, `EventResolvedEvent`. Both HUDs build their own canvas on `Awake` — just add the component to a GameObject in the bunker scene.
+
+**Event Engine API quick-reference** (for the UI/day-loop work): `engine.SelectNextEvent(regionTags, actingCrewInstanceId)` → `ExpeditionEventData?` (queued follow-ups take priority over the weighted pool); `engine.AvailableChoiceIndices(evt, actingId)` for enabling buttons; `engine.Resolve(evt, choiceIndex, actingId)` → `EventResolution` (full effect report). Subscribe to `EventPresentedEvent` / `EventResolvedEvent` / `FactionReputationChangedEvent` on the `EventBus` for UI refresh. `successChanceFormula` variables: `crew.combat`, `crew.charisma`, `crew.{health,sanity,fatigue,radiation}[_norm]` (see `CrewFormulaContext`).
+
+---
+
 ## 1. What this is
 
 **Oblast Zero** — a commercial roguelite survival game shipping on Steam. Solo dev (Leonid), heavy agentic workflow. This is a **full commercial release**, not a prototype or portfolio piece. Build production-quality, complete, modular code. Be direct and decisive — no hedging, no "you might consider," no suggestions to scale the project down.
