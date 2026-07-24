@@ -1,5 +1,8 @@
 // Assets/_Project/Scripts/Steam/SteamAchievementsService.cs
 using UnityEngine;
+#if STEAMWORKS
+using Steamworks.Data;
+#endif
 
 namespace OblastZero.Steam
 {
@@ -18,15 +21,10 @@ namespace OblastZero.Steam
 
             try
             {
-                var achv = Facepunch.Steamworks.SteamUserStats.FindAchievement(achievementKey);
-                if (achv == null)
+                var achv = new Achievement(achievementKey);
+                if (!achv.State)
                 {
-                    Debug.LogWarning($"[SteamAchievements] Achievement '{achievementKey}' not found. Check Steamworks Admin.");
-                    return;
-                }
-                if (!achv.State) // only unlock if not already
-                {
-                    achv.Trigger(false); // false = don't show popup? true = show
+                    achv.Trigger();
                     Debug.Log($"[SteamAchievements] Unlocked '{achievementKey}'.");
                 }
             }
@@ -49,10 +47,10 @@ namespace OblastZero.Steam
         {
 #if STEAMWORKS
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return false;
+            if (string.IsNullOrEmpty(achievementKey)) return false;
             try
             {
-                var achv = Facepunch.Steamworks.SteamUserStats.FindAchievement(achievementKey);
-                return achv?.State ?? false;
+                return new Achievement(achievementKey).State;
             }
             catch { return false; }
 #else

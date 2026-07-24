@@ -1,5 +1,8 @@
 // Assets/_Project/Scripts/Steam/SteamStatsService.cs
 using UnityEngine;
+#if STEAMWORKS
+using Steamworks;
+#endif
 
 namespace OblastZero.Steam
 {
@@ -18,14 +21,8 @@ namespace OblastZero.Steam
 
             try
             {
-                var stat = Facepunch.Steamworks.SteamUserStats.FindStat(statKey);
-                if (stat == null)
-                {
-                    Debug.LogWarning($"[SteamStats] Stat '{statKey}' not found. Check Steamworks Admin.");
-                    return;
-                }
-                stat.IntValue = value;
-                Facepunch.Steamworks.SteamUserStats.StoreStats();
+                SteamUserStats.SetStat(statKey, value);
+                SteamUserStats.StoreStats();
                 Debug.Log($"[SteamStats] '{statKey}' = {value}");
             }
             catch (System.Exception ex)
@@ -42,10 +39,12 @@ namespace OblastZero.Steam
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return;
             try
             {
-                var current = GetInt(statKey);
-                SetInt(statKey, current + delta);
+                SetInt(statKey, GetInt(statKey) + delta);
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[SteamStats] Failed to increment '{statKey}': {ex.Message}");
+            }
 #endif
         }
 
@@ -54,10 +53,10 @@ namespace OblastZero.Steam
         {
 #if STEAMWORKS
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return 0;
+            if (string.IsNullOrEmpty(statKey)) return 0;
             try
             {
-                var stat = Facepunch.Steamworks.SteamUserStats.FindStat(statKey);
-                return stat?.IntValue ?? 0;
+                return SteamUserStats.GetStatInt(statKey);
             }
             catch { return 0; }
 #else
@@ -65,7 +64,7 @@ namespace OblastZero.Steam
 #endif
         }
 
-        /// <summary>Only-store-max pattern: set stat only if new value > current.</summary>
+        /// <summary>Only-store-max pattern: set stat only if new value &gt; current.</summary>
         public static void SetIntIfHigher(string statKey, int value)
         {
             var current = GetInt(statKey);

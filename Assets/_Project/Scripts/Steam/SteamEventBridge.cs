@@ -3,18 +3,28 @@
 // Add this component alongside SteamManager (same GameObject is fine).
 using UnityEngine;
 using OblastZero.Core;
-using OblastZero.Data;
 
 namespace OblastZero.Steam
 {
     /// <summary>
-    /// Bridges game events (RunEnded, DayAdvanced, RepChanged, CrewDied) to Steam stats + achievements.
-    /// Attach to the same [SteamManager] GameObject, or any persistent singleton.
+    /// Bridges game events (RunStarted, RunEnded, DayAdvanced, RepChanged, CrewDied) to Steam
+    /// stats + achievements. Attach to the same [SteamManager] GameObject, or any persistent singleton.
+    /// All Steam calls are no-ops without the STEAMWORKS define, so this is safe to keep enabled.
     /// </summary>
     public class SteamEventBridge : MonoBehaviour
     {
+        // Faction string ids as produced by ManagerEventBridge (FactionId.ToString()).
+        private const string FactionScaleSociety = "ScaleSociety";
+        private const string FactionCordon = "Cordon";
+        private const string FactionKafedra = "Kafedra";
+
+        // Reputation threshold that counts as "maxed" for achievement purposes.
+        private const int MaxRepAchievementThreshold = 60;
+
         private SteamConfig cfg;
-        private int longestRunCache;
+
+        /// <summary>Highest day number reached during the current run (reset on RunStarted).</summary>
+        private int currentRunDay;
 
         private void Awake()
         {
@@ -23,16 +33,20 @@ namespace OblastZero.Steam
 
         private void OnEnable()
         {
-            if (cfg == null) cfg = SteamManager.Instance?.Config;
-            if (cfg == null) return;
-
-            longestRunCache = SteamStatsService.GetInt(cfg.statLongestRunDays);
+            if (cfg == null) cfg = SteamManager.Instance ? SteamManager.Instance.Config : null;
+            if (cfg == null)
+            {
+                Debug.LogWarning("[SteamEventBridge] No SteamConfig available — bridge inactive.");
+                return;
+            }
 
             EventBus.Subscribe<RunStartedEvent>(OnRunStarted);
             EventBus.Subscribe<RunEndedEvent>(OnRunEnded);
             EventBus.Subscribe<DayAdvancedEvent>(OnDayAdvanced);
             EventBus.Subscribe<FactionReputationChangedEvent>(OnRepChanged);
             EventBus.Subscribe<CrewDiedEvent>(OnCrewDied);
+
+            Debug.Log("[SteamEventBridge] Subscribed to game events.");
         }
 
         private void OnDisable()
@@ -46,6 +60,7 @@ namespace OblastZero.Steam
 
         private void OnRunStarted(RunStartedEvent e)
         {
+            currentRunDay = 0;
             SteamAchievementsService.Unlock(cfg.achvFirstRun);
             SteamStatsService.IncrementInt(cfg.statRunsStarted);
         }
@@ -53,59 +68,82 @@ namespace OblastZero.Steam
         private void OnRunEnded(RunEndedEvent e)
         {
             SteamStatsService.IncrementInt(cfg.statRunsEnded);
+            SteamStatsService.SetIntIfHigher(cfg.statLongestRunDays, currentRunDay);
 
-            // Victory achievements (depends on how RunEndReason enum is shaped)
-            var reason = e.Reason.ToString();
-            if (reason.Contains("Victory") || reason.Contains("Win"))
+            switch (e.Reason)
             {
-                SteamAchievementsService.Unlock(cfg.achvFirstVictory);
-            }
-            else if (reason.Contains("Fail") || reason.Contains("Wipe"))
-            {
-                SteamAchievementsService.Unlock(cfg.achvFirstWipe);
+                case RunEndReason.VictoryStabilization:
+                case RunEndReason.VictoryRelief:
+                case RunEndReason.VictoryAdaptation:
+                case RunEndReason.VictoryIndependent:
+                    SteamAchievementsService.Unlock(cfg.achvFirstVictory);
+                    UnlockAllEndingsIfComplete();
+                    break;
+
+                case RunEndReason.AllCrewDead:
+                case RunEndReason.BunkerBreach:
+                    SteamAchievementsService.Unlock(cfg.achvFirstWipe);
+                    break;
             }
         }
 
         private void OnDayAdvanced(DayAdvancedEvent e)
         {
-            SteamStatsService.IncrementInt(cfg.statDaysSurvivedTotal);
+            currentRunDay = e.NewDay;
 
-            // Update longest-run stat
-            // DayAdvancedEvent may expose DayNumber; if not, we infer by incrementing
-            // For now: compare against cached longest and update
-            // (Caller is responsible for knowing the current run's day count — see GameManager.RunData)
-            // We'll do a simple approach: track local counter per run via RunStartedEvent reset
+            SteamStatsService.IncrementInt(cfg.statDaysSurvivedTotal);
+            SteamStatsService.SetIntIfHigher(cfg.statLongestRunDays, currentRunDay);
+
+            if (currentRunDay >= 10) SteamAchievementsService.Unlock(cfg.achvSurvive10Days);
+            if (currentRunDay >= 30) SteamAchievementsService.Unlock(cfg.achvSurvive30Days);
+            if (currentRunDay >= 60) SteamAchievementsService.Unlock(cfg.achvSurvive60Days);
         }
 
         private void OnRepChanged(FactionReputationChangedEvent e)
         {
-            if (cfg == null) return;
-            var newRep = e.NewReputation;
-
-            // Max-rep achievements
-            if (newRep >= 60)
+            if (e.NewRep >= MaxRepAchievementThreshold)
             {
-                switch (e.Faction)
+                switch (e.FactionId)
                 {
-                    case FactionId.ScaleSociety:
+                    case FactionScaleSociety:
                         SteamAchievementsService.Unlock(cfg.achvMaxRepScaleSociety);
                         break;
-                    case FactionId.Cordon:
+                    case FactionCordon:
                         SteamAchievementsService.Unlock(cfg.achvMaxRepCordon);
                         break;
-                    case FactionId.Kafedra:
+                    case FactionKafedra:
                         SteamAchievementsService.Unlock(cfg.achvMaxRepKafedra);
                         break;
                 }
             }
 
-            // Highest-rep stat
-            SteamStatsService.SetIntIfHigher(cfg.statHighestRep, newRep);
+            SteamStatsService.SetIntIfHigher(cfg.statHighestRep, e.NewRep);
         }
 
         private void OnCrewDied(CrewDiedEvent e)
         {
             SteamStatsService.IncrementInt(cfg.statCrewDeathsTotal);
+        }
+
+        /// <summary>
+        /// Grants the completionist achievement once every victory ending has been unlocked on Steam.
+        /// Uses Steam itself as the source of truth so it survives local save wipes.
+        /// </summary>
+        private void UnlockAllEndingsIfComplete()
+        {
+            if (SteamAchievementsService.IsUnlocked(cfg.achvAllEndings)) return;
+
+            // The four victory endings each map to a Steam achievement key derived from the
+            // ending-specific achievements configured in SteamConfig. Until per-ending keys exist,
+            // the completionist award is gated on the first-victory key plus all rep maxes,
+            // which is the strongest signal currently modelled in config.
+            var complete =
+                SteamAchievementsService.IsUnlocked(cfg.achvFirstVictory) &&
+                SteamAchievementsService.IsUnlocked(cfg.achvMaxRepScaleSociety) &&
+                SteamAchievementsService.IsUnlocked(cfg.achvMaxRepCordon) &&
+                SteamAchievementsService.IsUnlocked(cfg.achvMaxRepKafedra);
+
+            if (complete) SteamAchievementsService.Unlock(cfg.achvAllEndings);
         }
     }
 }

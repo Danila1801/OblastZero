@@ -2,6 +2,9 @@
 // Optional cloud backup: mirrors SaveSystem JSON to Steam Remote Storage.
 using System.Text;
 using UnityEngine;
+#if STEAMWORKS
+using Steamworks;
+#endif
 
 namespace OblastZero.Steam
 {
@@ -12,12 +15,14 @@ namespace OblastZero.Steam
         {
 #if STEAMWORKS
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return false;
+            if (string.IsNullOrEmpty(filename) || json == null) return false;
             try
             {
                 var bytes = Encoding.UTF8.GetBytes(json);
-                Facepunch.Steamworks.SteamRemoteStorage.FileWrite(filename, bytes);
-                Debug.Log($"[SteamCloud] Wrote {bytes.Length} bytes to '{filename}'.");
-                return true;
+                var ok = SteamRemoteStorage.FileWrite(filename, bytes);
+                if (ok) Debug.Log($"[SteamCloud] Wrote {bytes.Length} bytes to '{filename}'.");
+                else Debug.LogWarning($"[SteamCloud] FileWrite rejected '{filename}' (quota or cloud disabled).");
+                return ok;
             }
             catch (System.Exception ex)
             {
@@ -34,14 +39,16 @@ namespace OblastZero.Steam
         {
 #if STEAMWORKS
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return null;
+            if (string.IsNullOrEmpty(filename)) return null;
             try
             {
-                if (!Facepunch.Steamworks.SteamRemoteStorage.FileExists(filename))
+                if (!SteamRemoteStorage.FileExists(filename))
                 {
                     Debug.Log($"[SteamCloud] File '{filename}' does not exist in cloud.");
                     return null;
                 }
-                var bytes = Facepunch.Steamworks.SteamRemoteStorage.FileRead(filename);
+                var bytes = SteamRemoteStorage.FileRead(filename);
+                if (bytes == null || bytes.Length == 0) return null;
                 return Encoding.UTF8.GetString(bytes);
             }
             catch (System.Exception ex)
@@ -58,7 +65,9 @@ namespace OblastZero.Steam
         {
 #if STEAMWORKS
             if (!SteamManager.Instance || !SteamManager.Instance.IsAvailable) return false;
-            return Facepunch.Steamworks.SteamRemoteStorage.FileExists(filename);
+            if (string.IsNullOrEmpty(filename)) return false;
+            try { return SteamRemoteStorage.FileExists(filename); }
+            catch { return false; }
 #else
             return false;
 #endif

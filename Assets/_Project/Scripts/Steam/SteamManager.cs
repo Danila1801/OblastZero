@@ -1,6 +1,9 @@
 // Assets/_Project/Scripts/Steam/SteamManager.cs
 // Compile-gated: without STEAMWORKS define, this class is an inert no-op singleton.
 using UnityEngine;
+#if STEAMWORKS
+using Steamworks;
+#endif
 
 namespace OblastZero.Steam
 {
@@ -18,10 +21,6 @@ namespace OblastZero.Steam
 
         public bool IsInitialized { get; private set; }
         public bool IsAvailable { get; private set; }
-
-#if STEAMWORKS
-        private Facepunch.Steamworks.Client steamClient;
-#endif
 
         public static void Initialize(SteamConfig cfg)
         {
@@ -49,8 +48,9 @@ namespace OblastZero.Steam
 #if STEAMWORKS
             if (Instance != null && Instance.IsInitialized)
             {
-                Facepunch.Steamworks.SteamClient.Shutdown();
+                SteamClient.Shutdown();
                 Instance.IsInitialized = false;
+                Instance.IsAvailable = false;
                 Debug.Log("[SteamManager] Steam client shut down.");
             }
 #endif
@@ -61,21 +61,19 @@ namespace OblastZero.Steam
         {
             try
             {
-                // Facepunch auto-init via steam_appid.txt in dev, or App ID arg at runtime
-                Facepunch.Steamworks.SteamClient.Init(cfg.appId, async: false);
-                steamClient = Facepunch.Steamworks.SteamClient.Instance ?? Facepunch.Steamworks.SteamClient.AddDisposable(this);
+                // App ID resolves from steam_appid.txt in the Editor / build folder,
+                // or from the launching Steam client at runtime.
+                SteamClient.Init(cfg.appId, asyncCallbacks: false);
 
                 IsInitialized = true;
-                IsAvailable = Facepunch.Steamworks.SteamClient.IsValid;
+                IsAvailable = SteamClient.IsValid;
 
                 if (IsAvailable)
                 {
-                    var user = Facepunch.Steamworks.SteamClient.Name;
-                    var id = Facepunch.Steamworks.SteamClient.SteamId;
-                    Debug.Log($"[SteamManager] Initialized for '{user}' ({id}). App {cfg.appId}.");
+                    Debug.Log($"[SteamManager] Initialized for '{SteamClient.Name}' ({SteamClient.SteamId}). App {cfg.appId}.");
 
-                    // Kick initial stat/achievement fetch
-                    Facepunch.Steamworks.SteamUserStats.RequestCurrentStats();
+                    // Kick initial stat/achievement fetch so reads are warm.
+                    SteamUserStats.RequestCurrentStats();
                 }
                 else
                 {
@@ -94,8 +92,8 @@ namespace OblastZero.Steam
         {
             if (IsAvailable)
             {
-                // Pump Steam callbacks each frame (achievements unlock, stat updates)
-                Facepunch.Steamworks.SteamClient.RunCallbacks();
+                // Pump Steam callbacks each frame (achievements unlock, stat updates).
+                SteamClient.RunCallbacks();
             }
         }
 
