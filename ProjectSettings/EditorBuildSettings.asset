@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Bunker.unity
     guid: efeb53894c418b64a8302a762049a53a
+  - enabled: 1
+    path: Assets/Scenes/Scavenge.unity
+    guid: c354a28639290b89175206d41d320351
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

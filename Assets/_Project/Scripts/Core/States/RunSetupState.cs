@@ -58,8 +58,8 @@ namespace OblastZero.Core.States
             var gm = GameManager.Instance;
             gm.BeginNewRun(siteId, seed);
 
-            // Transition to Phase A (3D scavenge).
-            // NOTE: Phase A is headless (DebugRunLauncher drives it). Real 3D scene comes in Step 3.
+            // Transition to Phase A. ScavengePhase3DState owns the emission clock and loads the
+            // Scavenge level additively on top of _Bootstrap.
             RequestTransition(GameState.ScavengePhase3D);
         }
 
