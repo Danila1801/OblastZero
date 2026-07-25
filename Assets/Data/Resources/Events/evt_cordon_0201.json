@@ -30,7 +30,16 @@
         "crewDeathChance": 0.0,
         "followUpEventId": ""
       },
-      "failureOutcome": {}
+      "failureOutcome": {
+        "sanityDelta": -4,
+        "fatigueDelta": 15,
+        "radiationDelta": 5,
+        "healthDelta": -10,
+        "reputationFaction": "Cordon",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
     },
     {
       "choiceLabel": "Stall for time.",

@@ -30,7 +30,16 @@
         "crewDeathChance": 0.0,
         "followUpEventId": ""
       },
-      "failureOutcome": {}
+      "failureOutcome": {
+        "sanityDelta": -8,
+        "fatigueDelta": 5,
+        "radiationDelta": 5,
+        "healthDelta": -10,
+        "reputationFaction": "ScaleSociety",
+        "reputationDelta": 0,
+        "crewDeathChance": 0.0,
+        "followUpEventId": ""
+      }
     },
     {
       "choiceLabel": "Decline, citing an absence of countersignature.",
