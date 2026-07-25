@@ -168,8 +168,14 @@ Post-**administrative**, not post-apocalyptic. Soviet/post-Soviet bureaucratic r
 
 ## 11. Workflow notes
 
-- **Unity MCP bridge will not start while there are compile errors.** Green console first, then agent work.
-- MCP runs HTTP local on **port 8090** (8080 conflicts with common services). Unity must be open for live scene/console access.
+- **Unity MCP bridge: if tools report "No Unity Editor instances found," check the transport before you go hunting a compile error.** (Corrected 25 Jul 2026 — this section previously blamed compile errors, which sent a session chasing a phantom problem while `verify_steam_layer.py` sat at 39/39 green.) A Claude Code session's MCP server is launched over **stdio** and discovers Unity by scanning its direct TCP bridge port (6400-ish). If Unity's *MCP For Unity* window has Transport set to **HTTP Local** (`http://127.0.0.1:8090`), Unity dials out to its own Python HTTP server and **never opens that TCP port** — so discovery finds zero instances even though Unity's window shows a green "Session Active". Diagnose, don't guess:
+  ```bash
+  netstat -ano | grep LISTENING | grep -E ":(8090|64[0-9][0-9])"   # only 8090 listening = HTTP Local mode
+  tail -20 ~/AppData/Local/UnityMCP/Logs/unity_mcp_server.log      # logs "Discovered 0 Unity instances"
+  ```
+  Fix: switch Transport off HTTP Local in that window. No restart needed on the agent side — discovery runs per call. Compile errors are a *separate* failure mode; confirm which one you have.
+- Unity must be open for live scene/console access, and Claude Code must be launched from this folder.
+- **Unity still auto-imports files written to `Assets/` by an outside process.** Folder `.meta` creation and shader-variant compilation in `Logs/AssetImportWorker0.log` are usable evidence that hand-authored assets were accepted, even with the bridge down.
 - Roadmap (mental model): 0–1 Core framework → 2 Data layer → 3 3D scavenge → 4 2D bunker engine → 5 Event system → 6 Meta-progression → 7 Polish → 8 Steamworks (Facepunch.Steamworks) → 9 Content blitz → 10 Beta/ship.
 
 ---
@@ -222,4 +228,29 @@ Notes:
   python3 -c "d=open('Assets/Plugins/Facepunch.Steamworks/Facepunch.Steamworks.Win64.dll','rb').read().decode('latin-1');
   print([k for k in ['SteamClient','SetStat','StoreStats','FileWrite'] if k in d])"
   ```
+
+---
+
+## 14. Authoring scenes without the Editor (learned 25 Jul 2026 building `Scavenge.unity`)
+
+`Assets/Scenes/Scavenge.unity` was written as text with Unity's bridge unreachable, and Unity accepted it. The approach generalises — read this before hand-authoring any scene or prefab.
+
+**Generate, never hand-write.** `tools/generate_scavenge_scene.py` (level plan) + `tools/scavenge_scene_lib.py` (YAML emitters, no level knowledge) own that scene. Output is **byte-deterministic** — re-running produces an identical file, verified by md5 — because GUIDs come from `md5('OblastZero::' + name)` and nothing samples time or randomness. Consequences:
+- **Never hand-edit `Scavenge.unity`.** The next regeneration silently overwrites you. Change the coordinate plan; the diff stays readable.
+- Determinism is what makes regeneration safe to run at any time, including as a pre-commit sanity check.
+
+**Facts you cannot guess and must harvest from the project:**
+- Script GUIDs come from the real `.meta` files — `grep guid Assets/.../Foo.cs.meta`. A guessed GUID yields a silently unassigned component, not an error.
+- Built-in primitive mesh fileIDs (guid `0000000000000000e000000000000000`): Cube `10202`, Cylinder `10206`, Sphere `10207`, Capsule `10208`, Plane `10209`, Quad `10210`.
+- URP Lit shader guid `933532a4fcc9baf4fa0491de14d08ed7`. A partial `m_SavedProperties` is fine — Unity fills shader defaults. Emissive needs `m_ValidKeywords: [_EMISSION]` **and** `m_LightmapFlags: 2`.
+- Unity Euler order is **ZXY intrinsic**. Get this wrong and every rotated prop lands somewhere plausible but wrong.
+- **Primitive mesh extents are not all unit.** A Cylinder/Capsule mesh is **2 units tall**, so a `1,1,1` BoxCollider on a cylinder is half-height. Keep a per-primitive local-extent table.
+
+**Validate in the generator and refuse to write on failure.** Four gates earned their keep on the first run: pickup ids against the live database, every fileID/GUID reference resolving, an **OBB** burial + support test (world AABB gives false positives on rotated solids), and a walkability flood-fill using the real CharacterController metrics (h 1.8 / r 0.35 / step 0.32). Findings: 6 pickups buried inside solids, and 2 routes sealed because **box colliders on debris meshes** turned ankle-deep grain spills and fallen beams into unclimbable 0.85 m walls. Model climbs as capped and drops as free, so the flood-fill proves pickups are **escapable**, not merely reachable — otherwise a pit is a run-ending trap that reads as fine.
+
+**Every validator needs a negative control.** Deleting `Pit_Ramp` must fail the escape check. A gate never observed failing is decoration.
+
+**Independent post-checks worth running on emitted YAML:** parses under PyYAML as N documents, no duplicate fileIDs, `m_Children`/`m_Father` mutually consistent, `SceneRoots` matches the real roots, every component's `m_GameObject` back-reference valid, quaternions unit-length.
+
+**Per-renderer material overrides:** use `MaterialPropertyBlock` + `SetPropertyBlock`. Writing `sharedMaterial` mutates the shared asset — every fixture animates in lockstep and the `.mat` comes back dirty in the Editor; `.material` instantiates a material per object instead.
 
