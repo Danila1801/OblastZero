@@ -1,0 +1,17 @@
+{
+  "id": "item_pulsing_form_stamp",
+  "displayName": "Pulsing Form Stamp",
+  "category": "Artifact",
+  "weightKg": 1.12,
+  "durability": 60,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 40.0,
+  "baseTradeValueScale": 89,
+  "baseTradeValueCordon": 51,
+  "baseTradeValueKafedra": 81
+}

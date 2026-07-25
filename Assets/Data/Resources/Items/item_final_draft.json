@@ -1,0 +1,18 @@
+{
+  "id": "item_final_draft",
+  "displayName": "Final Draft",
+  "category": "Artifact",
+  "weightKg": 0.01,
+  "durability": 1,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Active",
+    "Rewrite",
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 500,
+  "baseTradeValueCordon": 200,
+  "baseTradeValueKafedra": 600
+}

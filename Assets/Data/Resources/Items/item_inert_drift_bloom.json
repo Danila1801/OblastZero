@@ -1,0 +1,16 @@
+{
+  "id": "item_inert_drift_bloom",
+  "displayName": "Inert Drift Bloom",
+  "category": "Artifact",
+  "weightKg": 0.42,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 81,
+  "baseTradeValueCordon": 36,
+  "baseTradeValueKafedra": 103
+}

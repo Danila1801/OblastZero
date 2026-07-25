@@ -1,0 +1,16 @@
+{
+  "id": "item_inert_late_filing",
+  "displayName": "Inert Late Filing",
+  "category": "Artifact",
+  "weightKg": 0.64,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 66,
+  "baseTradeValueCordon": 55,
+  "baseTradeValueKafedra": 125
+}

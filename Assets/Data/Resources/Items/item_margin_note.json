@@ -1,0 +1,18 @@
+{
+  "id": "item_margin_note",
+  "displayName": "Margin Note",
+  "category": "Artifact",
+  "weightKg": 0.03,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Reroll",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 12.0,
+  "baseTradeValueScale": 180,
+  "baseTradeValueCordon": 90,
+  "baseTradeValueKafedra": 240
+}

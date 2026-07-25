@@ -1,0 +1,18 @@
+{
+  "id": "item_notarized_heart",
+  "displayName": "Notarized Heart",
+  "category": "Artifact",
+  "weightKg": 0.28,
+  "durability": 100,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Passive",
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 8.0,
+  "baseTradeValueScale": 320,
+  "baseTradeValueCordon": 150,
+  "baseTradeValueKafedra": 400
+}

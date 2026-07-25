@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_pale_register",
+  "displayName": "Dormant Pale Register",
+  "category": "Artifact",
+  "weightKg": 0.3,
+  "durability": 90,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 19.6,
+  "baseTradeValueScale": 100,
+  "baseTradeValueCordon": 36,
+  "baseTradeValueKafedra": 141
+}

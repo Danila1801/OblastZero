@@ -1,0 +1,17 @@
+{
+  "id": "item_dormant_field_anchor",
+  "displayName": "Dormant Field Anchor",
+  "category": "Artifact",
+  "weightKg": 0.82,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade",
+    "Ritual"
+  ],
+  "radiationContaminated": true,
+  "radiationContaminationLevel": 20.4,
+  "baseTradeValueScale": 76,
+  "baseTradeValueCordon": 49,
+  "baseTradeValueKafedra": 93
+}

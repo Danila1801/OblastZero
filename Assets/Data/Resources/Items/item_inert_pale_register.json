@@ -1,0 +1,16 @@
+{
+  "id": "item_inert_pale_register",
+  "displayName": "Inert Pale Register",
+  "category": "Artifact",
+  "weightKg": 0.78,
+  "durability": 80,
+  "decayPerDay": 0.0,
+  "utilityTags": [
+    "Trade"
+  ],
+  "radiationContaminated": false,
+  "radiationContaminationLevel": 0,
+  "baseTradeValueScale": 88,
+  "baseTradeValueCordon": 31,
+  "baseTradeValueKafedra": 71
+}
