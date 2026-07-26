@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using OblastZero.Core;
-using OblastZero.Core.States;
 
 namespace OblastZero.EditorTools
 {
@@ -13,6 +12,13 @@ namespace OblastZero.EditorTools
     ///
     /// Run via menu: OblastZero → Setup → Register Missing States.
     /// Idempotent — skips states that already exist, only adds the missing ones.
+    ///
+    /// This is now a convenience rather than a requirement: <c>GameStateMachine.Initialize</c> performs the
+    /// same reconciliation at runtime, so forgetting to run this no longer dead-ends a wipe. Running it is
+    /// still preferred, because a scene-authored state persists its serialized inspector values (e.g.
+    /// <c>TransitionCutsceneState.cutsceneSeconds</c>) where a runtime-created one gets field defaults.
+    /// The list of states lives in <see cref="GameStateMachine.DiscoverStateTypes"/> — one source, so the
+    /// tool and the runtime fallback can never disagree about what "all states" means.
     /// </summary>
     public static class StateRegistrationTool
     {
@@ -29,16 +35,9 @@ namespace OblastZero.EditorTools
                 return;
             }
 
-            // Every concrete state type that must live as a child of the machine.
-            System.Type[] stateTypes = {
-                typeof(MainMenuState),
-                typeof(RunSetupState),
-                typeof(RunFailedState),
-                typeof(RunVictoryStabilizationState),
-                typeof(RunVictoryReliefState),
-                typeof(RunVictoryAdaptationState),
-                typeof(RunVictoryIndependentState),
-            };
+            // Every concrete state type that must live as a child of the machine. Shared with the
+            // runtime fallback so the two can never drift apart.
+            var stateTypes = GameStateMachine.DiscoverStateTypes();
 
             int added = 0, skipped = 0;
             foreach (var type in stateTypes)
