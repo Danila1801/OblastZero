@@ -1,9 +1,11 @@
 # OBLAST ZERO — PROJECT STATE REPORT
 
-**Snapshot date:** 25 July 2026
+**Snapshot date:** 26 July 2026 (revised; first written 25 Jul)
 **Repo:** `C:\Users\danil\projects\OblastZero` — private GitHub `Danila1801/OblastZero`
-**Reporting branch:** `feat/scavenge-3d-scene` @ `e7b03db` (one commit ahead of `main` @ `7706a76`)
-**Author of this report:** Claude Opus 5 (Claude Code session, 25 Jul 2026)
+**Reporting branch:** `feat/scavenge-3d-scene` @ `624e586`
+**Author of this report:** Claude Opus 5 (Claude Code session, 25–26 Jul 2026)
+
+> **Revision note.** This report was first written on 25 Jul after the 3D scavenge level landed (`e7b03db`). Between then and this revision, a **parallel Claude Code session** committed onto the same branch: `a762432` (track `content_qa.py`), `0116e6f` (a prompt), and `624e586` — **three UI screens plus carry-weight enforcement plus an item-weight rebalance**. That session acted on the two weight defects this report identified as §9.2 / §9.3. Those sections are now **CLOSED** and record the resolution; §5, §8, §11 and the counts throughout are updated to the state I re-verified on 26 Jul. Anything still marked open is open as of `624e586`.
 
 ---
 
@@ -114,10 +116,11 @@ C# LangVersion        9.0
 Serializer            Newtonsoft JSON (installed package)
 Steam wrapper         Facepunch.Steamworks 2.x, Win64 managed DLL only
 Scenes in build       _Bootstrap=0, Bunker=1, Scavenge=2
-Content               691 item JSON + 8 Item_*.asset seeds = 699 resolvable item ids
+Content               703 item JSON + 8 Item_*.asset seeds = 711 resolvable item ids
                       1020 event JSON + 3 Event_*.asset seeds
                       3 Crew_*.asset, 3 Faction_*.asset, 3 Trait_*.asset
-C# source files       64 under Assets/_Project/Scripts/
+                      (was 691 items on 25 Jul; the 26 Jul rebalance added 12)
+C# source files       69 under Assets/_Project/Scripts/
 ```
 
 ### 4.1 Folder & namespace map
@@ -168,7 +171,7 @@ CONSUMABLES_LOST_ON_DEATH           = true
 SCAVENGE_TIMER_SECONDS              = 60f
 SCAVENGE_TIMER_WARNING_THRESHOLD    = 15f    // HUD flashes red below this
 SCAVENGE_TIMER_CRITICAL_THRESHOLD   = 5f     // emission rumble begins
-SCAVENGE_MAX_CARRY_WEIGHT_KG        = 25     // ← NOT ENFORCED ANYWHERE. See §9.2
+SCAVENGE_MAX_CARRY_WEIGHT_KG        = 15     // was 25 and unenforced; both fixed 26 Jul — §9.2
 SCAVENGE_PICKUP_LERP_DURATION       = 0.25f
 
 DAILY_FOOD_PER_CREW                 = 1
@@ -191,17 +194,18 @@ REPUTATION_MIN / MAX                = -100 / 100
 |---|---|---|
 | Core framework — state machine, EventBus, ServiceLocator, GameManager, bifurcated save | ✅ Built | **[VERIFIED]** compiles; source read |
 | Data schemas — ItemData, ExpeditionEventData, FactionData, AnomalyData, MutantData, CrewMemberData, TraitData, GameDatabase | ✅ Built | **[VERIFIED]** |
-| Content instances | ✅ 691 items + 1020 events as JSON | **[VERIFIED]** file counts. **[GAP]** quality unaudited — see §9.5 |
+| Content instances | ✅ **703** items + 1020 events as JSON | **[VERIFIED]** file counts 26 Jul. **[GAP]** quality unaudited — see §9.4 |
 | Scenes & bootstrap rig | ✅ 3 scenes, all in Build Settings | **[VERIFIED]** |
-| **Phase A — 3D scavenge level** | ✅ **Shipped this session** | **[VERIFIED]** — all of §6 |
+| **Phase A — 3D scavenge level** | ✅ **Shipped 25 Jul** | **[VERIFIED]** — all of §6 |
+| **Phase A — carry-weight economy** | ✅ **Closed 26 Jul** — cap 15 kg, enforced, weights rebalanced | **[VERIFIED]** — §9.2 |
 | Hybrid 2.5D rendering | ✅ Implemented, not a stub | **[ASSUMED]** — compiles, never seen rendering |
 | Phase B — bunker day loop | ✅ `BunkerDayController` + `BunkerPhaseController` | **[ASSUMED]** — `BunkerPhaseSmokeTest` reported 17/17 |
 | Event engine | ✅ `EventEngine` + `RunRng` + `FormulaEvaluator` + `CrewFormulaContext` | **[ASSUMED]** — `EventEngineSmokeTest` reported 24/24 |
 | Faction reputation | ✅ `FactionReputationManager`, sole owner of the 3 rep scales | **[ASSUMED]** |
-| UI | 🔶 `BunkerHUD`, `EventModalUI`, `ScavengeHUD` — self-building EventBus-driven canvases | **[GAP]** no main menu, run-setup, or run-summary screens exist |
+| UI | ✅ **All screens exist as of 26 Jul** — `BunkerHUD`, `EventModalUI`, `ScavengeHUD`, plus new `MainMenuUI`, `RunSetupUI`, `RunSummaryUI` and a shared `OblastUI` | **[VERIFIED]** files exist + compile. **[BUILT, UNRUN]** never displayed |
 | Save/load round-trip | ✅ `DataLayerSmokeTest` 24/24, `BunkerDayLoopTest` clean | **[ASSUMED]** |
 | Steamworks | ✅ Built + compiles, auto-boots from `Bootstrap` | **[VERIFIED]** compiles. **[GAP]** needs a real App ID |
-| Compile gate | ✅ **39/39 ALL GREEN** | **[VERIFIED]** — ran it live this session |
+| Compile gate | ✅ **39/39 ALL GREEN** | **[VERIFIED]** — ran it live 25 Jul |
 
 > ⚠️ **Critical caveat on every "[ASSUMED]" row.** The smoke tests (`DataLayerSmokeTest`, `BunkerPhaseSmokeTest`, `EventEngineSmokeTest`, `BunkerDayLoopTest`, `ScavengeLogicTest`) are **`[ContextMenu]` MonoBehaviours, not NUnit tests**. Unity's Test Runner does not see them and CI cannot execute them. Their pass counts come from prior sessions' notes. **They were not re-run today** — the Unity Editor was not drivable (§7). Do not treat those numbers as current evidence.
 
@@ -235,6 +239,10 @@ Two new Python files, 1808 lines total, do the authoring:
 **[VERIFIED] the output is byte-deterministic.** Re-running the generator this session reproduced md5 `0082c966d3a0fa85af2ffef7c7250769` exactly and left the git tree clean. GUIDs derive from `md5('OblastZero::' + name)`; nothing samples time or randomness.
 
 > **Consequence, and it is load-bearing: never hand-edit `Assets/Scenes/Scavenge.unity`.** The next regeneration overwrites it silently. Layout changes go in the coordinate plan. This is recorded in `CLAUDE.md` §0 and §14.
+
+**Re-validated on 26 Jul against the churned content** (the item database grew 691 → 703 and every weight was rewritten in between): the scene still emits byte-identical, all 25 pickup ids still resolve, and placement and reachability still pass. That is the payoff of the generator being a validator and not just an emitter — a content-wide rebalance could have silently invalidated the level, and one command proved it did not.
+
+> **⚠️ One defect in this tooling, found by hitting it.** The generator is idempotent with respect to the *scene* but **not** the *materials*. It writes minimal `.mat` files; Unity then enriches each one on import (adding `m_AllowLocking` and a URP `AssetVersion` stamp). Re-running the generator strips that enrichment back out across all 22 files — on 26 Jul it reverted a parallel session's committed import state, which I then restored with `git checkout -- Assets/Art/Materials/Scavenge`. It self-heals on Unity's next import, but it makes a validation run look like a content change. Now documented in `CLAUDE.md` §14.
 
 ### 6.4 Facts that had to be harvested, not guessed
 
@@ -384,79 +392,91 @@ Ordered. Items 1–3 are ship blockers; nothing after them matters if they fail.
 Boot → MainMenu → RunSetup → Scavenge (the new level) → TransitionCutscene → Bunker → End Day ×N → wipe → `RunFailedState` summary → back to MainMenu. **Zero console errors.** Re-run all five smoke tests via `execute_code` while the Editor is live, since CI cannot see them.
 
 ### 3. Runtime data-loader verification
-Confirm `GameDatabase.Initialize` actually ingests all **1020 events and 691 items** at runtime, and that `LocalizedStrings` populates from `Assets/Data/Resources/Locale/localization_en.json` — right now localization keys render raw, which is the symptom of the table not loading.
+Confirm `GameDatabase.Initialize` actually ingests all **1020 events and 703 items** at runtime, and that `LocalizedStrings` populates from `Assets/Data/Resources/Locale/localization_en.json` — right now localization keys render raw, which is the symptom of the table not loading.
 
-### 4. Scavenge tuning + close the carry-weight gap
-Play the level. Check pacing against the ~18 s / ~40 s budget, whether the pit detour earns its risk, and whether the fluorescents read as *failing* rather than as *strobing*. Then enforce `SCAVENGE_MAX_CARRY_WEIGHT_KG` (see §9.2).
+### 4. Scavenge tuning — and tune the *new* weight economy against real play
+Play the level. Check pacing against the ~18 s / ~40 s budget, whether the pit detour earns its risk, and whether the fluorescents read as *failing* rather than as *strobing*.
 
-### 5. Missing UI screens
-Main menu, run setup, and run summary do not exist. The states exist; their screens do not.
+The carry-weight fix has landed (§9.2) but **has never been played either**, and it is now the single biggest lever on how Phase A feels: the depot floor is 28.72 kg against a 15 kg cap, so the player takes ~52% of it. Whether 52% is the right number — and whether all-or-nothing refusal feels like a decision or like a wall — is a play question, not an arithmetic one.
 
-### 6. Content QA
-Spot-check the 1020 generated events for §3.2 voice compliance and §3.1 IP-firewall violations, and verify every `successChanceFormula` string parses in `FormulaEvaluator`. A tool for this (`tools/content_qa.py`) appeared mid-session from a concurrent session and is currently **untracked**.
+### 5. Content QA
+Spot-check the 1020 generated events for §3.2 voice compliance and §3.1 IP-firewall violations, and verify every `successChanceFormula` string parses in `FormulaEvaluator`. `tools/content_qa.py` exists for this (now tracked, commit `a762432`).
 
-### 7. Polish, then ship
+### 6. Polish, then ship
 Audio, VFX, UX tuning, Steam store page with the correct AI disclosure tier.
+
+> **Dropped from this list since 25 Jul:** "missing UI screens" (`MainMenuUI` / `RunSetupUI` / `RunSummaryUI` shipped in `624e586`) and "enforce the carry-weight cap" (shipped in the same commit). Both are now **[BUILT, UNRUN]** rather than missing, which moves them from §8 into §9.1's scope.
 
 ---
 
 ## 9. GAPS AND RISKS, RANKED
 
 ### 9.1 — CRITICAL: the game has never been played end-to-end
-Six weeks from a content-complete beta, with a state machine, two phase scenes, an event engine, and 1711 content objects that have **never executed together**. Integration bugs are not merely likely, they are near-certain, and they are currently invisible. Every other item on this list is smaller than this one.
+Six weeks from a content-complete beta, with a state machine, two phase scenes, an event engine, six UI screens, a weight economy, and 1723 content objects that have **never executed together**. Integration bugs are not merely likely, they are near-certain, and they are currently invisible. Every other item on this list is smaller than this one.
+
+**This risk grew rather than shrank between 25 and 26 Jul.** Three UI screens and a carry-weight enforcement path were added in that window. All of it compiles; none of it has been displayed or triggered. Shipping velocity is currently outrunning verification, and the gap between "written" and "known to work" is the project's real debt.
 
 **Compounding factor:** the only tests that exist are `[ContextMenu]` MonoBehaviours. **CI cannot run them.** There is no automated behavioural regression net at all — the 39-check gate proves compilation, not conduct.
 
-### 9.2 — HIGH: `SCAVENGE_MAX_CARRY_WEIGHT_KG` is enforced nowhere
-`InventoryManager.AddItem` has **no weight gate**, and `GetTotalWeight()` exists but **nothing calls it during the scavenge**. The constant (25 kg) is declared and ignored.
+### 9.2 — ✅ CLOSED 26 Jul: the carry-weight economy (was two HIGH defects)
 
-The player can currently carry the entire depot. That deletes the central decision of Phase A — *what do I leave behind* — and with it the reason the 60-second clock and the three-route layout exist. **The level I just built is balanced around a constraint the code does not apply.** Found in passing; not fixed, because `InventoryManager` was outside "build the scene" and has tests around it. Recorded as `CLAUDE.md` §0 remaining item 4.
+Recorded here in full because the *shape* of the bug is instructive and the fix is not yet play-tested.
 
-One gate in `AddItem` plus one HUD readout is the small half of the fix. The other half is §9.3, and without it the gate does nothing.
+**What was wrong (found 25 Jul, both halves needed fixing):**
 
-### 9.3 — HIGH: the 25 kg cap is numerically unreachable, so enforcing it changes nothing
+**(a) The cap was enforced nowhere.** `InventoryManager.AddItem` had no weight gate; `GetTotalWeight()` existed but nothing called it during the scavenge. The player could carry the entire depot, which deletes the central decision of Phase A — *what do I leave behind* — and with it the reason the 60-second clock and the three-route layout exist. The level was balanced against a constraint the code did not apply.
 
-**[VERIFIED] this session** by summing the manifest in §6.6 against the `weightKg` field in the live item database:
-
-```
-taking EVERY item in the level (22 stacks)  =  16.59 kg  =  66% of the 25 kg cap
-heaviest single item in the manifest        =   2.00 kg  (item_pry_bar)
-```
-
-So a player who strips the depot bare still walks out **8.4 kg under the limit**. Implementing §9.2 perfectly would produce a gate that never fires.
-
-The manifest is not the problem — **the content is**. Across all **691 items**:
+**(b) Worse: the cap was numerically unreachable, so fixing (a) alone would have shipped a gate that never fires.** Measured by summing the §6.6 manifest against `weightKg` in the live database:
 
 ```
-max weight        3.15 kg   (item_kafedra_issue_drill_bit)
-mean              0.64 kg
-median            0.47 kg
-items over 5 kg   0
-items over 3 kg   1
-items over 2 kg   17
-heaviest category Tool (mean 1.14, max 3.15) and Weapon (mean 1.17, max 2.99)
+taking EVERY item in the level  =  16.59 kg  =  66% of the then-25 kg cap
+heaviest item in the manifest   =   2.00 kg
+heaviest of all 691 items       =   3.15 kg   (mean 0.64, median 0.47, zero over 5 kg)
 ```
 
-Reaching 25 kg requires **~8 copies of the single heaviest item in the game**, or ~39 average items. No plausible 60-second haul gets close. Note also `item_12_gauge_carbine` at **0.73 kg** — a real 12-gauge is roughly 3 kg — so the generated weights skew light for exactly the bulky objects that should force a choice.
+Reaching 25 kg needed ~8 copies of the heaviest item in the game. `item_12_gauge_carbine` weighed **0.73 kg** — a real 12-gauge is ~3 kg — so generated weights skewed light for exactly the bulky objects that should force a choice. **This is the general failure mode worth remembering: a constant that is enforced but unreachable looks identical to a working feature in code review, and only arithmetic over the content exposes it.**
 
-Three levers, and this is a design call (see §11 Q3): recalibrate `weightKg` across 691 items; lower the cap to roughly **8–12 kg** to match the content as generated; or drop weight as a constraint and let the 60-second clock be the only currency. **The cheapest is lowering the cap**; the most faithful to "what do I leave behind" is probably a heavy-item pass so that a carbine or a fuel can actually costs something.
+**How it was resolved** (parallel session, `624e586` — **[VERIFIED]** by reading the code and re-running the arithmetic on 26 Jul):
 
-### 9.4 — HIGH: run-end dead-ends until the states are registered by hand
-Until `StateRegistrationTool` is run and `_Bootstrap.unity` saved, a wipe cannot resolve. This is a save-the-scene-in-the-Editor action that no external process can perform.
+- `SCAVENGE_MAX_CARRY_WEIGHT_KG` **25 → 15**.
+- Enforced in `InventoryManager.AddItem` on the **Scavenged channel only** — the Bunker channel stays uncapped, which is correct: the cap models what one person carries, not what the bunker holds.
+- Refusal is **all-or-nothing**: an over-cap pickup returns null and nothing partially fills. `ScavengeController` already leaves the world object in place, so a refused item stays takeable — the player keeps the choice rather than losing the item.
+- `ScavengeLoadChangedEvent` / `ScavengePickupRejectedEvent` reach the HUD through `ManagerEventBridge`; `ScavengeHUD` draws a load bar and a refusal notice.
+- Capacity is settable via `InventoryManager.ScavengeCarryCapacityKg`, leaving room for a per-crew override.
+- Item weights rebalanced by a new `tools/rebalance_weights.py` — deterministic, idempotent, with a `--check` gate. It covers **both** the 703 Resources JSON items *and* the 8 authored `.asset` items; touching only one set leaves the depot half-light.
 
-### 9.5 — MEDIUM: three UI screens missing
-Main menu, run setup, run summary. The states drive nothing visible. An Early Access build without a main menu is not shippable.
+**Verified outcome:**
 
-### 9.6 — MEDIUM: 1711 content objects, quality unaudited
-691 items and 1020 events were mass-generated. Two specific risks: **IP-firewall violations** (§3.1 — a legal exposure, not a polish item) and **voice drift** (§3.2). Plus a mechanical risk: any `successChanceFormula` string that fails to parse in `FormulaEvaluator` is a runtime break in an event nobody has seen yet.
+```
+depot floor      16.59 kg  ->  28.72 kg
+cap                  25 kg  ->  15 kg
+player carries        66% of the floor  ->  52%
+pickups costing >2 kg      0  ->  6 stacks (4 individual items over 2 kg)
+heaviest item in database   3.15 kg  ->  4.75 kg   (mean 0.64 -> 0.98)
+```
 
-### 9.7 — MEDIUM: concurrent sessions share this repo
-More than one Claude Code session works here simultaneously. During this session, `main` advanced three commits (`f0e00bb`, `57dfdc5`, `7706a76`) and `tools/content_qa.py` appeared at 23:15. My work is isolated on a branch with only my own paths staged, and the other session's file was left untracked and untouched. **Practical rule for anyone working here: re-check `git status` and `git log` before staging, stage explicit paths, and never `git add -A`.**
+**Still open on this:** it has never been played (§9.1), and see §9.5 for the crew-capacity stat that is displayed but not wired.
 
-### 9.8 — LOW: Steam App ID is a placeholder
+### 9.3 — HIGH: run-end dead-ends until the states are registered by hand
+Until `StateRegistrationTool` is run and `_Bootstrap.unity` saved, a wipe cannot resolve. This is a save-the-scene-in-the-Editor action that no external process can perform. Note `_Bootstrap.unity` currently shows as **modified in the working tree** by the parallel session, so this may be in progress — verify before redoing it.
+
+### 9.4 — MEDIUM: 1723 content objects, quality unaudited
+703 items and 1020 events were mass-generated. Two specific risks: **IP-firewall violations** (§3.1 — a legal exposure, not a polish item) and **voice drift** (§3.2). Plus a mechanical risk: any `successChanceFormula` string that fails to parse in `FormulaEvaluator` is a runtime break in an event nobody has seen yet. `tools/content_qa.py` exists to attack this.
+
+### 9.5 — MEDIUM: crew carry capacity is authored and displayed, but does not affect the cap
+`CrewMemberData.baseStats.carryCapacityKg` is authored per crew member (**Marina 22 / Yuri 28 / Sasha 34**) and **[VERIFIED]** is read in exactly one production place: `RunSetupUI.cs:151`, which prints it as a roster stat. Nothing feeds it into `InventoryManager.ScavengeCarryCapacityKg`, so the scavenge cap is a flat 15 kg for every crew member.
+
+This is a **UI-tells-a-lie** bug, and it is worse than a plain missing feature: run setup advertises a number that has no mechanical effect, so a player choosing Sasha for the 34 kg will get 15 kg like everyone else. Either wire it or stop displaying it. (Note the authored values, 22–34 kg, are all well above the 15 kg cap — so wiring them naively would make the cap non-binding again and re-open §9.2(b). They need rescaling, not just connecting.)
+
+### 9.6 — MEDIUM: concurrent sessions share this repo, and they interleave
+More than one Claude Code session works here simultaneously, and this is not hypothetical friction — it materially affected this report. On 25 Jul `main` advanced three commits mid-task and `tools/content_qa.py` appeared unannounced. Between 25 and 26 Jul a parallel session committed **onto this branch**, and in doing so swept up this report and my uncommitted `CLAUDE.md` edits into its own commit `624e586`.
+
+Nothing was lost, but nobody intended that grouping, and a commit message now describes changes it does not contain. **Practical rules: re-check `git status` and `git log` before staging, stage explicit paths, never `git add -A` here, and treat any file you left uncommitted as something another session may commit for you.**
+
+### 9.7 — LOW: Steam App ID is a placeholder
 Blocks a real store build, but is trivial once the App ID exists.
 
-### 9.9 — LOW: `Assets/Scenes/SampleScene.unity` is leftover Unity template cruft
+### 9.8 — LOW: `Assets/Scenes/SampleScene.unity` is leftover Unity template cruft
 Dated Jan 2025. Not in Build Settings. Should be deleted.
 
 ---
@@ -479,7 +499,19 @@ Dated Jan 2025. Not in Build Settings. Should be deleted.
 - `.gitignore` — `tools/__pycache__/`
 - `CLAUDE.md` — §0 status rows for scenes and Phase A; remaining-priority item 4 rewritten to name the carry-weight gap; **§11 corrected** (the bridge/compile-error claim was wrong and cost a session real time); **new §14** documenting how to author Unity scenes without the Editor
 
-**Found but deliberately not changed:** the `SCAVENGE_MAX_CARRY_WEIGHT_KG` gap (§9.2) — out of scope for "build the scene," and `InventoryManager` has tests around it. Documented instead of quietly patched.
+**Found but deliberately not changed:** the `SCAVENGE_MAX_CARRY_WEIGHT_KG` gap (§9.2) — out of scope for "build the scene," and `InventoryManager` has tests around it. Documented instead of quietly patched. **A parallel session then fixed it within a day**, which is the argument for documenting findings precisely rather than either silently patching them or silently dropping them.
+
+### 10.1 What the parallel session added on 26 Jul (`624e586`)
+
+Not my work; recorded because it changes the state this report describes. **[VERIFIED]** by reading the code and re-deriving the numbers:
+
+- `Assets/_Project/Scripts/UI/MainMenuUI.cs`, `RunSetupUI.cs`, `RunSummaryUI.cs`, and a shared `OblastUI.cs` — the three screens §9.5 previously listed as missing.
+- Carry-weight enforcement in `InventoryManager` (Scavenged channel only), the cap at 15 kg, `ScavengeLoadChangedEvent` / `ScavengePickupRejectedEvent`, and a `ScavengeHUD` load bar.
+- `tools/rebalance_weights.py` — deterministic, idempotent, `--check` gate; rebalanced weights across the 703 JSON items and the 8 authored `.asset` items.
+- `tools/content_qa.py` tracked (`a762432`).
+- Item count 691 → **703**.
+
+**In flight, uncommitted, not mine:** `Assets/Scenes/_Bootstrap.unity` is modified in the working tree and twelve new `Items/*.json.meta` files are untracked. Do not assume the tree is clean.
 
 ---
 
@@ -487,19 +519,21 @@ Dated Jan 2025. Not in Build Settings. Should be deleted.
 
 A status dump invites a status-dump response. These are the open questions.
 
-1. **Six weeks, one unplayed integration.** Given §9.1, is "wire the Editor, then play the loop" the correct next move, or should a subset be cut *now* to shrink the untested surface before it is ever run? Which of §8's items 4–6 would you cut first if the loop turns out to be badly broken?
+1. **Verification is now the bottleneck, not features.** Six weeks out, the honest state is that written work is outpacing proven work (§9.1), and the 25→26 Jul window made that worse by adding three screens and a weight system nobody has seen run. Is the correct call to **freeze feature work** until the loop has been played once end-to-end, or does the deadline justify continuing to build in parallel and accepting a large integration debt at the end? This is the single question I most want an outside answer to.
 
-2. **The carry-weight gap (§9.2) inverts a design premise.** Is the right fix a hard gate in `AddItem` (refuse the pickup, HUD says why), a soft one (accept it, apply a movement-speed penalty — which interacts with the 60-second clock and the ~40 s detour budget), or a swap-prompt? The hard gate is simplest; the soft gate is arguably the better game. Which serves "what do I leave behind" better under a 60-second clock, and what does each do to the pit-detour risk calculus?
+2. **Is 15 kg / 52% of the floor the right tuning?** (§9.2.) The player can now take about half the depot. Too generous still, or already tight? Consider the interaction with the 60-second clock: **weight and time are two simultaneous constraints, and one of them may be redundant.** If ~40 s of detour budget already prevents taking everything, does a 15 kg cap add a decision or just add friction? A reviewer arguing "one constraint is enough, drop or loosen the other" would be taken seriously.
 
-3. **The weight economy is incoherent, and the fix is a design call (§9.3).** I did the arithmetic: the entire level is **16.59 kg against a 25 kg cap**, and the heaviest of all 691 items is **3.15 kg**. Which lever? (a) A heavy-item content pass — most faithful to the design intent, but it touches 691 files and risks disturbing trade values that events may depend on. (b) Drop the cap to ~8–12 kg — one constant, ships today, but then "heavy" means *four tools* rather than anything a player would intuit as heavy. (c) Abandon weight and let the clock be the only currency — honest, and arguably fine for a 60-second phase, but deletes a locked-ish design pillar. **My inclination is (b) now and (a) after launch**; argue me out of it if the reasoning is wrong.
+3. **All-or-nothing refusal vs a softer failure.** The chosen behaviour: an over-cap pickup is refused entirely and left in the world. The alternative is a movement-speed penalty for being overloaded, which converts weight into *time* — the currency the phase already runs on — instead of a wall. Under a 60-second panic clock, which produces the better decision? My instinct is that a hard refusal is more readable at speed and a speed penalty is more interesting, and I do not know which wins.
 
-4. **The test net.** The only tests are Editor-only `[ContextMenu]` MonoBehaviours that CI cannot run. Is converting them to NUnit worth the days it costs six weeks out, or is a manual play-checklist the correct trade for an Early Access launch?
+4. **§9.5 is a UI-tells-a-lie bug and I want a sanity check on the fix direction.** Run setup advertises per-crew carry capacity (Marina 22 / Yuri 28 / Sasha 34 kg) that has no mechanical effect. Wiring the authored values naively makes every crew member's cap *above* the 15 kg design point and re-opens the unreachable-cap failure. Rescale to straddle 15 (say 12/15/19) and make crew choice a real trade-off, or stop displaying the stat until after launch?
 
-5. **Is ~18 s direct / ~40 s detour the right ratio** for a 60-second panic phase, and do three routes plus one high-risk detour give enough replay variety for a roguelite where this phase runs every single run? Bear in mind these numbers are geometric, not measured.
+5. **The test net.** The only tests are Editor-only `[ContextMenu]` MonoBehaviours that CI cannot run. Is converting them to NUnit worth the days it costs six weeks out, or is a manual play-checklist the correct trade for an Early Access launch?
 
-6. **Content risk (§9.5).** 1711 generated objects, unaudited, with an absolute IP firewall. Is a sampling audit defensible for launch, or does the legal exposure demand a full mechanical scan for the forbidden name set before the store page goes up?
+6. **Is ~18 s direct / ~40 s detour the right ratio** for a 60-second panic phase, and do three routes plus one high-risk detour give enough replay variety for a roguelite where this phase runs every single run? Bear in mind these numbers are geometric, not measured.
 
-7. **Anything in §6 where structural verification is masquerading as behavioural verification.** I have tried to label these honestly, but I built the thing — a reviewer with no stake in it is better positioned to spot where "all references resolve" got quietly upgraded to "it works."
+7. **Content risk (§9.4).** 1723 generated objects, unaudited, with an absolute IP firewall. Is a sampling audit defensible for launch, or does the legal exposure demand a full mechanical scan for the forbidden name set before the store page goes up?
+
+8. **Anything in §6 where structural verification is masquerading as behavioural verification.** I have tried to label these honestly, but I built the thing — a reviewer with no stake in it is better positioned to spot where "all references resolve" got quietly upgraded to "it works."
 
 ---
 
@@ -552,4 +586,21 @@ Bunker UI ↔ logic contract: HUD raises `EndDayRequestedEvent` and `EventChoice
 
 ---
 
-*End of report. Generated 25 Jul 2026 by Claude Opus 5 from a live read of the repository at `feat/scavenge-3d-scene` @ `e7b03db`, with the 39-check compile gate and the scene generator both re-run to confirm the numbers quoted above.*
+### 12.4 Numbers in this report, and how to re-derive them
+
+Every figure below was computed, not recalled. Re-run these if you doubt one.
+
+| Claim | How to reproduce |
+|---|---|
+| 39/39 compile gate | `python tools/verify_steam_layer.py` |
+| Scene is byte-deterministic | `md5sum Assets/Scenes/Scavenge.unity`, re-run the generator, compare |
+| 703 items / 1020 events | `ls Assets/Data/Resources/{Items,Events}/*.json \| wc -l` |
+| 699 → 711 resolvable item ids | 703 JSON + 8 authored `.asset` |
+| Depot floor 28.72 kg, 52% of cap | sum the `PICKUPS` manifest in `tools/generate_scavenge_scene.py` against `weightKg` in `Assets/Data/Resources/Items/*.json` **plus** the `Item_*.asset` files — both sets, or the total comes out light |
+| Database max 4.75 kg, mean 0.98 | same weight scan, over all items |
+| 11 state classes in 8 files | `grep -hE "class \w+State" Assets/_Project/Scripts/Core/States/*.cs` |
+| `carryCapacityKg` read only for display | `grep -rn carryCapacityKg Assets --include=*.cs` — one production hit, `RunSetupUI.cs:151` |
+
+---
+
+*End of report. First written 25 Jul 2026, revised 26 Jul 2026 by Claude Opus 5 from a live read of the repository at `feat/scavenge-3d-scene` @ `624e586`. The 39-check compile gate and the scene generator were both re-run, and every weight figure was re-derived from the current content after the 26 Jul rebalance. Sections marked **[ASSUMED]** were not re-proven and should be treated as the weakest claims in this document.*

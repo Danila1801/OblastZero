@@ -241,7 +241,12 @@ Notes:
 
 **Generate, never hand-write.** `tools/generate_scavenge_scene.py` (level plan) + `tools/scavenge_scene_lib.py` (YAML emitters, no level knowledge) own that scene. Output is **byte-deterministic** — re-running produces an identical file, verified by md5 — because GUIDs come from `md5('OblastZero::' + name)` and nothing samples time or randomness. Consequences:
 - **Never hand-edit `Scavenge.unity`.** The next regeneration silently overwrites you. Change the coordinate plan; the diff stays readable.
-- Determinism is what makes regeneration safe to run at any time, including as a pre-commit sanity check.
+- Determinism is what makes regeneration safe to run as a validation pass — the scene comes out byte-identical, so a dirty `Scavenge.unity` after a re-run means the plan changed.
+- **⚠️ But regenerating also reverts Unity's importer enrichment of the 22 materials, and that is NOT idempotent.** The generator writes a minimal `.mat`; Unity then rewrites each one on import, appending `m_AllowLocking: 1` and a URP `AssetVersion` MonoBehaviour block (`version: 10`). Re-running the generator strips all of that back out across 22 files — which is how it produced 22 spurious modified files on 26 Jul, reverting a parallel session's committed import state. It self-heals (Unity re-stamps on the next import) but it pollutes the diff. **If you re-ran the generator only to validate, restore the materials afterwards:**
+  ```bash
+  git checkout -- Assets/Art/Materials/Scavenge Assets/Settings/ScavengeVolumeProfile.asset
+  ```
+  The scene itself is safe to leave — it round-trips byte-identical.
 
 **Facts you cannot guess and must harvest from the project:**
 - Script GUIDs come from the real `.meta` files — `grep guid Assets/.../Foo.cs.meta`. A guessed GUID yields a silently unassigned component, not an error.
