@@ -5,21 +5,57 @@ content_qa.py — OblastZero content QA (read-only)
 Validates generated JSON content for the OblastZero Unity game:
   1. Parses every Events/*.json and Items/*.json under Assets/Data/Resources/.
   2. Schema check for required top-level fields (real schema, observed across
-     all 1020 events + 691 items on 2026-07-25; see CLAUDE.md Stage 5).
-  3. IP firewall: flags S.T.A.L.K.E.R. proper nouns / faction names / mutants
-     that must NOT appear in OblastZero content (trademark separation).
-  4. Design bible §7 (line ~1290 forbidden cliches): flags banned voice phrases.
-  5. successChanceFormula lint (grammar of Core/FormulaEvaluator.cs):
-        empty parens, unbalanced parens, unknown variables (only crew.* are
-        valid), stray operators, invalid number literals, trailing tokens.
-     Notes: NO event currently carries a successChanceFormula field (choices use
-     numeric `successChance`); the lint runs defensively for future content.
-  6. Prints a full report with file paths + 1-based line refs for each hit.
+     all 1020 events + 703 items; see CLAUDE.md Stage 5).
+  3. IP firewall (CLAUDE.md §8): flags S.T.A.L.K.E.R. proper nouns that must
+     not appear in OblastZero content. Two tiers — see "Why two tiers" below.
+  4. Voice check (design bible §7 / CLAUDE.md §9): forbidden pulp cliches.
+  5. successChanceFormula lint against the grammar of Core/FormulaEvaluator.cs.
+  6. Prints a report with file path, field, 1-based line ref and matched text.
 
-Stdlib only. Does not touch any game file.
+Run `--self-test` for the negative control: synthetic violations that every
+detector must catch, and clean strings it must not. CLAUDE.md §14 — a gate
+never observed failing is decoration.
+
+Stdlib only. Does not modify any game file.
+
+--------------------------------------------------------------------------
+Why prose-only scanning
+--------------------------------------------------------------------------
+Scans run over PROSE fields (title, narrativeText, choiceLabel, outcomeText,
+displayName, designerNotes, description) — never over ids, region tags, or
+enum values. Those are machine identifiers: `abandoned_school` is a region tag
+that EventEngine.SelectNextEvent gates on, and it accounts for all 123
+occurrences of "abandoned" in the content set. A raw-text scan reports those
+as voice violations, and "fixing" them silently breaks event gating.
+
+--------------------------------------------------------------------------
+Why two tiers of banned term
+--------------------------------------------------------------------------
+The earlier revision matched every banned term case-insensitively against raw
+file text, which produced 87 hits — all of them the ordinary English adjective
+in "military plates", "military vehicle approaching", "Follow military
+protocol." and item names like "Issued Military Kit". None reference the
+S.T.A.L.K.E.R. *Military* faction; there is no trademark exposure in the
+English word "military".
+
+A gate with 87 false positives is worse than no gate, because it trains you to
+skim past the one line that says Strelok. So:
+
+  HARD_IP_TERMS       unambiguous proper nouns (Strelok, Sidorovich, Pripyat,
+                      ChNPP, Bloodsucker, ...). Any casing, always a violation.
+  CONTEXTUAL_IP_TERMS ordinary English words that are only a violation when
+                      used as a named entity (Military, Duty, Freedom,
+                      Monolith, Controller, Lens, ...). Flagged only when
+                      capitalized, not sentence-initial, and not inside a
+                      title-cased phrase — i.e. "the Military refused" trips,
+                      "Issued Military Kit" and "Military plates," do not.
+
+Cliches split the same way: the four phrases named in the bible fail the gate;
+the broader pulp-adjective list is reported as a warning and does not.
 """
 from __future__ import annotations
 
+import argparse
 import glob
 import json
 import os
@@ -31,9 +67,7 @@ from typing import Any, Iterable
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-PROJECT_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), os.pardir)
-)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 RESOURCES = os.path.join(PROJECT_ROOT, "Assets", "Data", "Resources")
 EVENTS_DIR = os.path.join(RESOURCES, "Events")
 ITEMS_DIR = os.path.join(RESOURCES, "Items")
@@ -47,7 +81,6 @@ ITEM_REQUIRED = (
     "utilityTags", "radiationContaminated", "radiationContaminationLevel",
     "baseTradeValueScale", "baseTradeValueCordon", "baseTradeValueKafedra",
 )
-
 CHOICE_REQUIRED = (
     "choiceLabel", "successChance", "requiredTraitsAny", "blockedByTraits",
     "successOutcome", "failureOutcome",
@@ -57,30 +90,65 @@ OUTCOME_REQUIRED = (
     "reputationFaction", "reputationDelta", "crewDeathChance", "followUpEventId",
 )
 
-# Task mentions displayNameKey/narrativeKey/successChanceFormula (the C# localization
-# + formula path). The shipped JSON deliberately uses flat strings+numbers instead.
-# Flag absence as INFO, not an error, since the live content is consistent.
+# The C# side reads these as localization keys; the shipped JSON stores flat prose
+# in them instead (EventJsonLoader maps `title` -> titleKey verbatim). Consistent
+# across the whole set, so it is reported as INFO rather than an error.
 EVENT_INFO_KEYS_MISSING = ("displayNameKey", "narrativeKey")
 
 # ---------------------------------------------------------------------------
-# IP firewall — S.T.A.L.K.E.R. proper nouns that must NOT appear in Oblast content
+# Prose fields — the only text the IP and voice scans look at.
 # ---------------------------------------------------------------------------
-BANNED_IP_TERMS = [
-    "Strelok", "Scar", "Sidorovich", "Pripyat", "ChNPP", "Duty", "Freedom",
-    "Monolith", "Bandits", "Clear Sky", "Ecologists", "Military",
-    "Lehavy", "Degtyarev", "Kovalsky", "Tachenko", "Petrenko", "Kalancha",
-    "Beard", "Owl", "Hawaiian", "Garry", "Strider", "Vano", "Mitay", "Barge",
-    "Garmata", "Chekhov", "Tariyev", "Sokolov",
-    "Zombified", "Pseudogiant", "Controller", "Bloodsucker", "Snork",
-    "Boar", "Flesh", "Blind Dog", "Pseudodog", "Chimera", "Poltergeist", "Burer",
+EVENT_PROSE_TOP = ("title", "narrativeText", "designerNotes", "description")
+EVENT_PROSE_CHOICE = ("choiceText", "choiceLabel")
+EVENT_PROSE_OUTCOME = ("outcomeText", "resultText")
+ITEM_PROSE_TOP = ("displayName", "designerNotes", "description", "flavorText")
+
+# ---------------------------------------------------------------------------
+# IP firewall — CLAUDE.md §8
+# ---------------------------------------------------------------------------
+# Tier 1: unambiguous. These are proper nouns with no ordinary-English reading,
+# so any casing anywhere in prose is a violation.
+HARD_IP_TERMS = [
+    # People / traders / named characters
+    "Strelok", "Sidorovich", "Degtyarev", "Kovalsky", "Tachenko", "Petrenko",
+    "Kalancha", "Garmata", "Chekhov", "Tariyev", "Sokolov", "Lehavy", "Vano",
+    "Mitay", "Sakharov", "Ghost", "Fang",
+    # Places / installations
+    "Pripyat", "ChNPP", "Chernobyl", "Yantar", "Rostok", "Agroprom",
+    "Limansk", "Zaton", "Jupiter",
+    # Factions with no common-noun reading
+    "Clear Sky", "Renegades",
+    # Mutants / anomalies with no common-noun reading
+    "Zombified", "Pseudogiant", "Pseudodog", "Bloodsucker", "Snork", "Burer",
+    "Poltergeist", "Blind Dog", "Whirligig", "Springboard", "Vortex Anomaly",
+    # Franchise shorthand
+    "EMR", "S.T.A.L.K.E.R", "STALKER",
 ]
 
-# Design bible §7 (line ~1290) forbidden cliches.
-BANNED_PHRASES = [
+# Tier 2: ordinary English words that only infringe when used as a named entity.
+CONTEXTUAL_IP_TERMS = [
+    "Military", "Duty", "Freedom", "Monolith", "Bandits", "Ecologists",
+    "Mercenaries", "Loners", "Controller", "Chimera", "Boar", "Flesh",
+    "Lens", "Owl", "Beard", "Hawaiian", "Garry", "Strider", "Barge", "Scar",
+]
+
+# ---------------------------------------------------------------------------
+# Voice — design bible §7 / CLAUDE.md §9
+# ---------------------------------------------------------------------------
+# Named in the bible. These fail the gate.
+HARD_CLICHES = [
     "twisted metal",
     "eerie silence",
     "unnatural glow",
     "screams in the distance",
+]
+
+# Broader pulp register. Reported, but does not fail: each has a legitimate
+# post-administrative reading ("the abandoned filing annex" is in voice), so
+# failing on them would make the gate unusable. Judgement call for a human.
+SOFT_CLICHES = [
+    "abandoned", "desolate", "lurking", "ominous", "sinister", "otherworldly",
+    "bone-chilling", "blood-curdling", "deathly quiet", "shadowy figure",
 ]
 
 # ---------------------------------------------------------------------------
@@ -98,12 +166,14 @@ FORMULA_KNOWN_VARS = {
 }
 _FORMULA_TOKEN_RE = re.compile(
     r"""\s*(?:
-        (?P<num>\d+\.\d+|\d+\.|\.\d+|\d+)         # number literal (greedy)
-      | (?P<var>[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)  # dotted var, greedy
-      | (?P<op>[+\-*/()])                          # operator / paren
+        (?P<num>\d+\.\d+|\d+\.|\.\d+|\d+)
+      | (?P<var>[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)
+      | (?P<op>[+\-*/()])
     )""",
     re.VERBOSE,
 )
+
+SENTENCE_ENDERS = (".", "!", "?", '"', ":", ";", "—", "-", "(", "[")
 
 
 # ---------------------------------------------------------------------------
@@ -111,72 +181,167 @@ _FORMULA_TOKEN_RE = re.compile(
 # ---------------------------------------------------------------------------
 @dataclass
 class Viol:
-    kind: str          # ip | phrase | schema | formula | parse | info
+    kind: str           # ip | ip_ctx | phrase | cliche_soft | schema | formula | parse | info
     message: str
     file: str
     line: int = 0
     field: str = ""
+    matched: str = ""
+
+    @property
+    def hard(self) -> bool:
+        """Does this violation fail the gate?"""
+        return self.kind not in ("info", "cliche_soft")
 
 
 @dataclass
 class FileReport:
     path: str
     rel: str
-    kind: str          # "event" | "item"
+    kind: str           # "event" | "item"
     parse_ok: bool = True
     schema_ok: bool = True
-    violations: list[Viol] = field(default_factory=list)
+    violations: list = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-def _line_of(text: str, needle: str) -> int:
-    """1-based line number of first occurrence of needle (case-insensitive), 0 if absent."""
-    low = needle.lower()
-    for i, ln in enumerate(text.splitlines(), start=1):
+def _word_bound(term: str, ignorecase: bool = True) -> re.Pattern:
+    """Match `term` on non-alphanumeric boundaries (\\b misbehaves next to spaces/dots)."""
+    flags = re.IGNORECASE if ignorecase else 0
+    return re.compile(r"(?<![A-Za-z0-9])" + re.escape(term) + r"(?![A-Za-z0-9])", flags)
+
+
+def _line_of_snippet(raw_text: str, snippet: str) -> int:
+    """1-based line of the first line containing `snippet` (case-insensitive), else 0."""
+    if not snippet:
+        return 0
+    low = snippet.lower()
+    for i, ln in enumerate(raw_text.splitlines(), start=1):
         if low in ln.lower():
             return i
     return 0
 
 
-def _line_of_re(text: str, pattern: re.Pattern) -> int:
-    """1-based line of first regex match, else 0."""
-    for i, ln in enumerate(text.splitlines(), start=1):
-        if pattern.search(ln):
-            return i
-    return 0
+def _locate(raw_text: str, value: str, match: re.Match) -> int:
+    """
+    Best-effort 1-based line for a match inside a prose value. Tries a window around
+    the hit first (unique enough to land on the right line), then the bare term.
+    """
+    start = max(0, match.start() - 24)
+    window = value[start:match.end() + 24].strip()
+    return _line_of_snippet(raw_text, window) or _line_of_snippet(raw_text, match.group(0))
 
 
-def _word_bound(term: str) -> re.Pattern:
-    """Case-insensitive regex matching `term` on word boundaries."""
-    # Treat spaces inside multi-word terms as literal spaces; escape everything.
-    esc = re.escape(term)
-    # \b doesn't fire next to a space, so apply \b only at letter/digit edges.
-    return re.compile(r"(?<![A-Za-z0-9])" + esc + r"(?![A-Za-z0-9])", re.IGNORECASE)
+def _is_named_entity_use(value: str, match: re.Match) -> bool:
+    """
+    True when a contextual term reads as a proper noun rather than an ordinary word.
+
+    Requires the match to be capitalized, not sentence-initial, and not part of a
+    title-cased phrase. That clears "Military plates," (sentence-initial),
+    "military protocol" (lowercase) and "Issued Military Kit" (title case), while
+    still tripping on "the Military sealed the road".
+    """
+    tok = match.group(0)
+    if not tok[:1].isupper():
+        return False
+
+    before = value[:match.start()].rstrip()
+    if not before or before.endswith(SENTENCE_ENDERS):
+        return False        # sentence-initial: capitalization carries no meaning
+
+    prev_word = re.search(r"([A-Za-z0-9'\-]+)\s*$", before)
+    if prev_word and prev_word.group(1)[:1].isupper():
+        return False        # inside a Title Cased Phrase
+
+    after = value[match.end():].lstrip()
+    next_word = re.match(r"([A-Za-z0-9'\-]+)", after)
+    if next_word and next_word.group(1)[:1].isupper():
+        return False        # start of a Title Cased Phrase
+
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Prose extraction
+# ---------------------------------------------------------------------------
+def iter_prose(data: dict, kind: str) -> Iterable[tuple]:
+    """Yield (field_path, text) for every human-facing string. Never ids or tags."""
+    if kind == "event":
+        for key in EVENT_PROSE_TOP:
+            val = data.get(key)
+            if isinstance(val, str) and val:
+                yield (key, val)
+        choices = data.get("choices")
+        if isinstance(choices, list):
+            for i, choice in enumerate(choices):
+                if not isinstance(choice, dict):
+                    continue
+                for key in EVENT_PROSE_CHOICE:
+                    val = choice.get(key)
+                    if isinstance(val, str) and val:
+                        yield (f"choices[{i}].{key}", val)
+                for outcome_key in ("successOutcome", "failureOutcome"):
+                    outcome = choice.get(outcome_key)
+                    if not isinstance(outcome, dict):
+                        continue
+                    for key in EVENT_PROSE_OUTCOME:
+                        val = outcome.get(key)
+                        if isinstance(val, str) and val:
+                            yield (f"choices[{i}].{outcome_key}.{key}", val)
+    else:
+        for key in ITEM_PROSE_TOP:
+            val = data.get(key)
+            if isinstance(val, str) and val:
+                yield (key, val)
 
 
 # ---------------------------------------------------------------------------
 # Checks
 # ---------------------------------------------------------------------------
-def check_ip_and_phrases(raw_text: str, rel: str, rep: FileReport) -> None:
-    for term in BANNED_IP_TERMS:
-        pat = _word_bound(term)
-        ln = _line_of_re(raw_text, pat)
-        if ln:
-            rep.violations.append(Viol(
-                kind="ip",
-                message=f"IP firewall hit: banned S.T.A.L.K.E.R. name '{term}'",
-                file=rel, line=ln,
-            ))
-    for phrase in BANNED_PHRASES:
-        ln = _line_of(raw_text, phrase)
-        if ln:
-            rep.violations.append(Viol(
-                kind="phrase",
-                message=f"§7 forbidden phrase: '{phrase}'",
-                file=rel, line=ln,
-            ))
+def scan_prose(data: dict, kind: str, raw_text: str, rel: str, rep: FileReport) -> None:
+    """IP firewall + voice, over prose fields only."""
+    for field_path, value in iter_prose(data, kind):
+
+        for term in HARD_IP_TERMS:
+            for m in _word_bound(term).finditer(value):
+                rep.violations.append(Viol(
+                    kind="ip", file=rel, field=field_path, line=_locate(raw_text, value, m),
+                    matched=m.group(0),
+                    message=f"IP firewall: banned proper noun '{term}' (CLAUDE.md §8)",
+                ))
+                break   # one report per term per field is enough to act on
+
+        for term in CONTEXTUAL_IP_TERMS:
+            for m in _word_bound(term, ignorecase=False).finditer(value):
+                if not _is_named_entity_use(value, m):
+                    continue
+                rep.violations.append(Viol(
+                    kind="ip_ctx", file=rel, field=field_path, line=_locate(raw_text, value, m),
+                    matched=m.group(0),
+                    message=f"IP firewall: '{term}' reads as a named entity here, not an "
+                            f"ordinary word (CLAUDE.md §8)",
+                ))
+                break
+
+        for phrase in HARD_CLICHES:
+            m = _word_bound(phrase).search(value)
+            if m:
+                rep.violations.append(Viol(
+                    kind="phrase", file=rel, field=field_path, line=_locate(raw_text, value, m),
+                    matched=m.group(0),
+                    message=f"§7 forbidden cliche: '{phrase}'",
+                ))
+
+        for phrase in SOFT_CLICHES:
+            m = _word_bound(phrase).search(value)
+            if m:
+                rep.violations.append(Viol(
+                    kind="cliche_soft", file=rel, field=field_path,
+                    line=_locate(raw_text, value, m), matched=m.group(0),
+                    message=f"pulp register: '{phrase}' — check it earns its place (warning only)",
+                ))
 
 
 def check_schema_event(data: dict, rel: str, rep: FileReport) -> None:
@@ -205,24 +370,21 @@ def check_schema_event(data: dict, rel: str, rep: FileReport) -> None:
         if not isinstance(ch, list) or not ch:
             rep.schema_ok = False
             rep.violations.append(Viol(
-                kind="schema", file=rel,
-                message="Event 'choices' must be a non-empty array",
+                kind="schema", file=rel, message="Event 'choices' must be a non-empty array",
             ))
         else:
             for i, c in enumerate(ch):
                 if not isinstance(c, dict):
                     rep.schema_ok = False
                     rep.violations.append(Viol(
-                        kind="schema", file=rel,
-                        message=f"choices[{i}] is not an object",
+                        kind="schema", file=rel, message=f"choices[{i}] is not an object",
                     ))
                     continue
                 m = [k for k in CHOICE_REQUIRED if k not in c]
                 if m:
                     rep.schema_ok = False
                     rep.violations.append(Viol(
-                        kind="schema", file=rel,
-                        message=f"choices[{i}] missing: {', '.join(m)}",
+                        kind="schema", file=rel, message=f"choices[{i}] missing: {', '.join(m)}",
                     ))
                 if "successChance" in c:
                     sc = c["successChance"]
@@ -246,15 +408,13 @@ def check_schema_item(data: dict, rel: str, rep: FileReport) -> None:
     if missing:
         rep.schema_ok = False
         rep.violations.append(Viol(
-            kind="schema", file=rel,
-            message=f"Item missing required field(s): {', '.join(missing)}",
+            kind="schema", file=rel, message=f"Item missing required field(s): {', '.join(missing)}",
         ))
     if "id" in data:
         base = os.path.splitext(os.path.basename(rel))[0]
         if data["id"] != base:
             rep.violations.append(Viol(
-                kind="schema", file=rel,
-                message=f"Item id '{data['id']}' != filename '{base}'",
+                kind="schema", file=rel, message=f"Item id '{data['id']}' != filename '{base}'",
             ))
     if "weightKg" in data and not isinstance(data["weightKg"], (int, float)):
         rep.schema_ok = False
@@ -263,31 +423,24 @@ def check_schema_item(data: dict, rel: str, rep: FileReport) -> None:
         ))
     if "durability" in data and not isinstance(data["durability"], (int, float)):
         rep.schema_ok = False
-        rep.violations.append(Viol(
-            kind="schema", file=rel, message=f"durability not numeric",
-        ))
+        rep.violations.append(Viol(kind="schema", file=rel, message="durability not numeric"))
 
 
 # ---- formula lint ---------------------------------------------------------
-def _msg(s: str) -> str: return s
-
-
 def lint_formula(formula: str, rel: str, field_name: str, rep: FileReport) -> None:
     """Static lint of a successChanceFormula string against the FormulaEvaluator grammar."""
     s = formula.strip()
     if not s:
-        rep.violations.append(Viol(
-            kind="formula", file=rel, message=f"{field_name}: empty formula",
-        )); return
-    pos = 0
-    depth = 0
-    n = len(s)
-    last_op = True            # expect a primary (operand) at start
+        rep.violations.append(Viol(kind="formula", file=rel, field=field_name,
+                                   message=f"{field_name}: empty formula"))
+        return
+    pos, depth, n = 0, 0, len(s)
+    last_op = True                      # expect an operand at the start
     while pos < n:
         m = _FORMULA_TOKEN_RE.match(s, pos)
         if not m or m.start() != pos:
             rep.violations.append(Viol(
-                kind="formula", file=rel,
+                kind="formula", file=rel, field=field_name,
                 message=f"{field_name}: unexpected character at pos {pos}: {s[pos]!r} in {s!r}",
             ))
             return
@@ -295,7 +448,7 @@ def lint_formula(formula: str, rel: str, field_name: str, rep: FileReport) -> No
             tok = m.group("num")
             if tok in (".", "..", ""):
                 rep.violations.append(Viol(
-                    kind="formula", file=rel,
+                    kind="formula", file=rel, field=field_name,
                     message=f"{field_name}: invalid number literal {tok!r} in {s!r}",
                 ))
             last_op = False
@@ -303,55 +456,54 @@ def lint_formula(formula: str, rel: str, field_name: str, rep: FileReport) -> No
             tok = m.group("var")
             if tok not in FORMULA_KNOWN_VARS:
                 rep.violations.append(Viol(
-                    kind="formula", file=rel,
+                    kind="formula", file=rel, field=field_name,
                     message=f"{field_name}: unknown variable {tok!r} in {s!r} (known: crew.*)",
                 ))
             last_op = False
-        elif m.group("op") is not None:
+        else:
             tok = m.group("op")
             if tok == "(":
                 if not last_op:
                     rep.violations.append(Viol(
-                        kind="formula", file=rel,
-                        message=f"{field_name}: '(' must follow operator, pos {pos} in {s!r}",
+                        kind="formula", file=rel, field=field_name,
+                        message=f"{field_name}: '(' must follow an operator, pos {pos} in {s!r}",
                     ))
                 depth += 1
                 last_op = True
             elif tok == ")":
                 if last_op:
                     rep.violations.append(Viol(
-                        kind="formula", file=rel,
+                        kind="formula", file=rel, field=field_name,
                         message=f"{field_name}: ')' with nothing inside, pos {pos} in {s!r}",
                     ))
                 if depth == 0:
                     rep.violations.append(Viol(
-                        kind="formula", file=rel,
+                        kind="formula", file=rel, field=field_name,
                         message=f"{field_name}: unbalanced ')' at pos {pos} in {s!r}",
                     ))
                 depth -= 1
                 last_op = False
-            else:  # + - * /
+            else:
                 if last_op and tok != "-":
                     rep.violations.append(Viol(
-                        kind="formula", file=rel,
-                        message=f"{field_name}: binary '{tok}' without left operand at pos {pos} in {s!r}",
+                        kind="formula", file=rel, field=field_name,
+                        message=f"{field_name}: binary '{tok}' without a left operand at pos {pos} in {s!r}",
                     ))
                 last_op = True
         pos = m.end()
     if depth != 0:
         rep.violations.append(Viol(
-            kind="formula", file=rel,
+            kind="formula", file=rel, field=field_name,
             message=f"{field_name}: unbalanced parens (depth={depth}) in {s!r}",
         ))
     if last_op:
         rep.violations.append(Viol(
-            kind="formula", file=rel,
+            kind="formula", file=rel, field=field_name,
             message=f"{field_name}: trailing operator in {s!r}",
         ))
 
 
-def _walk_strings(obj: Any, prefix: str = "") -> Iterable[tuple[str, str]]:
-    """Yield (field_path, value) for every string value in a nested dict/list."""
+def _walk_strings(obj: Any, prefix: str = "") -> Iterable[tuple]:
     if isinstance(obj, dict):
         for k, v in obj.items():
             p = f"{prefix}.{k}" if prefix else k
@@ -390,17 +542,12 @@ def process_file(path: str, kind: str) -> FileReport:
         rep.violations.append(Viol(kind="parse", file=rel, message=f"Cannot read file: {e}"))
         return rep
 
-    # IP firewall + §7 phrases scan the raw text (case-insensitive, word-bounded).
-    check_ip_and_phrases(raw_text, rel, rep)
-
-    # JSON parse
     try:
         data = json.loads(raw_text)
     except json.JSONDecodeError as e:
         rep.parse_ok = False
         rep.violations.append(Viol(
-            kind="parse", file=rel, line=e.lineno,
-            message=f"JSON parse error: {e.msg}",
+            kind="parse", file=rel, line=e.lineno, message=f"JSON parse error: {e.msg}",
         ))
         return rep
 
@@ -409,22 +556,122 @@ def process_file(path: str, kind: str) -> FileReport:
         rep.violations.append(Viol(kind="parse", file=rel, message="Top-level JSON must be an object"))
         return rep
 
-    # Schema
     if kind == "event":
         check_schema_event(data, rel, rep)
     else:
         check_schema_item(data, rel, rep)
 
-    # Formula lint
+    scan_prose(data, kind, raw_text, rel, rep)
     check_formulas(data, rel, rep)
-
     return rep
 
 
+def _has_hard_violation(r: FileReport) -> bool:
+    return any(v.hard for v in r.violations)
+
+
+# ---------------------------------------------------------------------------
+# Negative control (CLAUDE.md §14 — a gate never observed failing is decoration)
+# ---------------------------------------------------------------------------
+MUST_CATCH = [
+    ("ip", {"id": "evt_x", "title": "Strelok is asking after you",
+            "narrativeText": "n", "prerequisites": {}, "baseWeight": 1.0,
+            "choices": [{"choiceLabel": "c", "successChance": 0.5, "requiredTraitsAny": [],
+                         "blockedByTraits": [], "successOutcome": {}, "failureOutcome": {}}]}),
+    ("ip", {"id": "evt_x", "title": "t", "narrativeText": "A bloodsucker took the night shift.",
+            "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("ip", {"id": "evt_x", "title": "t", "narrativeText": "Filed from Pripyat, apparently.",
+            "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("ip_ctx", {"id": "evt_x", "title": "t",
+                "narrativeText": "The road is closed; the Military sealed it Tuesday.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("ip_ctx", {"id": "evt_x", "title": "t", "narrativeText": "He signed with Duty last spring.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("phrase", {"id": "evt_x", "title": "t", "narrativeText": "An eerie silence over the yard.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("phrase", {"id": "evt_x", "title": "t", "narrativeText": "Twisted metal everywhere.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("formula", {"id": "evt_x", "title": "t", "narrativeText": "n", "prerequisites": {},
+                 "baseWeight": 1.0,
+                 "choices": [{"choiceLabel": "c", "successChanceFormula": "crew.combat * (0.4",
+                              "successChance": 0.5, "requiredTraitsAny": [], "blockedByTraits": [],
+                              "successOutcome": {}, "failureOutcome": {}}]}),
+    ("formula", {"id": "evt_x", "title": "t", "narrativeText": "n", "prerequisites": {},
+                 "baseWeight": 1.0,
+                 "choices": [{"choiceLabel": "c", "successChanceFormula": "crew.luck + 1",
+                              "successChance": 0.5, "requiredTraitsAny": [], "blockedByTraits": [],
+                              "successOutcome": {}, "failureOutcome": {}}]}),
+    ("schema", {"id": "evt_x", "title": "t", "narrativeText": "n", "prerequisites": {},
+                "baseWeight": 1.0, "choices": []}),
+]
+
+MUST_NOT_CATCH = [
+    ("ordinary adjective", {"id": "evt_x", "title": "t",
+                            "narrativeText": "Military plates, olive paint. They do not stop.",
+                            "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("lowercase adjective", {"id": "evt_x", "title": "t",
+                             "narrativeText": "The sentry signals: military vehicle approaching.",
+                             "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("title-cased item name", {"id": "item_x", "displayName": "Issued Military Kit"}),
+    ("in-voice duty usage", {"id": "evt_x", "title": "t",
+                             "narrativeText": "He is on duty until the shift register says otherwise.",
+                             "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+]
+
+
+def self_test() -> int:
+    """Prove every detector fires on a real violation and stays quiet on clean prose."""
+    print("=" * 78)
+    print("content_qa self-test (negative control)")
+    print("=" * 78)
+    failures = 0
+
+    print("\n-- must CATCH --")
+    for expect_kind, payload in MUST_CATCH:
+        kind = "item" if payload.get("id", "").startswith("item") else "event"
+        rep = FileReport(path="<memory>", rel="<memory>", kind=kind)
+        if kind == "event":
+            check_schema_event(payload, "<memory>", rep)
+        else:
+            check_schema_item(payload, "<memory>", rep)
+        scan_prose(payload, kind, json.dumps(payload, indent=2), "<memory>", rep)
+        check_formulas(payload, "<memory>", rep)
+
+        got = sorted({v.kind for v in rep.violations if v.hard})
+        ok = expect_kind in got
+        failures += 0 if ok else 1
+        probe = payload.get("narrativeText") or payload.get("title") or payload.get("displayName") or ""
+        print(f"  [{'PASS' if ok else 'FAIL'}] expect {expect_kind:8} got {got}  :: {probe[:56]!r}")
+
+    print("\n-- must NOT catch --")
+    for label, payload in MUST_NOT_CATCH:
+        kind = "item" if payload.get("id", "").startswith("item") else "event"
+        rep = FileReport(path="<memory>", rel="<memory>", kind=kind)
+        scan_prose(payload, kind, json.dumps(payload, indent=2), "<memory>", rep)
+        noisy = [v for v in rep.violations if v.kind in ("ip", "ip_ctx", "phrase")]
+        ok = not noisy
+        failures += 0 if ok else 1
+        print(f"  [{'PASS' if ok else 'FAIL'}] {label:24} "
+              f"{'clean' if ok else [v.matched for v in noisy]}")
+
+    print()
+    if failures:
+        print(f"SELF-TEST FAILED — {failures} case(s) wrong. The gate is not trustworthy.")
+        return 1
+    print("SELF-TEST PASSED — every detector fires on real violations and stays quiet on clean prose.")
+    return 0
+
+
 def main() -> int:
-    if not os.path.isdir(PROJECT_ROOT):
-        print(f"ERROR: project root not found: {PROJECT_ROOT}", file=sys.stderr)
-        return 2
+    ap = argparse.ArgumentParser(description="OblastZero content QA (read-only)")
+    ap.add_argument("--self-test", action="store_true",
+                    help="run the negative control instead of scanning content")
+    ap.add_argument("--max-detail", type=int, default=40,
+                    help="max lines printed per violation section (default 40)")
+    args = ap.parse_args()
+
+    if args.self_test:
+        return self_test()
 
     print("=" * 78)
     print("OblastZero Content QA")
@@ -433,31 +680,23 @@ def main() -> int:
 
     event_files = sorted(glob.glob(os.path.join(EVENTS_DIR, "*.json")))
     item_files = sorted(glob.glob(os.path.join(ITEMS_DIR, "*.json")))
-
     print(f"Events dir: {EVENTS_DIR}  ({len(event_files)} .json files)")
     print(f"Items  dir: {ITEMS_DIR}  ({len(item_files)} .json files)")
+    print("Scans run over prose fields only — ids, region tags and enum values are")
+    print("machine identifiers and are deliberately excluded.")
     print()
 
-    all_reps: list[FileReport] = []
-    for p in event_files:
-        all_reps.append(process_file(p, "event"))
-    for p in item_files:
-        all_reps.append(process_file(p, "item"))
+    all_reps = [process_file(p, "event") for p in event_files]
+    all_reps += [process_file(p, "item") for p in item_files]
 
-    # ---- Aggregate summary ------------------------------------------------
     total = len(all_reps)
     parse_ok = sum(1 for r in all_reps if r.parse_ok)
     schema_ok = sum(1 for r in all_reps if r.schema_ok)
     fully_valid = sum(1 for r in all_reps if r.parse_ok and r.schema_ok and not _has_hard_violation(r))
     hard_viol_files = [r for r in all_reps if _has_hard_violation(r)]
 
-    cnt = lambda k: sum(1 for r in all_reps for v in r.violations if v.kind == k)
-    n_ip = cnt("ip")
-    n_phrase = cnt("phrase")
-    n_formula = cnt("formula")
-    n_schema = cnt("schema")
-    n_parse = cnt("parse")
-    n_info = cnt("info")
+    def cnt(k):
+        return sum(1 for r in all_reps for v in r.violations if v.kind == k)
 
     print("-" * 78)
     print("SUMMARY")
@@ -469,57 +708,57 @@ def main() -> int:
     print(f"  Schema OK (top+choices):     {schema_ok}")
     print(f"  Fully valid (no hard viol.): {fully_valid}")
     print()
-    print(f"  Violations by kind:")
-    print(f"    ip       (S.T.A.L.K.E.R.): {n_ip}")
-    print(f"    phrase   (§7 cliches):     {n_phrase}")
-    print(f"    schema   (missing/invalid):{n_schema}")
-    print(f"    parse    (JSON):           {n_parse}")
-    print(f"    formula  (chance):         {n_formula}")
-    print(f"    info     (convention):     {n_info}")
+    print("  Violations by kind:")
+    print(f"    ip       (proper noun):    {cnt('ip')}          [fails gate]")
+    print(f"    ip_ctx   (named-entity):   {cnt('ip_ctx')}          [fails gate]")
+    print(f"    phrase   (bible §7):       {cnt('phrase')}          [fails gate]")
+    print(f"    schema   (missing/invalid):{cnt('schema')}          [fails gate]")
+    print(f"    parse    (JSON):           {cnt('parse')}          [fails gate]")
+    print(f"    formula  (chance):         {cnt('formula')}          [fails gate]")
+    print(f"    cliche_soft (pulp register):{cnt('cliche_soft')}         [warning only]")
+    print(f"    info     (convention):     {cnt('info')}       [warning only]")
     print()
 
-    # ---- Detail: every violation, grouped by kind -------------------------
     def dump(kind: str, title: str) -> None:
         hits = [v for r in all_reps for v in r.violations if v.kind == kind]
         if not hits:
             print(f"  [{title}] none")
             return
         print(f"  [{title}] {len(hits)}:")
-        for v in hits:
-            loc = v.file
-            if v.line:
-                loc += f":{v.line}"
+        for v in hits[:args.max_detail]:
+            loc = v.file + (f":{v.line}" if v.line else "")
             extra = f" :: {v.field}" if v.field else ""
-            print(f"    - {loc}{extra}  {v.message}")
+            shown = f" -> {v.matched!r}" if v.matched else ""
+            print(f"    - {loc}{extra}  {v.message}{shown}")
+        if len(hits) > args.max_detail:
+            print(f"    ... and {len(hits) - args.max_detail} more")
 
     print("-" * 78)
     print("DETAIL")
     print("-" * 78)
-    dump("ip", "IP FIREWALL")
-    dump("phrase", "§7 FORBIDDEN PHRASES")
+    dump("ip", "IP FIREWALL — proper nouns")
+    dump("ip_ctx", "IP FIREWALL — named-entity usage")
+    dump("phrase", "§7 FORBIDDEN CLICHES")
     dump("schema", "SCHEMA")
     dump("formula", "FORMULA")
     dump("parse", "PARSE")
-    dump("info", "INFO (convention, not error)")
+    dump("cliche_soft", "PULP REGISTER (warning only)")
 
     print()
     print("-" * 78)
     print("RESULT")
     print("-" * 78)
     if hard_viol_files:
-        print(f"  FAIL — {len(hard_viol_files)} file(s) with hard violations (ip/phrase/schema/parse/formula):")
+        print(f"  FAIL — {len(hard_viol_files)} file(s) with hard violations:")
         for r in hard_viol_files[:50]:
             print(f"    - {r.rel}")
         if len(hard_viol_files) > 50:
             print(f"    ... and {len(hard_viol_files) - 50} more")
         return 1
     print("  PASS — all files schema-valid; no IP / §7 / formula violations.")
-    print("  (info-level convention notes only; those do not fail the QA.)")
+    print("  (warning-level notes above, if any, do not fail the QA.)")
+    print("  Run --self-test to confirm the detectors still fire.")
     return 0
-
-
-def _has_hard_violation(r: FileReport) -> bool:
-    return any(v.kind != "info" for v in r.violations)
 
 
 if __name__ == "__main__":
