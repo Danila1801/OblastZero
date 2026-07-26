@@ -18,7 +18,7 @@ MonoBehaviour:
   category: 0
   icon: {fileID: 0}
   worldPrefab: {fileID: 0}
-  weightKg: 0.46
+  weightKg: 0.4
   durability: 100
   decayPerDay: 2
   utilityTags: 0000000005000000

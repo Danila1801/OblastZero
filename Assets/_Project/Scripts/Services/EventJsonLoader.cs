@@ -20,7 +20,8 @@ namespace OblastZero.Services
 
         /// <summary>
         /// Load all .json files from Resources/Events/ and deserialize into ExpeditionEventData instances.
-        /// Returns a list ready to be assigned to GameDatabase.events.
+        /// Returns a runtime-only list; GameDatabase indexes it alongside the authored `events` list
+        /// rather than appending to it, so the serialized asset stays authored-only.
         /// </summary>
         public static List<ExpeditionEventData> LoadEventsFromResources(GameDatabase database)
         {
@@ -149,7 +150,6 @@ namespace OblastZero.Services
 
             eventData.sourceJsonPath = sourceName;
 
-            Debug.Log($"[EventJsonLoader] Deserialized event '{eventData.displayName}' with {eventData.choices.Count} choices.");
             return eventData;
         }
 

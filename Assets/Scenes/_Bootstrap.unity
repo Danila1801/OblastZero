@@ -286,36 +286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50d1808084565f0478b71fe04b6cb763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.HomeBunkerState
---- !u!115 &355386559
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: RunVictoryAdaptationState
-  m_Namespace: OblastZero.Core.States
-  m_AssemblyName: Assembly-CSharp
---- !u!115 &535154911
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: RunVictoryStabilizationState
-  m_Namespace: OblastZero.Core.States
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &697542410
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,7 +398,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 705732175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 355386559}
+  m_Script: {fileID: 11500000, guid: 972080df60752ccb62d35666699e7846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.RunVictoryAdaptationState
 --- !u!1 &1126321470
@@ -475,21 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18e956570f9b0e42bc9b412309d1a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.RunFailedState
---- !u!115 &1380050476
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: RunVictoryReliefState
-  m_Namespace: OblastZero.Core.States
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &1527730792
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +489,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef65c299e10bc8048b321165e2483cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.ScavengePhase3DState
-  emissionSeconds: 60
 --- !u!1 &1539671407
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,24 +530,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1539671407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1632248203}
+  m_Script: {fileID: 11500000, guid: bbd035fc5f8e3d1d84012f5e69900571, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.RunVictoryIndependentState
---- !u!115 &1632248203
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: RunVictoryIndependentState
-  m_Namespace: OblastZero.Core.States
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &1656214920
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +574,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1656214920}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1380050476}
+  m_Script: {fileID: 11500000, guid: 868f7b0cc7625b437d218a1d085d3493, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.RunVictoryReliefState
 --- !u!1 &1696688963
@@ -812,7 +751,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2089679053}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 535154911}
+  m_Script: {fileID: 11500000, guid: c7ac0da93f7faa3dde83d9c50b5559f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Core.States.RunVictoryStabilizationState
 --- !u!1660057539 &9223372036854775807

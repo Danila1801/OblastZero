@@ -36,7 +36,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cbb6104baddb5cf4ab4ce8aa8e783f09, type: 2}
   anomalies: []
   mutants: []
-  events:
-  - {fileID: 11400000, guid: b7267e5f0d621e640b1880cbe3d01eff, type: 2}
-  - {fileID: 11400000, guid: a0ff8add452d3ae499455964a39da899, type: 2}
-  - {fileID: 11400000, guid: e3856db1add16564e821c080a6b9cec0, type: 2}
+  events: []

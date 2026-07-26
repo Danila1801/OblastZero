@@ -23,7 +23,8 @@ namespace OblastZero.Services
 
         /// <summary>
         /// Load all .json files from Resources/Items/ and deserialize into ItemData instances.
-        /// Returns a list ready to be merged with GameDatabase.items.
+        /// Returns a runtime-only list; GameDatabase indexes it alongside the authored `items` list
+        /// rather than appending to it, so the serialized asset stays authored-only.
         /// </summary>
         public static List<ItemData> LoadItemsFromResources()
         {

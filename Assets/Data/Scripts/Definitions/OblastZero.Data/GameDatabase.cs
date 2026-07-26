@@ -12,6 +12,12 @@ namespace OblastZero.Data
     ///
     /// Create one asset (Create → OblastZero/System/Game Database), then either assign the lists by hand
     /// or use the "Rebuild From Project" context-menu to auto-scan every matching asset in the project.
+    ///
+    /// Lifetime note: this is a ScriptableObject asset, so a single instance is shared between the Editor
+    /// and Play mode. Entering Play mode runs a domain reload, which round-trips the live instance through
+    /// Unity's serializer — that preserves plain fields but silently drops every <see cref="Dictionary{K,V}"/>.
+    /// The init state is therefore derived from <see cref="IndexesBuilt"/> rather than trusted from a bool,
+    /// so a dropped index always rebuilds instead of being reported as "already initialized".
     /// </summary>
     [CreateAssetMenu(menuName = "OblastZero/System/Game Database", fileName = "GameDatabase")]
     public class GameDatabase : ScriptableObject
@@ -35,102 +41,157 @@ namespace OblastZero.Data
         private Dictionary<string, AnomalyData> _anomaliesById;
         private Dictionary<string, MutantData> _mutantsById;
         private Dictionary<string, ExpeditionEventData> _eventsById;
-        private bool _initialized;
 
-        public bool IsInitialized => _initialized;
+        // JSON-sourced content lives in runtime-only lists, never in the serialized ones above.
+        // Appending it to `items`/`events` grew the asset by 703 items / 1020 events on every rebuild,
+        // and any Editor tool that saved the asset afterwards persisted throwaway CreateInstance objects
+        // as broken references. Kept separate, the indexes merge both sources and the asset stays authored-only.
+        [System.NonSerialized] private List<ItemData> _jsonItems;
+        [System.NonSerialized] private List<ExpeditionEventData> _jsonEvents;
+        [System.NonSerialized] private List<ItemData> _allItems;
+        [System.NonSerialized] private List<ExpeditionEventData> _allEvents;
+
+        // Must not survive a domain reload — the dictionaries above cannot, and a stale `true` here
+        // is what makes Initialize() early-return over a set of null indexes.
+        [System.NonSerialized] private bool _initialized;
+        [System.NonSerialized] private bool _initializing;
+
+        public bool IsInitialized => _initialized && IndexesBuilt;
+
+        /// <summary>
+        /// True only when every index actually exists. This is the real test for "usable"; the
+        /// <c>_initialized</c> flag alone cannot be trusted across a play-mode domain reload.
+        /// </summary>
+        private bool IndexesBuilt =>
+            _itemsById != null && _crewById != null && _traitsById != null && _voiceById != null &&
+            _factionsById != null && _factionsByEnum != null && _anomaliesById != null &&
+            _mutantsById != null && _eventsById != null;
 
         /// <summary>Builds all id indexes. Call once at bootstrap. Idempotent unless <paramref name="force"/>.</summary>
         public void Initialize(bool force = false)
         {
-            if (_initialized && !force) return;
-
-            // Load JSON items and merge with authored SO items.
-            var jsonItems = ItemJsonLoader.LoadItemsFromResources();
-            if (jsonItems != null && jsonItems.Count > 0)
+            if (_initialized && IndexesBuilt && !force) return;
+            if (_initializing)
             {
-                items = new List<ItemData>(items ?? new List<ItemData>());
-                items.AddRange(jsonItems);
+                Debug.LogWarning("[GameDatabase] Initialize() called re-entrantly. Skipping.");
+                return;
             }
+            _initializing = true;
 
-            _itemsById = BuildIndex(items, "ItemData");
-
-            _crewById = BuildIndex(crew, "CrewMemberData");
-            _traitsById = BuildIndex(traits, "TraitData");
-            _voiceById = BuildIndex(voiceGroups, "VoiceLineGroup");
-            _factionsById = BuildIndex(factions, "FactionData");
-            _anomaliesById = BuildIndex(anomalies, "AnomalyData");
-            _mutantsById = BuildIndex(mutants, "MutantData");
-
-            // Load JSON events and merge with authored events.
-            var jsonEvents = EventJsonLoader.LoadEventsFromResources(this);
-            if (jsonEvents != null && jsonEvents.Count > 0)
+            try
             {
-                events = new List<ExpeditionEventData>(events ?? new List<ExpeditionEventData>());
-                events.AddRange(jsonEvents);
-            }
+                // Load JSON items first — the event loader resolves item ids through TryGetItem,
+                // so the item index has to exist before events are deserialized.
+                _jsonItems = ItemJsonLoader.LoadItemsFromResources() ?? new List<ItemData>();
 
-            _eventsById = BuildIndex(events, "ExpeditionEventData");
+                _itemsById = BuildIndex("ItemData", items, _jsonItems);
 
-            // Secondary index: factions are also reached by their enum id (reputation is enum-driven).
-            _factionsByEnum = new Dictionary<FactionId, FactionData>(factions?.Count ?? 0);
-            if (factions != null)
-            {
-                foreach (var faction in factions)
+                _crewById = BuildIndex("CrewMemberData", crew);
+                _traitsById = BuildIndex("TraitData", traits);
+                _voiceById = BuildIndex("VoiceLineGroup", voiceGroups);
+                _factionsById = BuildIndex("FactionData", factions);
+                _anomaliesById = BuildIndex("AnomalyData", anomalies);
+                _mutantsById = BuildIndex("MutantData", mutants);
+
+                _jsonEvents = EventJsonLoader.LoadEventsFromResources(this) ?? new List<ExpeditionEventData>();
+
+                _eventsById = BuildIndex("ExpeditionEventData", events, _jsonEvents);
+
+                // Secondary index: factions are also reached by their enum id (reputation is enum-driven).
+                _factionsByEnum = new Dictionary<FactionId, FactionData>(factions?.Count ?? 0);
+                if (factions != null)
                 {
-                    if (faction == null) continue;
-                    if (_factionsByEnum.ContainsKey(faction.factionId))
+                    foreach (var faction in factions)
                     {
-                        Debug.LogError($"[GameDatabase] Duplicate FactionId '{faction.factionId}' on '{faction.name}'; first one wins.");
-                        continue;
+                        if (faction == null) continue;
+                        if (_factionsByEnum.ContainsKey(faction.factionId))
+                        {
+                            Debug.LogError($"[GameDatabase] Duplicate FactionId '{faction.factionId}' on '{faction.name}'; first one wins.");
+                            continue;
+                        }
+                        _factionsByEnum[faction.factionId] = faction;
                     }
-                    _factionsByEnum[faction.factionId] = faction;
                 }
-            }
 
-            _initialized = true;
-            Debug.Log($"[GameDatabase] Initialized: {_itemsById.Count} items, {_crewById.Count} crew, " +
-                      $"{_traitsById.Count} traits, {_voiceById.Count} voice groups, {_factionsById.Count} factions, " +
-                      $"{_anomaliesById.Count} anomalies, {_mutantsById.Count} mutants, {_eventsById.Count} events.");
+                _allItems = Combine(items, _jsonItems);
+                _allEvents = Combine(events, _jsonEvents);
+
+                _initialized = true;
+                Debug.Log($"[GameDatabase] Initialized: {_itemsById.Count} items, {_crewById.Count} crew, " +
+                          $"{_traitsById.Count} traits, {_voiceById.Count} voice groups, {_factionsById.Count} factions, " +
+                          $"{_anomaliesById.Count} anomalies, {_mutantsById.Count} mutants, {_eventsById.Count} events.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[GameDatabase] Initialize() threw: {ex}");
+                throw;
+            }
+            finally
+            {
+                _initializing = false;
+            }
         }
 
-        private Dictionary<string, T> BuildIndex<T>(List<T> source, string label) where T : GameDataObject
+        private Dictionary<string, T> BuildIndex<T>(string label, params List<T>[] sources) where T : GameDataObject
         {
-            var dict = new Dictionary<string, T>(source?.Count ?? 0);
-            if (source == null) return dict;
-            foreach (var entry in source)
+            int capacity = 0;
+            foreach (var source in sources) capacity += source?.Count ?? 0;
+
+            var dict = new Dictionary<string, T>(capacity);
+            foreach (var source in sources)
             {
-                if (entry == null)
+                if (source == null) continue;
+                foreach (var entry in source)
                 {
-                    Debug.LogWarning($"[GameDatabase] Null {label} entry skipped.");
-                    continue;
+                    if (entry == null)
+                    {
+                        Debug.LogWarning($"[GameDatabase] Null {label} entry skipped.");
+                        continue;
+                    }
+                    if (string.IsNullOrEmpty(entry.id))
+                    {
+                        Debug.LogError($"[GameDatabase] {label} asset '{entry.name}' has an empty id; skipped.");
+                        continue;
+                    }
+                    if (dict.ContainsKey(entry.id))
+                    {
+                        Debug.LogError($"[GameDatabase] Duplicate {label} id '{entry.id}' on '{entry.name}'; first one wins.");
+                        continue;
+                    }
+                    dict[entry.id] = entry;
                 }
-                if (string.IsNullOrEmpty(entry.id))
-                {
-                    Debug.LogError($"[GameDatabase] {label} asset '{entry.name}' has an empty id; skipped.");
-                    continue;
-                }
-                if (dict.ContainsKey(entry.id))
-                {
-                    Debug.LogError($"[GameDatabase] Duplicate {label} id '{entry.id}' on '{entry.name}'; first one wins.");
-                    continue;
-                }
-                dict[entry.id] = entry;
             }
             return dict;
         }
 
+        private static List<T> Combine<T>(List<T> authored, List<T> fromJson)
+        {
+            var combined = new List<T>((authored?.Count ?? 0) + (fromJson?.Count ?? 0));
+            if (authored != null) combined.AddRange(authored);
+            if (fromJson != null) combined.AddRange(fromJson);
+            return combined;
+        }
+
         private void EnsureInit()
         {
-            if (!_initialized) Initialize();
+            if (_initialized && IndexesBuilt) return;
+            if (_initializing)
+            {
+                // Re-entrant call during Initialize() — e.g. EventJsonLoader looking up an item
+                // via TryGetItem while Initialize is still mid-flight. The indexes built so far are
+                // safe to read; the ones not yet built are null, which every Lookup already guards.
+                return;
+            }
+            Initialize();
         }
 
         // ---- Lookups ----
 
         public ItemData GetItem(string id) { EnsureInit(); return Lookup(_itemsById, id, "ItemData"); }
-        public bool TryGetItem(string id, out ItemData data) { EnsureInit(); return _itemsById.TryGetValue(id ?? string.Empty, out data); }
+        public bool TryGetItem(string id, out ItemData data) { EnsureInit(); data = null; return _itemsById != null && _itemsById.TryGetValue(id ?? string.Empty, out data); }
 
         public CrewMemberData GetCrew(string id) { EnsureInit(); return Lookup(_crewById, id, "CrewMemberData"); }
-        public bool TryGetCrew(string id, out CrewMemberData data) { EnsureInit(); return _crewById.TryGetValue(id ?? string.Empty, out data); }
+        public bool TryGetCrew(string id, out CrewMemberData data) { EnsureInit(); data = null; return _crewById != null && _crewById.TryGetValue(id ?? string.Empty, out data); }
 
         public TraitData GetTrait(string id) { EnsureInit(); return Lookup(_traitsById, id, "TraitData"); }
         public VoiceLineGroup GetVoiceGroup(string id) { EnsureInit(); return Lookup(_voiceById, id, "VoiceLineGroup"); }
@@ -139,6 +200,11 @@ namespace OblastZero.Data
         public FactionData GetFaction(FactionId factionId)
         {
             EnsureInit();
+            if (_factionsByEnum == null)
+            {
+                Debug.LogError($"[GameDatabase] Faction index missing after Initialize(); cannot look up '{factionId}'.");
+                return null;
+            }
             if (_factionsByEnum.TryGetValue(factionId, out var value)) return value;
             Debug.LogWarning($"[GameDatabase] No FactionData found for FactionId '{factionId}'.");
             return null;
@@ -148,13 +214,20 @@ namespace OblastZero.Data
         public MutantData GetMutant(string id) { EnsureInit(); return Lookup(_mutantsById, id, "MutantData"); }
         public ExpeditionEventData GetEvent(string id) { EnsureInit(); return Lookup(_eventsById, id, "ExpeditionEventData"); }
 
-        public IReadOnlyList<ItemData> AllItems => items;
-        public IReadOnlyList<CrewMemberData> AllCrew => crew;
-        public IReadOnlyList<ExpeditionEventData> AllEvents => events;
+        // Authored + JSON content. These are the lists callers iterate (EventEngine walks AllEvents to
+        // build its weighted pool), so they must include the JSON content the indexes were built from.
+        public IReadOnlyList<ItemData> AllItems { get { EnsureInit(); return _allItems ?? (IReadOnlyList<ItemData>)items; } }
+        public IReadOnlyList<CrewMemberData> AllCrew { get { EnsureInit(); return crew; } }
+        public IReadOnlyList<ExpeditionEventData> AllEvents { get { EnsureInit(); return _allEvents ?? (IReadOnlyList<ExpeditionEventData>)events; } }
         public List<CrewMemberData> allCrewMembers => crew; // Convenience for UI.
 
         private T Lookup<T>(Dictionary<string, T> dict, string id, string label) where T : GameDataObject
         {
+            if (dict == null)
+            {
+                Debug.LogError($"[GameDatabase] {label} index missing after Initialize(); lookup for '{id}' failed.");
+                return null;
+            }
             if (!string.IsNullOrEmpty(id) && dict.TryGetValue(id, out var value)) return value;
             Debug.LogWarning($"[GameDatabase] No {label} found for id '{id}'.");
             return null;
