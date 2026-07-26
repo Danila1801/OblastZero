@@ -216,18 +216,46 @@ namespace OblastZero.Core
             _reputation?.Bind(newRun);
             _events?.Bind(newRun);
 
-            // Every Blowout starts with an empty pack against the standard ceiling.
-            if (_inventory != null)
-                _inventory.ScavengeCarryCapacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
+            // Every Blowout starts with an empty pack. The ceiling on it is the lead operator's authored
+            // carry capacity, not a flat constant — without this the CARRY figure on the RunSetup roster
+            // is decoration, and a player who picked Sasha for her pack gets Marina's.
+            float carryCapacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
+            string capacitySource = "baseline (no lead)";
 
             if (!string.IsNullOrEmpty(leadCrewDataId))
             {
                 var lead = _crew?.AddRescued(leadCrewDataId);
                 if (lead == null)
+                {
                     Debug.LogError($"[GameManager] Lead operator '{leadCrewDataId}' could not be added — " +
                                    "the run will reach the bunker with no crew unless someone is rescued.");
+                }
                 else
+                {
                     Debug.Log($"[GameManager] Lead operator '{leadCrewDataId}' registered for the expedition.");
+
+                    // CrewInstance carries only the data id, so the authored stats come from the database.
+                    CrewMemberData leadData;
+                    if (gameDatabase != null && gameDatabase.TryGetCrew(leadCrewDataId, out leadData) && leadData != null)
+                    {
+                        carryCapacityKg = Mathf.Max(BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG,
+                                                    leadData.baseStats.carryCapacityKg);
+                        capacitySource = $"lead '{leadCrewDataId}' ({leadData.baseStats.carryCapacityKg:0.##} kg authored)";
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[GameManager] No CrewMemberData for lead '{leadCrewDataId}'; " +
+                                         "falling back to the baseline scavenge capacity.");
+                    }
+                }
+            }
+
+            if (_inventory != null)
+            {
+                _inventory.ScavengeCarryCapacityKg = carryCapacityKg;
+                Debug.Log($"[GameManager] Scavenge carry capacity {carryCapacityKg:0.##} kg — from {capacitySource}. " +
+                          $"Baseline {BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG} kg, " +
+                          $"floor {BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG} kg.");
             }
 
             Debug.Log($"[GameManager] New run begun. id={newRun.runId} site={scavengeSiteId} seed={rngSeed} " +

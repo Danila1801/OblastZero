@@ -34,6 +34,13 @@ namespace OblastZero.Core
         /// this in loot, so "what do I leave behind" is a live decision every run rather than a formality.
         /// </summary>
         public const int   SCAVENGE_MAX_CARRY_WEIGHT_KG = 15;
+        /// <summary>
+        /// Hard floor under the per-crew carry override, in kg. The live cap is the lead operator's
+        /// authored <c>carryCapacityKg</c> (GameManager.BeginNewRun); this stops a misauthored or
+        /// zeroed crew member from producing a pack that refuses every pickup, which in play reads as
+        /// a broken pickup system rather than as a crew stat. Roughly half the baseline.
+        /// </summary>
+        public const int   SCAVENGE_MIN_CARRY_WEIGHT_KG = 8;
         public const float SCAVENGE_PICKUP_LERP_DURATION = 0.25f;   // SmoothDamp time for instant-pickup visual
 
         // ─── Bunker Phase (2D, Phase B) ─────────────────────────────────────────

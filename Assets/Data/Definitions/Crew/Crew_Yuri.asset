@@ -23,7 +23,7 @@ MonoBehaviour:
   baseStats:
     maxHealth: 100
     maxSanity: 80
-    carryCapacityKg: 28
+    carryCapacityKg: 15
     sanityRecoveryMultiplier: 0.9
     radiationResistanceMultiplier: 1.1
     combatResolutionMultiplier: 1.3

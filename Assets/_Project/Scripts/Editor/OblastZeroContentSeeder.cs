@@ -143,20 +143,26 @@ namespace OblastZero.EditorTools
         {
             TraitData Trait(string id) => traits.Find(t => t.id == id);
 
+            // carryCapacityKg straddles BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG (15) rather than
+            // sitting above it: Marina 12 / Yuri 15 / Sasha 19. The lead operator's value IS the scavenge
+            // cap (GameManager.BeginNewRun), so authoring all three above the baseline would hand every
+            // run more room than the depot was tuned against and retire the "what do I leave behind"
+            // decision. Keep these in step with Assets/Data/Definitions/Crew/Crew_*.asset — re-seeding
+            // overwrites those files.
             var list = new List<CrewMemberData>
             {
                 MakeCrew("Crew_Marina", "crew_marina", "Marina", "Marina", "Volkova", "Andreevna",
-                    CrewBackground.FieldMedic, 90, 100, 22f, 1.3f, 1.0f, 0.9f,
+                    CrewBackground.FieldMedic, 90, 100, 12f, 1.3f, 1.0f, 0.9f,
                     "A field medic who stayed after the others left. She keeps a list of everyone she could not save.",
                     new[] { Trait("trait_steady_hands") }),
 
                 MakeCrew("Crew_Yuri", "crew_yuri", "Yuri", "Yuri", "Lebedev", "Ignatevich",
-                    CrewBackground.ExCordonSoldier, 100, 80, 28f, 0.9f, 1.1f, 1.3f,
+                    CrewBackground.ExCordonSoldier, 100, 80, 15f, 0.9f, 1.1f, 1.3f,
                     "Walked away from a garrison still following its 1981 orders. He does not talk about it, and he still cleans his rifle every night.",
                     new[] { Trait("trait_steady_hands") }),
 
                 MakeCrew("Crew_Sasha", "crew_sasha", "Sasha", "Aleksandr", "Morozov", "Pavlovich",
-                    CrewBackground.LonerScavenger, 95, 85, 34f, 1.0f, 1.0f, 1.0f,
+                    CrewBackground.LonerScavenger, 95, 85, 19f, 1.0f, 1.0f, 1.0f,
                     "A loner who knows every drainage culvert and collapsed stairwell in the cordon. Trusts the Oblast more than the people in it.",
                     new[] { Trait("trait_iron_stomach"), Trait("trait_claustrophobic") }),
             };
