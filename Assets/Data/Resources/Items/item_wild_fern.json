@@ -2,7 +2,7 @@
   "id": "item_wild_fern",
   "displayName": "Wild Fern",
   "category": "Food",
-  "weightKg": 0.13,
+  "weightKg": 0.79,
   "durability": 90,
   "decayPerDay": 0.2,
   "utilityTags": [

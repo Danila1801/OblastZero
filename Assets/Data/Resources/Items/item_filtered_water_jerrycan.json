@@ -2,7 +2,7 @@
   "id": "item_filtered_water_jerrycan",
   "displayName": "Filtered Water Jerrycan",
   "category": "Water",
-  "weightKg": 0.83,
+  "weightKg": 1.48,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

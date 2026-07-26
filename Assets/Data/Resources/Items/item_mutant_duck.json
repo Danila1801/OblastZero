@@ -2,7 +2,7 @@
   "id": "item_mutant_duck",
   "displayName": "Mutant Duck",
   "category": "Food",
-  "weightKg": 0.57,
+  "weightKg": 0.9,
   "durability": 70,
   "decayPerDay": 0.27,
   "utilityTags": [

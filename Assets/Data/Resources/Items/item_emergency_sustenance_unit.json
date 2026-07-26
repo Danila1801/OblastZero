@@ -2,7 +2,7 @@
   "id": "item_emergency_sustenance_unit",
   "displayName": "Emergency Sustenance Unit",
   "category": "Food",
-  "weightKg": 0.2,
+  "weightKg": 0.7,
   "durability": 70,
   "decayPerDay": 0.35,
   "utilityTags": [

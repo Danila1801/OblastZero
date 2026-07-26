@@ -2,7 +2,7 @@
   "id": "item_artifact_blanket",
   "displayName": "Artifact: Blanket",
   "category": "Artifact",
-  "weightKg": 0.76,
+  "weightKg": 0.16,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

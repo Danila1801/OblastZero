@@ -2,7 +2,7 @@
   "id": "item_salvaged_fabric",
   "displayName": "Salvaged Fabric",
   "category": "Crafting",
-  "weightKg": 0.13,
+  "weightKg": 0.3,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

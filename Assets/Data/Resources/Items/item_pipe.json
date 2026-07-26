@@ -2,7 +2,7 @@
   "id": "item_pipe",
   "displayName": "Pipe",
   "category": "Weapon",
-  "weightKg": 2.04,
+  "weightKg": 1.58,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

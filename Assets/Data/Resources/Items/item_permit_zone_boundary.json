@@ -2,7 +2,7 @@
   "id": "item_permit_zone_boundary",
   "displayName": "Permit: Zone Boundary",
   "category": "Document",
-  "weightKg": 0.08,
+  "weightKg": 0.04,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

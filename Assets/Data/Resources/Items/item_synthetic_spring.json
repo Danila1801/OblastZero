@@ -2,7 +2,7 @@
   "id": "item_synthetic_spring",
   "displayName": "Synthetic Spring",
   "category": "Crafting",
-  "weightKg": 0.44,
+  "weightKg": 0.84,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_canned_beet",
   "displayName": "Canned Beet",
   "category": "Food",
-  "weightKg": 0.33,
+  "weightKg": 0.5,
   "durability": 60,
   "decayPerDay": 0.42,
   "utilityTags": [

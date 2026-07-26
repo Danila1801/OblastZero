@@ -2,7 +2,7 @@
   "id": "item_standard_sedative",
   "displayName": "Standard Sedative",
   "category": "Medical",
-  "weightKg": 0.01,
+  "weightKg": 0.08,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

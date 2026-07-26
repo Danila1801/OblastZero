@@ -2,7 +2,7 @@
   "id": "item_issued_document_variant_13",
   "displayName": "Issued Document Variant 13",
   "category": "Document",
-  "weightKg": 0.31,
+  "weightKg": 0.17,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

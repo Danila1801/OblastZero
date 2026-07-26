@@ -2,7 +2,7 @@
   "id": "item_bolt_cutter",
   "displayName": "Bolt Cutter",
   "category": "Tool",
-  "weightKg": 0.89,
+  "weightKg": 2.66,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

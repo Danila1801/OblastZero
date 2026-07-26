@@ -2,7 +2,7 @@
   "id": "item_issued_document_variant_8",
   "displayName": "Issued Document Variant 8",
   "category": "Document",
-  "weightKg": 0.68,
+  "weightKg": 0.11,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

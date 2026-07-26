@@ -2,7 +2,7 @@
   "id": "item_issued_food_variant_28",
   "displayName": "Issued Food Variant 28",
   "category": "Food",
-  "weightKg": 0.15,
+  "weightKg": 0.25,
   "durability": 90,
   "decayPerDay": 0.48,
   "utilityTags": [

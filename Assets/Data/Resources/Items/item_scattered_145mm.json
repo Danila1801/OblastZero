@@ -2,7 +2,7 @@
   "id": "item_scattered_145mm",
   "displayName": "Scattered 14.5mm",
   "category": "Ammunition",
-  "weightKg": 0.01,
+  "weightKg": 0.13,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

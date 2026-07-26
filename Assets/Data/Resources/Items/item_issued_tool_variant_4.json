@@ -2,7 +2,7 @@
   "id": "item_issued_tool_variant_4",
   "displayName": "Issued Tool Variant 4",
   "category": "Tool",
-  "weightKg": 0.33,
+  "weightKg": 2.54,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

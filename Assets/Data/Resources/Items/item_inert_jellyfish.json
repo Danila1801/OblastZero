@@ -2,7 +2,7 @@
   "id": "item_inert_jellyfish",
   "displayName": "Inert Jellyfish",
   "category": "Artifact",
-  "weightKg": 0.42,
+  "weightKg": 0.27,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

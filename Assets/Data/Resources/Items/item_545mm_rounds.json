@@ -2,7 +2,7 @@
   "id": "item_545mm_rounds",
   "displayName": "5.45mm Rounds",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.1,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

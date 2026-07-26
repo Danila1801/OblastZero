@@ -2,7 +2,7 @@
   "id": "item_anti_rad_vial",
   "displayName": "Anti-Rad Vial",
   "category": "Medical",
-  "weightKg": 0.04,
+  "weightKg": 0.13,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

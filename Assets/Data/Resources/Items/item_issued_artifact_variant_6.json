@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_6",
   "displayName": "Issued Artifact Variant 6",
   "category": "Artifact",
-  "weightKg": 0.1,
+  "weightKg": 0.34,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

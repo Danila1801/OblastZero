@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_12",
   "displayName": "Issued Artifact Variant 12",
   "category": "Artifact",
-  "weightKg": 0.51,
+  "weightKg": 0.39,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_worn_wrench",
   "displayName": "Worn Wrench",
   "category": "Tool",
-  "weightKg": 0.63,
+  "weightKg": 2.26,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

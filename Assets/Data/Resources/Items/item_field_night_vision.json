@@ -2,7 +2,7 @@
   "id": "item_field_night_vision",
   "displayName": "Field Night Vision",
   "category": "Tool",
-  "weightKg": 1.73,
+  "weightKg": 1.1,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

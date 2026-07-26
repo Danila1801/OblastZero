@@ -2,7 +2,7 @@
   "id": "item_beacon",
   "displayName": "Beacon",
   "category": "Special",
-  "weightKg": 0.39,
+  "weightKg": 1.7,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

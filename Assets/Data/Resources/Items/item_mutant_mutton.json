@@ -2,7 +2,7 @@
   "id": "item_mutant_mutton",
   "displayName": "Mutant Mutton",
   "category": "Food",
-  "weightKg": 0.5,
+  "weightKg": 0.55,
   "durability": 60,
   "decayPerDay": 0.17,
   "utilityTags": [

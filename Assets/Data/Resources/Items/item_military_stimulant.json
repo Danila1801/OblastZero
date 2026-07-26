@@ -2,7 +2,7 @@
   "id": "item_military_stimulant",
   "displayName": "Military Stimulant",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.1,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

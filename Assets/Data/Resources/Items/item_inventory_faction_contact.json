@@ -2,7 +2,7 @@
   "id": "item_inventory_faction_contact",
   "displayName": "Inventory: Faction Contact",
   "category": "Document",
-  "weightKg": 0.25,
+  "weightKg": 0.12,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

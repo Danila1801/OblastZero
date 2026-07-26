@@ -2,7 +2,7 @@
   "id": "item_artifact_mica",
   "displayName": "Artifact: Mica",
   "category": "Artifact",
-  "weightKg": 0.56,
+  "weightKg": 0.11,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

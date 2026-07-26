@@ -2,7 +2,7 @@
   "id": "item_cold_ember",
   "displayName": "Cold Ember",
   "category": "Artifact",
-  "weightKg": 1.1,
+  "weightKg": 0.42,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

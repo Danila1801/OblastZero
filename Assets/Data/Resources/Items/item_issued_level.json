@@ -2,7 +2,7 @@
   "id": "item_issued_level",
   "displayName": "Issued Level",
   "category": "Tool",
-  "weightKg": 1.19,
+  "weightKg": 0.65,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

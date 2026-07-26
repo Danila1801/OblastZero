@@ -2,7 +2,7 @@
   "id": "item_improvised_pliers",
   "displayName": "Improvised Pliers",
   "category": "Tool",
-  "weightKg": 0.95,
+  "weightKg": 2.96,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

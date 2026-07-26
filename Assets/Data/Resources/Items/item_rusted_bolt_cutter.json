@@ -2,7 +2,7 @@
   "id": "item_rusted_bolt_cutter",
   "displayName": "Rusted Bolt Cutter",
   "category": "Tool",
-  "weightKg": 1.64,
+  "weightKg": 3.21,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

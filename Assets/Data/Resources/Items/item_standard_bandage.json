@@ -2,7 +2,7 @@
   "id": "item_standard_bandage",
   "displayName": "Standard Bandage",
   "category": "Medical",
-  "weightKg": 0.1,
+  "weightKg": 0.23,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

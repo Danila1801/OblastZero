@@ -2,7 +2,7 @@
   "id": "item_pepper_paste",
   "displayName": "Pepper Paste",
   "category": "Food",
-  "weightKg": 0.08,
+  "weightKg": 0.63,
   "durability": 100,
   "decayPerDay": 0.43,
   "utilityTags": [

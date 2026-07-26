@@ -2,7 +2,7 @@
   "id": "item_processed_gasket",
   "displayName": "Processed Gasket",
   "category": "Crafting",
-  "weightKg": 0.07,
+  "weightKg": 0.5,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

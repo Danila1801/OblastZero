@@ -2,7 +2,7 @@
   "id": "item_classified_incident_report",
   "displayName": "Classified Incident Report",
   "category": "Document",
-  "weightKg": 0.12,
+  "weightKg": 0.1,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

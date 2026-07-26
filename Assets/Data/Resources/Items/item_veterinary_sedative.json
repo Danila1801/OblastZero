@@ -2,7 +2,7 @@
   "id": "item_veterinary_sedative",
   "displayName": "Veterinary Sedative",
   "category": "Medical",
-  "weightKg": 0.03,
+  "weightKg": 0.08,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

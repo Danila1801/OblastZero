@@ -2,7 +2,7 @@
   "id": "item_salvaged_nail_set",
   "displayName": "Salvaged Nail Set",
   "category": "Tool",
-  "weightKg": 0.57,
+  "weightKg": 3.85,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

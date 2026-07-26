@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_21",
   "displayName": "Issued Ammunition Variant 21",
   "category": "Ammunition",
-  "weightKg": 0.7,
+  "weightKg": 0.08,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

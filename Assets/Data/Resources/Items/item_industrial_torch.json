@@ -2,7 +2,7 @@
   "id": "item_industrial_torch",
   "displayName": "Industrial Torch",
   "category": "Tool",
-  "weightKg": 2.81,
+  "weightKg": 1.46,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

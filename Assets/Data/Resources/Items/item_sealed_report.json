@@ -2,7 +2,7 @@
   "id": "item_sealed_report",
   "displayName": "Sealed Report",
   "category": "Document",
-  "weightKg": 0.07,
+  "weightKg": 0.12,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

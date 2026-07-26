@@ -2,7 +2,7 @@
   "id": "item_handloaded_545mm",
   "displayName": "Handloaded 5.45mm",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.07,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

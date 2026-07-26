@@ -2,7 +2,7 @@
   "id": "item_dried_tongue",
   "displayName": "Dried Tongue",
   "category": "Food",
-  "weightKg": 0.27,
+  "weightKg": 0.58,
   "durability": 70,
   "decayPerDay": 0.19,
   "utilityTags": [

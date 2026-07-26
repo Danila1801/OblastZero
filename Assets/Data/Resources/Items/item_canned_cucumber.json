@@ -2,7 +2,7 @@
   "id": "item_canned_cucumber",
   "displayName": "Canned Cucumber",
   "category": "Food",
-  "weightKg": 0.47,
+  "weightKg": 0.58,
   "durability": 70,
   "decayPerDay": 0.24,
   "utilityTags": [

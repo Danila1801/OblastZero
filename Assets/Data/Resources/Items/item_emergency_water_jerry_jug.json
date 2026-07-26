@@ -2,7 +2,7 @@
   "id": "item_emergency_water_jerry_jug",
   "displayName": "Emergency Water Jerry Jug",
   "category": "Water",
-  "weightKg": 1.6,
+  "weightKg": 1.37,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

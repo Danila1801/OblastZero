@@ -2,7 +2,7 @@
   "id": "item_improvised_military_kit",
   "displayName": "Improvised Military Kit",
   "category": "Medical",
-  "weightKg": 0.22,
+  "weightKg": 1.06,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

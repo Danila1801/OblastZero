@@ -2,7 +2,7 @@
   "id": "item_issued_tool_variant_1",
   "displayName": "Issued Tool Variant 1",
   "category": "Tool",
-  "weightKg": 0.25,
+  "weightKg": 4.36,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

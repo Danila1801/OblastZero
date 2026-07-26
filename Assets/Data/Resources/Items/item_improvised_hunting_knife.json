@@ -2,7 +2,7 @@
   "id": "item_improvised_hunting_knife",
   "displayName": "Improvised Hunting Knife",
   "category": "Weapon",
-  "weightKg": 2.26,
+  "weightKg": 0.48,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

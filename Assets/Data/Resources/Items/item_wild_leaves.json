@@ -2,7 +2,7 @@
   "id": "item_wild_leaves",
   "displayName": "Wild Leaves",
   "category": "Food",
-  "weightKg": 0.05,
+  "weightKg": 0.97,
   "durability": 100,
   "decayPerDay": 0.08,
   "utilityTags": [

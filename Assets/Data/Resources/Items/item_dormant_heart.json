@@ -2,7 +2,7 @@
   "id": "item_dormant_heart",
   "displayName": "Dormant Heart",
   "category": "Artifact",
-  "weightKg": 0.63,
+  "weightKg": 0.34,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

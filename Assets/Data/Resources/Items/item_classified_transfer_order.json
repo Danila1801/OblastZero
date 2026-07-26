@@ -2,7 +2,7 @@
   "id": "item_classified_transfer_order",
   "displayName": "Classified Transfer Order",
   "category": "Document",
-  "weightKg": 0.25,
+  "weightKg": 0.08,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

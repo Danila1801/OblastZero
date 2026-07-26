@@ -2,7 +2,7 @@
   "id": "item_kafedra_drip",
   "displayName": "Kafedra Drip",
   "category": "Medical",
-  "weightKg": 0.05,
+  "weightKg": 0.71,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

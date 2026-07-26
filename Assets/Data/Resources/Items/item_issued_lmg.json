@@ -2,7 +2,7 @@
   "id": "item_issued_lmg",
   "displayName": "Issued LMG",
   "category": "Weapon",
-  "weightKg": 1.28,
+  "weightKg": 4.75,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

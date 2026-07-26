@@ -2,7 +2,7 @@
   "id": "item_sidearm_revolver",
   "displayName": "Sidearm Revolver",
   "category": "Weapon",
-  "weightKg": 0.66,
+  "weightKg": 1.04,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

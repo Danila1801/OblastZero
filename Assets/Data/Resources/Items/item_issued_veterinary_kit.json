@@ -2,7 +2,7 @@
   "id": "item_issued_veterinary_kit",
   "displayName": "Issued Veterinary Kit",
   "category": "Medical",
-  "weightKg": 0.27,
+  "weightKg": 1.39,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

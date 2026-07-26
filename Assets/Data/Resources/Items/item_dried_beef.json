@@ -2,7 +2,7 @@
   "id": "item_dried_beef",
   "displayName": "Dried Beef",
   "category": "Food",
-  "weightKg": 0.19,
+  "weightKg": 0.55,
   "durability": 100,
   "decayPerDay": 0.48,
   "utilityTags": [

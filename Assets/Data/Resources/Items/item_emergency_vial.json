@@ -2,7 +2,7 @@
   "id": "item_emergency_vial",
   "displayName": "Emergency Vial",
   "category": "Medical",
-  "weightKg": 0.03,
+  "weightKg": 0.07,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

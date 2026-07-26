@@ -2,7 +2,7 @@
   "id": "item_military_splint",
   "displayName": "Military Splint",
   "category": "Medical",
-  "weightKg": 0.21,
+  "weightKg": 0.38,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

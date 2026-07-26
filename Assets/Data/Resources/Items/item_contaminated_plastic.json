@@ -2,7 +2,7 @@
   "id": "item_contaminated_plastic",
   "displayName": "Contaminated Plastic",
   "category": "Crafting",
-  "weightKg": 0.39,
+  "weightKg": 0.37,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

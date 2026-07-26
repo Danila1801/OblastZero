@@ -2,7 +2,7 @@
   "id": "item_veterinary_surplus_painkiller",
   "displayName": "Veterinary-Surplus Painkiller",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.67,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

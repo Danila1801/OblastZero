@@ -2,7 +2,7 @@
   "id": "item_adhesive_scrap",
   "displayName": "Adhesive Scrap",
   "category": "Crafting",
-  "weightKg": 0.09,
+  "weightKg": 0.41,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

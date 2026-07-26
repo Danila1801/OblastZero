@@ -2,7 +2,7 @@
   "id": "item_sharpened_trench_knife",
   "displayName": "Sharpened Trench Knife",
   "category": "Weapon",
-  "weightKg": 1.45,
+  "weightKg": 0.36,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

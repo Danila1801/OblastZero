@@ -36,14 +36,28 @@ namespace OblastZero.UI
         [Tooltip("Cosmetic only — what the countdown shows for the first second before the timer's first tick.")]
         [SerializeField] private float initialSecondsDisplay = 60f;
 
+        [Header("Carry Load")]
+        [Tooltip("Fraction of capacity at which the load readout turns amber.")]
+        [SerializeField, Range(0f, 1f)] private float loadWarnFraction = 0.75f;
+
+        [Tooltip("Seconds the 'TOO HEAVY' refusal notice stays on screen.")]
+        [SerializeField] private float refusalNoticeSeconds = 1.6f;
+
         private TextMeshProUGUI _countdown;
         private TextMeshProUGUI _prompt;
         private TextMeshProUGUI _grabbedBody;
+        private TextMeshProUGUI _loadLabel;
+        private Image _loadBarFill;
+        private RectTransform _loadBarTrack;
+        private TextMeshProUGUI _refusal;
         private GameObject _emissionLabel;
         private Sprite _whiteSprite;
 
         private float _cachedRemaining = Mathf.Infinity;
         private bool _expired;
+        private float _refusalHideAt = -1f;
+        private float _loadKg;
+        private float _capacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
 
         private void Awake() => BuildUI();
 
@@ -54,9 +68,12 @@ namespace OblastZero.UI
             EventBus.Subscribe<ItemPickedUpEvent>(OnPickup);
             EventBus.Subscribe<CrewRescuedEvent>(OnRescue);
             EventBus.Subscribe<ScavengeTargetChangedEvent>(OnTargetChanged);
+            EventBus.Subscribe<ScavengeLoadChangedEvent>(OnLoadChanged);
+            EventBus.Subscribe<ScavengePickupRejectedEvent>(OnPickupRejected);
 
             RefreshGrabbedList();
             SetPrompt(false, string.Empty);
+            PullLiveLoad();
         }
 
         private void OnDisable()
@@ -66,6 +83,8 @@ namespace OblastZero.UI
             EventBus.Unsubscribe<ItemPickedUpEvent>(OnPickup);
             EventBus.Unsubscribe<CrewRescuedEvent>(OnRescue);
             EventBus.Unsubscribe<ScavengeTargetChangedEvent>(OnTargetChanged);
+            EventBus.Unsubscribe<ScavengeLoadChangedEvent>(OnLoadChanged);
+            EventBus.Unsubscribe<ScavengePickupRejectedEvent>(OnPickupRejected);
         }
 
         private void Update()
@@ -75,6 +94,13 @@ namespace OblastZero.UI
             bool danger = !_expired && _cachedRemaining <= dangerThreshold;
             float scale = danger ? 1f + 0.10f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 6f)) : 1f;
             _countdown.rectTransform.localScale = Vector3.one * scale;
+
+            // Retire the refusal notice on its own clock — unscaled, so a pause never strands it.
+            if (_refusalHideAt > 0f && Time.unscaledTime >= _refusalHideAt)
+            {
+                _refusalHideAt = -1f;
+                if (_refusal != null) _refusal.gameObject.SetActive(false);
+            }
         }
 
         // ---- Event handlers ----
@@ -91,6 +117,17 @@ namespace OblastZero.UI
         private void OnPickup(ItemPickedUpEvent e) => RefreshGrabbedList();
         private void OnRescue(CrewRescuedEvent e) => RefreshGrabbedList();
         private void OnTargetChanged(ScavengeTargetChangedEvent e) => SetPrompt(e.HasTarget, e.Verb);
+
+        private void OnLoadChanged(ScavengeLoadChangedEvent e) => SetLoad(e.CurrentKg, e.CapacityKg);
+
+        private void OnPickupRejected(ScavengePickupRejectedEvent e)
+        {
+            // The pickup stayed on the floor. Say why in one line, in the Oblast's register.
+            var db = GameManager.Instance != null ? GameManager.Instance.Database : null;
+            string name = ResolveItemName(db, e.ItemDataId);
+            ShowRefusal($"OVER CAPACITY — {name} ({e.ItemWeightKg:0.#} kg) NOT LOGGED");
+            SetLoad(e.CurrentKg, e.CapacityKg);
+        }
 
         // ---- View updates ----
 
@@ -109,6 +146,51 @@ namespace OblastZero.UI
             if (_prompt == null) return;
             _prompt.gameObject.SetActive(show);
             if (show) _prompt.text = $"[E] {(string.IsNullOrEmpty(verb) ? "Take" : verb)}";
+        }
+
+        /// <summary>Reads the live load straight off the manager, so the HUD is correct on first frame.</summary>
+        private void PullLiveLoad()
+        {
+            var gm = GameManager.Instance;
+            var inventory = gm != null ? gm.Inventory : null;
+            if (inventory == null)
+            {
+                SetLoad(_loadKg, _capacityKg);
+                return;
+            }
+            SetLoad(inventory.ScavengeLoadKg, inventory.ScavengeCarryCapacityKg);
+        }
+
+        private void SetLoad(float currentKg, float capacityKg)
+        {
+            _loadKg = Mathf.Max(0f, currentKg);
+            _capacityKg = Mathf.Max(0.01f, capacityKg);
+
+            float fraction = Mathf.Clamp01(_loadKg / _capacityKg);
+            Color tint = fraction >= 1f ? dangerColor
+                       : fraction >= loadWarnFraction ? warnColor
+                       : normalColor;
+
+            if (_loadLabel != null)
+            {
+                _loadLabel.text = $"{_loadKg:0.0} / {_capacityKg:0.#} KG";
+                _loadLabel.color = tint;
+            }
+
+            if (_loadBarFill != null && _loadBarTrack != null)
+            {
+                var rect = _loadBarFill.rectTransform;
+                rect.sizeDelta = new Vector2(_loadBarTrack.sizeDelta.x * fraction, rect.sizeDelta.y);
+                _loadBarFill.color = tint;
+            }
+        }
+
+        private void ShowRefusal(string message)
+        {
+            if (_refusal == null) return;
+            _refusal.text = message;
+            _refusal.gameObject.SetActive(true);
+            _refusalHideAt = Time.unscaledTime + refusalNoticeSeconds;
         }
 
         private void RefreshGrabbedList()
@@ -220,9 +302,38 @@ namespace OblastZero.UI
             header.text = "GRABBED";
 
             _grabbedBody = CreateText("GrabbedBody", root, 22f, FontStyles.Normal, TextAlignmentOptions.BottomLeft);
-            SetBottomLeft(_grabbedBody.rectTransform, new Vector2(40f, 40f), new Vector2(460f, 270f));
+            SetBottomLeft(_grabbedBody.rectTransform, new Vector2(40f, 96f), new Vector2(460f, 214f));
             _grabbedBody.color = new Color(1f, 1f, 1f, 0.8f);
             _grabbedBody.text = "<i>nothing yet</i>";
+
+            // Carry load — under the grabbed list. The cap is the whole decision in Phase A, so it gets
+            // a bar the player can read at a glance while sprinting, not just a number.
+            var loadHeader = CreateText("LoadHeader", root, 20f, FontStyles.Bold, TextAlignmentOptions.BottomLeft);
+            SetBottomLeft(loadHeader.rectTransform, new Vector2(40f, 64f), new Vector2(200f, 26f));
+            loadHeader.color = new Color(1f, 1f, 1f, 0.85f);
+            loadHeader.text = "LOAD";
+
+            _loadLabel = CreateText("LoadValue", root, 20f, FontStyles.Bold, TextAlignmentOptions.BottomRight);
+            SetBottomLeft(_loadLabel.rectTransform, new Vector2(240f, 64f), new Vector2(260f, 26f));
+            _loadLabel.color = normalColor;
+            _loadLabel.text = $"0.0 / {(float)BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG:0.#} KG";
+
+            var track = CreateImage(root, "LoadBarTrack", new Color(1f, 1f, 1f, 0.18f));
+            SetBottomLeft(track.rectTransform, new Vector2(40f, 44f), new Vector2(460f, 10f));
+            _loadBarTrack = track.rectTransform;
+
+            _loadBarFill = CreateImage(track.transform, "LoadBarFill", normalColor);
+            var fillRect = _loadBarFill.rectTransform;
+            fillRect.anchorMin = fillRect.anchorMax = fillRect.pivot = new Vector2(0f, 0.5f);
+            fillRect.anchoredPosition = Vector2.zero;
+            fillRect.sizeDelta = new Vector2(0f, 10f);
+
+            // Refusal notice — sits just above the crosshair prompt so it lands in the player's eyeline.
+            _refusal = CreateText("Refusal", root, 26f, FontStyles.Bold, TextAlignmentOptions.Center);
+            SetCenter(_refusal.rectTransform, new Vector2(0f, -110f), new Vector2(900f, 40f));
+            _refusal.color = dangerColor;
+            _refusal.text = string.Empty;
+            _refusal.gameObject.SetActive(false);
 
             // Emission flash — center, hidden until the timer expires.
             var emission = CreateText("Emission", root, 64f, FontStyles.Bold, TextAlignmentOptions.Center);

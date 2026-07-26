@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_16",
   "displayName": "Issued Ammunition Variant 16",
   "category": "Ammunition",
-  "weightKg": 0.81,
+  "weightKg": 0.08,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

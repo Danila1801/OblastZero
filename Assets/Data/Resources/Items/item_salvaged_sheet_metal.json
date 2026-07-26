@@ -2,7 +2,7 @@
   "id": "item_salvaged_sheet_metal",
   "displayName": "Salvaged Sheet Metal",
   "category": "Crafting",
-  "weightKg": 0.19,
+  "weightKg": 0.61,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

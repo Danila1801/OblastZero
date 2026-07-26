@@ -2,7 +2,7 @@
   "id": "item_key_vault_3",
   "displayName": "Key: Vault 3",
   "category": "Special",
-  "weightKg": 0.19,
+  "weightKg": 0.24,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

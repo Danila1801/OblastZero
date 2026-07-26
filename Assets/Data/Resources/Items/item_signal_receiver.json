@@ -2,7 +2,7 @@
   "id": "item_signal_receiver",
   "displayName": "Signal Receiver",
   "category": "Tool",
-  "weightKg": 0.31,
+  "weightKg": 1.88,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

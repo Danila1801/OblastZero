@@ -2,7 +2,7 @@
   "id": "item_gray_water_glass_bottle",
   "displayName": "Gray Water Glass Bottle",
   "category": "Water",
-  "weightKg": 0.52,
+  "weightKg": 1.33,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

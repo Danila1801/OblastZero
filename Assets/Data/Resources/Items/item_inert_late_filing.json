@@ -2,7 +2,7 @@
   "id": "item_inert_late_filing",
   "displayName": "Inert Late Filing",
   "category": "Artifact",
-  "weightKg": 0.64,
+  "weightKg": 0.18,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

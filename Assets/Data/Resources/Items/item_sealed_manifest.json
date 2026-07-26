@@ -2,7 +2,7 @@
   "id": "item_sealed_manifest",
   "displayName": "Sealed Manifest",
   "category": "Document",
-  "weightKg": 0.2,
+  "weightKg": 0.11,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

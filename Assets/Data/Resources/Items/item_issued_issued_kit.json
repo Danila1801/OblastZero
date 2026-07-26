@@ -2,7 +2,7 @@
   "id": "item_issued_issued_kit",
   "displayName": "Issued Issued Kit",
   "category": "Medical",
-  "weightKg": 0.38,
+  "weightKg": 1.37,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

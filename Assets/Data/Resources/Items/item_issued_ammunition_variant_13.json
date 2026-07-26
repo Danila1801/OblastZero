@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_13",
   "displayName": "Issued Ammunition Variant 13",
   "category": "Ammunition",
-  "weightKg": 0.97,
+  "weightKg": 0.06,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

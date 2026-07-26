@@ -2,7 +2,7 @@
   "id": "item_smoked_mussel",
   "displayName": "Smoked Mussel",
   "category": "Food",
-  "weightKg": 0.34,
+  "weightKg": 0.75,
   "durability": 70,
   "decayPerDay": 0.39,
   "utilityTags": [

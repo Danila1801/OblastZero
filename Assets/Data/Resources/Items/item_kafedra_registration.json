@@ -2,7 +2,7 @@
   "id": "item_kafedra_registration",
   "displayName": "Kafedra Registration",
   "category": "Document",
-  "weightKg": 0.18,
+  "weightKg": 0.06,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

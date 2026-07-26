@@ -2,7 +2,7 @@
   "id": "item_raw_fabric",
   "displayName": "Raw Fabric",
   "category": "Crafting",
-  "weightKg": 0.21,
+  "weightKg": 0.34,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

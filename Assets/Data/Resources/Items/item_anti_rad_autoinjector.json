@@ -2,7 +2,7 @@
   "id": "item_anti_rad_autoinjector",
   "displayName": "Anti-Rad Autoinjector",
   "category": "Medical",
-  "weightKg": 0.03,
+  "weightKg": 0.08,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

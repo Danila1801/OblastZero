@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_18",
   "displayName": "Issued Ammunition Variant 18",
   "category": "Ammunition",
-  "weightKg": 0.23,
+  "weightKg": 0.1,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_sealed_memorandum",
   "displayName": "Sealed Memorandum",
   "category": "Document",
-  "weightKg": 0.16,
+  "weightKg": 0.07,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

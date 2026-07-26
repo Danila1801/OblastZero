@@ -2,7 +2,7 @@
   "id": "item_decontamination_injector",
   "displayName": "Decontamination Injector",
   "category": "Medical",
-  "weightKg": 0.11,
+  "weightKg": 0.14,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

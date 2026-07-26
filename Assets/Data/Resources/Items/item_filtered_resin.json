@@ -2,7 +2,7 @@
   "id": "item_filtered_resin",
   "displayName": "Filtered Resin",
   "category": "Crafting",
-  "weightKg": 0.12,
+  "weightKg": 0.51,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

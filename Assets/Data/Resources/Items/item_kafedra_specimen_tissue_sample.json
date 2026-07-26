@@ -2,7 +2,7 @@
   "id": "item_kafedra_specimen_tissue_sample",
   "displayName": "Kafedra Specimen: Tissue Sample",
   "category": "Artifact",
-  "weightKg": 0.76,
+  "weightKg": 0.42,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_anomaly_fragment_amber",
   "displayName": "Anomaly Fragment: Amber",
   "category": "Artifact",
-  "weightKg": 0.47,
+  "weightKg": 0.1,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

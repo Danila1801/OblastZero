@@ -2,7 +2,7 @@
   "id": "item_kafedra_flashlight",
   "displayName": "Kafedra Flashlight",
   "category": "Tool",
-  "weightKg": 0.37,
+  "weightKg": 1.18,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

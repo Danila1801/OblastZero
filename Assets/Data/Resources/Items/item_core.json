@@ -2,7 +2,7 @@
   "id": "item_core",
   "displayName": "Core",
   "category": "Special",
-  "weightKg": 0.43,
+  "weightKg": 1.95,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

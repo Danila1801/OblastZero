@@ -2,7 +2,7 @@
   "id": "item_stamped_tongue",
   "displayName": "Stamped Tongue",
   "category": "Artifact",
-  "weightKg": 0.09,
+  "weightKg": 0.4,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

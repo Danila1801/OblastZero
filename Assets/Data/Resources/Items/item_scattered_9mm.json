@@ -2,7 +2,7 @@
   "id": "item_scattered_9mm",
   "displayName": "Scattered 9mm",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.06,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

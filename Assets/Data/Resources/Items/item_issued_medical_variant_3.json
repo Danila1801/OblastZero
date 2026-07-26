@@ -2,7 +2,7 @@
   "id": "item_issued_medical_variant_3",
   "displayName": "Issued Medical Variant 3",
   "category": "Medical",
-  "weightKg": 0.34,
+  "weightKg": 0.37,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_decontaminated_water_glass_bottle",
   "displayName": "Decontaminated Water Glass Bottle",
   "category": "Water",
-  "weightKg": 1.17,
+  "weightKg": 1.3,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

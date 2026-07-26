@@ -2,7 +2,7 @@
   "id": "item_145mm_carbine",
   "displayName": "14.5mm Carbine",
   "category": "Weapon",
-  "weightKg": 0.77,
+  "weightKg": 3.01,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

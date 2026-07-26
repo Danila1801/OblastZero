@@ -2,7 +2,7 @@
   "id": "item_sharpened_pipe",
   "displayName": "Sharpened Pipe",
   "category": "Weapon",
-  "weightKg": 1.12,
+  "weightKg": 1.5,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

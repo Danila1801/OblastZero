@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_9",
   "displayName": "Issued Ammunition Variant 9",
   "category": "Ammunition",
-  "weightKg": 0.98,
+  "weightKg": 0.1,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

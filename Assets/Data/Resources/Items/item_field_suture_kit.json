@@ -2,7 +2,7 @@
   "id": "item_field_suture_kit",
   "displayName": "Field Suture Kit",
   "category": "Medical",
-  "weightKg": 0.09,
+  "weightKg": 1.01,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

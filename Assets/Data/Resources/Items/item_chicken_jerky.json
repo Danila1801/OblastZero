@@ -2,7 +2,7 @@
   "id": "item_chicken_jerky",
   "displayName": "Chicken Jerky",
   "category": "Food",
-  "weightKg": 0.19,
+  "weightKg": 0.48,
   "durability": 80,
   "decayPerDay": 0.01,
   "utilityTags": [

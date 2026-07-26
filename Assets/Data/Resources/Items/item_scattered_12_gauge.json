@@ -2,7 +2,7 @@
   "id": "item_scattered_12_gauge",
   "displayName": "Scattered 12 Gauge",
   "category": "Ammunition",
-  "weightKg": 0.01,
+  "weightKg": 0.05,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

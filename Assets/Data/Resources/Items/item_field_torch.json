@@ -2,7 +2,7 @@
   "id": "item_field_torch",
   "displayName": "Field Torch",
   "category": "Tool",
-  "weightKg": 1.26,
+  "weightKg": 1.18,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

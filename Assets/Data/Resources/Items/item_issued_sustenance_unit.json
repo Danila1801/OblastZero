@@ -2,7 +2,7 @@
   "id": "item_issued_sustenance_unit",
   "displayName": "Issued Sustenance Unit",
   "category": "Food",
-  "weightKg": 0.31,
+  "weightKg": 0.8,
   "durability": 90,
   "decayPerDay": 0.19,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_modified_rifle",
   "displayName": "Modified Rifle",
   "category": "Weapon",
-  "weightKg": 0.87,
+  "weightKg": 3.39,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

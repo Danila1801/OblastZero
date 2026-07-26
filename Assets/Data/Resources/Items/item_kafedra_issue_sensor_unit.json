@@ -2,7 +2,7 @@
   "id": "item_kafedra_issue_sensor_unit",
   "displayName": "Kafedra-Issue Sensor Unit",
   "category": "Tool",
-  "weightKg": 0.71,
+  "weightKg": 2.01,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

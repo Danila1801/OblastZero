@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_20",
   "displayName": "Issued Ammunition Variant 20",
   "category": "Ammunition",
-  "weightKg": 0.78,
+  "weightKg": 0.09,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

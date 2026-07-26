@@ -2,7 +2,7 @@
   "id": "item_contaminated_insulation",
   "displayName": "Contaminated Insulation",
   "category": "Crafting",
-  "weightKg": 0.29,
+  "weightKg": 0.27,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

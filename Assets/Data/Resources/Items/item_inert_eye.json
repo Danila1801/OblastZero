@@ -2,7 +2,7 @@
   "id": "item_inert_eye",
   "displayName": "Inert Eye",
   "category": "Artifact",
-  "weightKg": 0.88,
+  "weightKg": 0.19,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

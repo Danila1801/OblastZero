@@ -2,7 +2,7 @@
   "id": "item_bunker_bunker_provisions",
   "displayName": "Bunker Bunker Provisions",
   "category": "Food",
-  "weightKg": 0.21,
+  "weightKg": 0.51,
   "durability": 60,
   "decayPerDay": 0.06,
   "utilityTags": [

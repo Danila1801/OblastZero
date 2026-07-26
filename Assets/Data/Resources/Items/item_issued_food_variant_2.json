@@ -2,7 +2,7 @@
   "id": "item_issued_food_variant_2",
   "displayName": "Issued Food Variant 2",
   "category": "Food",
-  "weightKg": 0.22,
+  "weightKg": 0.41,
   "durability": 80,
   "decayPerDay": 0.14,
   "utilityTags": [

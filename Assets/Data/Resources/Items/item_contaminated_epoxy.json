@@ -2,7 +2,7 @@
   "id": "item_contaminated_epoxy",
   "displayName": "Contaminated Epoxy",
   "category": "Crafting",
-  "weightKg": 0.29,
+  "weightKg": 0.53,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -59,6 +59,14 @@ namespace OblastZero.Gameplay
             var data = _db.GetCrew(crewDataId);
             if (data == null) return null; // GameDatabase already logged the miss
 
+            // A person can only be rescued once. This matters now that a run registers a lead operator
+            // up front and that same crew member also stands in the level as a rescuable pickup.
+            if (IsAlreadyOnStrength(crewDataId))
+            {
+                Debug.Log($"[CrewManager] '{crewDataId}' is already on strength — rescue ignored.");
+                return null;
+            }
+
             var traitIds = new List<string>();
             if (data.startingTraits != null)
             {
@@ -204,6 +212,15 @@ namespace OblastZero.Gameplay
             int n = 0;
             foreach (var c in _run.ActiveCrew) if (c.isAlive) n++;
             return n;
+        }
+
+        /// <summary>True when this crew member is already rescued or already in the bunker roster.</summary>
+        public bool IsAlreadyOnStrength(string crewDataId)
+        {
+            if (!Ready(nameof(IsAlreadyOnStrength)) || string.IsNullOrEmpty(crewDataId)) return false;
+            foreach (var c in _run.RescuedCrew) if (c.crewDataId == crewDataId) return true;
+            foreach (var c in _run.ActiveCrew) if (c.crewDataId == crewDataId) return true;
+            return false;
         }
 
         // ---- Internals ----

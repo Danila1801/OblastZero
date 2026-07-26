@@ -2,7 +2,7 @@
   "id": "item_issued_craftin_variant_3",
   "displayName": "Issued Craftin Variant 3",
   "category": "Crafting",
-  "weightKg": 0.53,
+  "weightKg": 0.38,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_rusted_baton",
   "displayName": "Rusted Baton",
   "category": "Weapon",
-  "weightKg": 1.57,
+  "weightKg": 1.93,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

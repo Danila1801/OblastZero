@@ -2,7 +2,7 @@
   "id": "item_improvised_splint",
   "displayName": "Improvised Splint",
   "category": "Medical",
-  "weightKg": 0.11,
+  "weightKg": 0.42,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

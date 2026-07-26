@@ -2,7 +2,7 @@
   "id": "item_boiled_water_canteen",
   "displayName": "Boiled Water Canteen",
   "category": "Water",
-  "weightKg": 1.7,
+  "weightKg": 1.07,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

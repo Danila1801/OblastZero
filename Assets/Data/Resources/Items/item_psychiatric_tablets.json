@@ -2,7 +2,7 @@
   "id": "item_psychiatric_tablets",
   "displayName": "Psychiatric Tablets",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.55,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_key",
   "displayName": "Key",
   "category": "Special",
-  "weightKg": 0.48,
+  "weightKg": 0.2,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

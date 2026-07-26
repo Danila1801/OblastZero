@@ -2,7 +2,7 @@
   "id": "item_processed_chemical_compound",
   "displayName": "Processed Chemical Compound",
   "category": "Crafting",
-  "weightKg": 0.19,
+  "weightKg": 0.6,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

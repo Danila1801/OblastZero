@@ -2,7 +2,7 @@
   "id": "item_industrial_radio",
   "displayName": "Industrial Radio",
   "category": "Tool",
-  "weightKg": 1.35,
+  "weightKg": 4.65,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

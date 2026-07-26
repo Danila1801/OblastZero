@@ -2,7 +2,7 @@
   "id": "item_powdered_milk",
   "displayName": "Powdered Milk",
   "category": "Food",
-  "weightKg": 0.13,
+  "weightKg": 0.85,
   "durability": 70,
   "decayPerDay": 0.02,
   "utilityTags": [

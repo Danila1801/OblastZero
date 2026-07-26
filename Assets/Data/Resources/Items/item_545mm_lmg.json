@@ -2,7 +2,7 @@
   "id": "item_545mm_lmg",
   "displayName": "5.45mm LMG",
   "category": "Weapon",
-  "weightKg": 0.75,
+  "weightKg": 4.48,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

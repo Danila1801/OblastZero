@@ -2,7 +2,7 @@
   "id": "item_filtered_water_bladder",
   "displayName": "Filtered Water Bladder",
   "category": "Water",
-  "weightKg": 0.78,
+  "weightKg": 1.02,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

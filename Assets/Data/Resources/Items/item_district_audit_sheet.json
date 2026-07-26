@@ -2,7 +2,7 @@
   "id": "item_district_audit_sheet",
   "displayName": "District Audit Sheet",
   "category": "Document",
-  "weightKg": 0.28,
+  "weightKg": 0.09,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

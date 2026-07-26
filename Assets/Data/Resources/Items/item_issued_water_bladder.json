@@ -2,7 +2,7 @@
   "id": "item_issued_water_bladder",
   "displayName": "Issued Water Bladder",
   "category": "Water",
-  "weightKg": 1.13,
+  "weightKg": 1.1,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

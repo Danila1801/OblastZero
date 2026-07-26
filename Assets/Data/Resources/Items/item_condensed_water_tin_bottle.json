@@ -2,7 +2,7 @@
   "id": "item_condensed_water_tin_bottle",
   "displayName": "Condensed Water Tin Bottle",
   "category": "Water",
-  "weightKg": 1.32,
+  "weightKg": 0.85,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

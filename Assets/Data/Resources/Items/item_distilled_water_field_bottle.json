@@ -2,7 +2,7 @@
   "id": "item_distilled_water_field_bottle",
   "displayName": "Distilled Water Field Bottle",
   "category": "Water",
-  "weightKg": 1.87,
+  "weightKg": 1.01,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

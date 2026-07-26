@@ -2,7 +2,7 @@
   "id": "item_issued_water_glass_bottle",
   "displayName": "Issued Water Glass Bottle",
   "category": "Water",
-  "weightKg": 1.98,
+  "weightKg": 1.46,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

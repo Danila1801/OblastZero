@@ -2,7 +2,7 @@
   "id": "item_foraged_mushrooms",
   "displayName": "Foraged Mushrooms",
   "category": "Food",
-  "weightKg": 0.2,
+  "weightKg": 0.69,
   "durability": 60,
   "decayPerDay": 0.38,
   "utilityTags": [

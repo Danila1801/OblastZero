@@ -2,7 +2,7 @@
   "id": "item_filtered_fabric",
   "displayName": "Filtered Fabric",
   "category": "Crafting",
-  "weightKg": 0.18,
+  "weightKg": 0.4,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

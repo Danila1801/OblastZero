@@ -2,7 +2,7 @@
   "id": "item_tinned_tongue",
   "displayName": "Tinned Tongue",
   "category": "Food",
-  "weightKg": 0.54,
+  "weightKg": 0.47,
   "durability": 90,
   "decayPerDay": 0.2,
   "utilityTags": [

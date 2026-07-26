@@ -2,7 +2,7 @@
   "id": "item_dormant_jellyfish",
   "displayName": "Dormant Jellyfish",
   "category": "Artifact",
-  "weightKg": 0.55,
+  "weightKg": 0.32,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

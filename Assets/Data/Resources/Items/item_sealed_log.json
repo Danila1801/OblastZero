@@ -2,7 +2,7 @@
   "id": "item_sealed_log",
   "displayName": "Sealed Log",
   "category": "Document",
-  "weightKg": 0.14,
+  "weightKg": 0.18,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_4",
   "displayName": "Issued Ammunition Variant 4",
   "category": "Ammunition",
-  "weightKg": 0.12,
+  "weightKg": 0.04,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

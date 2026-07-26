@@ -2,7 +2,7 @@
   "id": "item_filtered_glass",
   "displayName": "Filtered Glass",
   "category": "Crafting",
-  "weightKg": 0.1,
+  "weightKg": 0.3,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

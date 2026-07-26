@@ -2,7 +2,7 @@
   "id": "item_salvaged_bolt_cutter",
   "displayName": "Salvaged Bolt Cutter",
   "category": "Tool",
-  "weightKg": 0.57,
+  "weightKg": 3.35,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_9mm_rounds",
   "displayName": "9mm Rounds",
   "category": "Ammunition",
-  "weightKg": 0.03,
+  "weightKg": 0.04,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

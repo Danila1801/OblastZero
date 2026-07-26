@@ -40,6 +40,14 @@ namespace OblastZero.Core
         public FactionReputationManager Reputation => _reputation;
         public EventEngine Events => _events;
 
+        /// <summary>
+        /// Outcome of the most recently ended run, captured inside <see cref="EndCurrentRun"/> while the
+        /// RunData was still populated. The run-end states read this: they enter AFTER the run has been
+        /// closed and cleared, so it is the only place the numbers still exist. Null before the first
+        /// run ends.
+        /// </summary>
+        public RunSummary LastRunSummary { get; private set; }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -106,10 +114,36 @@ namespace OblastZero.Core
         }
 
         /// <summary>
+        /// Points every run-scoped manager at whatever run currently sits on the context. Call after
+        /// restoring a run from disk — without it the managers stay bound to the previous run (or to
+        /// nothing at all) and every read comes back empty.
+        /// </summary>
+        public void RebindManagersToCurrentRun()
+        {
+            var run = CurrentRun;
+            if (run == null)
+            {
+                Debug.LogWarning("[GameManager] RebindManagersToCurrentRun called with no active run. Ignoring.");
+                return;
+            }
+
+            _inventory?.Bind(run);
+            _crew?.Bind(run);
+            _reputation?.Bind(run);
+            _events?.Bind(run);
+
+            Debug.Log($"[GameManager] Managers rebound to run '{run.runId}' (day {run.currentDay}).");
+        }
+
+        /// <summary>
         /// Starts a new run. Creates a fresh RunData and pushes it into the context.
         /// Called by RunSetupState after the player commits their loadout.
+        ///
+        /// <paramref name="leadCrewDataId"/> is the operator the player registered for the expedition. They
+        /// are added to the rescued list up front, so the run always reaches the bunker with at least one
+        /// living crew member — without a lead, day one is an immediate wipe.
         /// </summary>
-        public void BeginNewRun(string scavengeSiteId, int rngSeed)
+        public void BeginNewRun(string scavengeSiteId, int rngSeed, string leadCrewDataId = null)
         {
             var newRun = new RunData
             {
@@ -133,7 +167,22 @@ namespace OblastZero.Core
             _reputation?.Bind(newRun);
             _events?.Bind(newRun);
 
-            Debug.Log($"[GameManager] New run begun. id={newRun.runId} site={scavengeSiteId} seed={rngSeed}");
+            // Every Blowout starts with an empty pack against the standard ceiling.
+            if (_inventory != null)
+                _inventory.ScavengeCarryCapacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
+
+            if (!string.IsNullOrEmpty(leadCrewDataId))
+            {
+                var lead = _crew?.AddRescued(leadCrewDataId);
+                if (lead == null)
+                    Debug.LogError($"[GameManager] Lead operator '{leadCrewDataId}' could not be added — " +
+                                   "the run will reach the bunker with no crew unless someone is rescued.");
+                else
+                    Debug.Log($"[GameManager] Lead operator '{leadCrewDataId}' registered for the expedition.");
+            }
+
+            Debug.Log($"[GameManager] New run begun. id={newRun.runId} site={scavengeSiteId} seed={rngSeed} " +
+                      $"lead={leadCrewDataId ?? "(none)"}");
 
             EventBus.Raise(new RunStartedEvent { RunId = newRun.runId, SiteId = scavengeSiteId });
         }
@@ -167,6 +216,15 @@ namespace OblastZero.Core
             }
 
             ServiceLocator.Get<ISaveService>().SaveProfile(MetaProgress);
+
+            // Snapshot the outcome while RunData still exists and the meta counters are already updated.
+            // The run-end states enter after this method returns, by which point CurrentRun is null —
+            // LastRunSummary is the only place these numbers survive.
+            LastRunSummary = RunSummary.FromRun(run, MetaProgress, reason, gameDatabase);
+
+            // The run is over: its save channel should not outlive it, or the main menu would offer to
+            // "resume" a run that has already been closed out.
+            ServiceLocator.Get<ISaveService>().DeleteExpeditionSave();
 
             stateMachine.Context.CurrentRun = null;
 

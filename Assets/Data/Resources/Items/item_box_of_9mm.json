@@ -2,7 +2,7 @@
   "id": "item_box_of_9mm",
   "displayName": "Box of 9mm",
   "category": "Ammunition",
-  "weightKg": 0.31,
+  "weightKg": 2.19,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

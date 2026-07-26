@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_9",
   "displayName": "Issued Artifact Variant 9",
   "category": "Artifact",
-  "weightKg": 0.34,
+  "weightKg": 0.45,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

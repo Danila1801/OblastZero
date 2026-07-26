@@ -2,7 +2,7 @@
   "id": "item_military_suture_kit",
   "displayName": "Military Suture Kit",
   "category": "Medical",
-  "weightKg": 0.07,
+  "weightKg": 1.06,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

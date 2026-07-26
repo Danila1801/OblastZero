@@ -2,7 +2,7 @@
   "id": "item_millet_hardtack",
   "displayName": "Millet Hardtack",
   "category": "Food",
-  "weightKg": 0.21,
+  "weightKg": 0.51,
   "durability": 60,
   "decayPerDay": 0.46,
   "utilityTags": [

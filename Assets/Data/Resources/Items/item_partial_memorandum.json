@@ -2,7 +2,7 @@
   "id": "item_partial_memorandum",
   "displayName": "Partial Memorandum",
   "category": "Document",
-  "weightKg": 0.06,
+  "weightKg": 0.19,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

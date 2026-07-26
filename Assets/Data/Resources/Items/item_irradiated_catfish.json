@@ -2,7 +2,7 @@
   "id": "item_irradiated_catfish",
   "displayName": "Irradiated Catfish",
   "category": "Food",
-  "weightKg": 0.42,
+  "weightKg": 0.95,
   "durability": 70,
   "decayPerDay": 0.15,
   "utilityTags": [

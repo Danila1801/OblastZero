@@ -2,7 +2,7 @@
   "id": "item_metal_plate_scrap",
   "displayName": "Metal Plate Scrap",
   "category": "Crafting",
-  "weightKg": 0.26,
+  "weightKg": 1.27,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

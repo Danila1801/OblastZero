@@ -2,7 +2,7 @@
   "id": "item_improvised_stimulant",
   "displayName": "Improvised Stimulant",
   "category": "Medical",
-  "weightKg": 0.03,
+  "weightKg": 0.08,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

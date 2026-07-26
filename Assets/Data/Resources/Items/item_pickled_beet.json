@@ -2,7 +2,7 @@
   "id": "item_pickled_beet",
   "displayName": "Pickled Beet",
   "category": "Food",
-  "weightKg": 0.69,
+  "weightKg": 0.46,
   "durability": 100,
   "decayPerDay": 0.41,
   "utilityTags": [

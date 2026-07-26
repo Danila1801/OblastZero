@@ -2,7 +2,7 @@
   "id": "item_stale_biscuit",
   "displayName": "Stale Biscuit",
   "category": "Food",
-  "weightKg": 0.17,
+  "weightKg": 0.48,
   "durability": 60,
   "decayPerDay": 0.11,
   "utilityTags": [

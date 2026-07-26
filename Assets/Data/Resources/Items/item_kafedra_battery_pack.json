@@ -2,7 +2,7 @@
   "id": "item_kafedra_battery_pack",
   "displayName": "Kafedra Battery Pack",
   "category": "Tool",
-  "weightKg": 0.41,
+  "weightKg": 4.11,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

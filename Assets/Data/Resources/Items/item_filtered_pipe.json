@@ -2,7 +2,7 @@
   "id": "item_filtered_pipe",
   "displayName": "Filtered Pipe",
   "category": "Crafting",
-  "weightKg": 0.18,
+  "weightKg": 1.44,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

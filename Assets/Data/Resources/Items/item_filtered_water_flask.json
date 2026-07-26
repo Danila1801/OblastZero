@@ -2,7 +2,7 @@
   "id": "item_filtered_water_flask",
   "displayName": "Filtered Water Flask",
   "category": "Water",
-  "weightKg": 0.79,
+  "weightKg": 1.07,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

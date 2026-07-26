@@ -2,7 +2,7 @@
   "id": "item_unknown_key",
   "displayName": "Unknown Key",
   "category": "Special",
-  "weightKg": 0.85,
+  "weightKg": 0.1,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

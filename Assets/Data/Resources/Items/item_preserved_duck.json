@@ -2,7 +2,7 @@
   "id": "item_preserved_duck",
   "displayName": "Preserved Duck",
   "category": "Food",
-  "weightKg": 0.4,
+  "weightKg": 0.44,
   "durability": 90,
   "decayPerDay": 0.46,
   "utilityTags": [

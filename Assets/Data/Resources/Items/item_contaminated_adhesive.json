@@ -2,7 +2,7 @@
   "id": "item_contaminated_adhesive",
   "displayName": "Contaminated Adhesive",
   "category": "Crafting",
-  "weightKg": 0.15,
+  "weightKg": 0.77,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_canned_mushroom",
   "displayName": "Canned Mushroom",
   "category": "Food",
-  "weightKg": 0.37,
+  "weightKg": 0.64,
   "durability": 100,
   "decayPerDay": 0.41,
   "utilityTags": [

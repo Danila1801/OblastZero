@@ -2,7 +2,7 @@
   "id": "item_partial_report",
   "displayName": "Partial Report",
   "category": "Document",
-  "weightKg": 0.05,
+  "weightKg": 0.13,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

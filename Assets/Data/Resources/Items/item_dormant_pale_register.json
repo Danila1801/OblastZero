@@ -2,7 +2,7 @@
   "id": "item_dormant_pale_register",
   "displayName": "Dormant Pale Register",
   "category": "Artifact",
-  "weightKg": 0.3,
+  "weightKg": 0.23,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

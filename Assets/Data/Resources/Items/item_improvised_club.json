@@ -2,7 +2,7 @@
   "id": "item_improvised_club",
   "displayName": "Improvised Club",
   "category": "Weapon",
-  "weightKg": 2.82,
+  "weightKg": 1.6,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

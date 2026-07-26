@@ -2,7 +2,7 @@
   "id": "item_anomaly_fragment_resin",
   "displayName": "Anomaly Fragment: Resin",
   "category": "Artifact",
-  "weightKg": 0.14,
+  "weightKg": 0.2,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_classified_report",
   "displayName": "Classified Report",
   "category": "Document",
-  "weightKg": 0.26,
+  "weightKg": 0.11,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

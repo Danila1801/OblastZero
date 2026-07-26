@@ -2,7 +2,7 @@
   "id": "item_barley_porridge_mix",
   "displayName": "Barley Porridge Mix",
   "category": "Food",
-  "weightKg": 0.22,
+  "weightKg": 0.6,
   "durability": 100,
   "decayPerDay": 0.34,
   "utilityTags": [

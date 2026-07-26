@@ -2,7 +2,7 @@
   "id": "item_pulsing_form_stamp",
   "displayName": "Pulsing Form Stamp",
   "category": "Artifact",
-  "weightKg": 1.12,
+  "weightKg": 0.41,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

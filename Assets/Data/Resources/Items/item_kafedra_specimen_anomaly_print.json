@@ -2,7 +2,7 @@
   "id": "item_kafedra_specimen_anomaly_print",
   "displayName": "Kafedra Specimen: Anomaly Print",
   "category": "Artifact",
-  "weightKg": 0.79,
+  "weightKg": 0.21,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

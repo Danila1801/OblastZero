@@ -2,7 +2,7 @@
   "id": "item_artifact_shard",
   "displayName": "Artifact: Shard",
   "category": "Artifact",
-  "weightKg": 1.38,
+  "weightKg": 0.17,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_potable_water_jerrycan",
   "displayName": "Potable Water Jerrycan",
   "category": "Water",
-  "weightKg": 0.51,
+  "weightKg": 1.41,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_regional_report",
   "displayName": "Regional Report",
   "category": "Document",
-  "weightKg": 0.2,
+  "weightKg": 0.09,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

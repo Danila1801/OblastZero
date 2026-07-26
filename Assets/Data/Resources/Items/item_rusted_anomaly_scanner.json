@@ -2,7 +2,7 @@
   "id": "item_rusted_anomaly_scanner",
   "displayName": "Rusted Anomaly Scanner",
   "category": "Tool",
-  "weightKg": 1.26,
+  "weightKg": 2.67,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

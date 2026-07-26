@@ -2,7 +2,7 @@
   "id": "item_dormant_echo",
   "displayName": "Dormant Echo",
   "category": "Artifact",
-  "weightKg": 0.26,
+  "weightKg": 0.2,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

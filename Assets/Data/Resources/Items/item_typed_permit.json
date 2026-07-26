@@ -2,7 +2,7 @@
   "id": "item_typed_permit",
   "displayName": "Typed Permit",
   "category": "Document",
-  "weightKg": 0.08,
+  "weightKg": 0.05,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

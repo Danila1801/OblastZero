@@ -2,7 +2,7 @@
   "id": "item_module",
   "displayName": "Module",
   "category": "Special",
-  "weightKg": 0.33,
+  "weightKg": 0.91,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

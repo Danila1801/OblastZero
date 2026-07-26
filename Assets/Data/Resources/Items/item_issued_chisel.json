@@ -2,7 +2,7 @@
   "id": "item_issued_chisel",
   "displayName": "Issued Chisel",
   "category": "Tool",
-  "weightKg": 1.71,
+  "weightKg": 0.76,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_unclassified_key",
   "displayName": "Unclassified Key",
   "category": "Special",
-  "weightKg": 0.75,
+  "weightKg": 0.13,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

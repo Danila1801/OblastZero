@@ -2,7 +2,7 @@
   "id": "item_dormant_gimlet",
   "displayName": "Dormant Gimlet",
   "category": "Artifact",
-  "weightKg": 0.42,
+  "weightKg": 0.12,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

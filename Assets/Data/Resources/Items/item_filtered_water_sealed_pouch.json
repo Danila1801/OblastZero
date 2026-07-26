@@ -2,7 +2,7 @@
   "id": "item_filtered_water_sealed_pouch",
   "displayName": "Filtered Water Sealed Pouch",
   "category": "Water",
-  "weightKg": 1.09,
+  "weightKg": 0.49,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

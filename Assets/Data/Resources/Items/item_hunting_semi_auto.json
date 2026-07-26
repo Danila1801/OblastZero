@@ -2,7 +2,7 @@
   "id": "item_hunting_semi_auto",
   "displayName": "Hunting Semi-Auto",
   "category": "Weapon",
-  "weightKg": 1.37,
+  "weightKg": 3.37,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

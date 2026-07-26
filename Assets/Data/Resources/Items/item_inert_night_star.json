@@ -2,7 +2,7 @@
   "id": "item_inert_night_star",
   "displayName": "Inert Night Star",
   "category": "Artifact",
-  "weightKg": 0.64,
+  "weightKg": 0.25,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

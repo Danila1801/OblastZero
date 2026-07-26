@@ -2,7 +2,7 @@
   "id": "item_salvaged_solder",
   "displayName": "Salvaged Solder",
   "category": "Crafting",
-  "weightKg": 0.19,
+  "weightKg": 1.57,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

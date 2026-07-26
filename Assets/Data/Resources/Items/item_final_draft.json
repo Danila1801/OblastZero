@@ -2,7 +2,7 @@
   "id": "item_final_draft",
   "displayName": "Final Draft",
   "category": "Artifact",
-  "weightKg": 0.01,
+  "weightKg": 0.24,
   "durability": 1,
   "decayPerDay": 0.0,
   "utilityTags": [

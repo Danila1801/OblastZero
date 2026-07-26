@@ -2,7 +2,7 @@
   "id": "item_issued_water_jerrycan",
   "displayName": "Issued Water Jerrycan",
   "category": "Water",
-  "weightKg": 0.79,
+  "weightKg": 1.43,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

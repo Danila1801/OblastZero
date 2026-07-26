@@ -2,7 +2,7 @@
   "id": "item_well_water_jerrycan",
   "displayName": "Well Water Jerrycan",
   "category": "Water",
-  "weightKg": 0.83,
+  "weightKg": 1.47,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

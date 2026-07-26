@@ -2,7 +2,7 @@
   "id": "item_sidearm_pistol",
   "displayName": "Sidearm Pistol",
   "category": "Weapon",
-  "weightKg": 0.54,
+  "weightKg": 1.02,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

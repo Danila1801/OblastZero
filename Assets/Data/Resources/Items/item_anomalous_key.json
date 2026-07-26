@@ -2,7 +2,7 @@
   "id": "item_anomalous_key",
   "displayName": "Anomalous Key",
   "category": "Special",
-  "weightKg": 0.12,
+  "weightKg": 0.13,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

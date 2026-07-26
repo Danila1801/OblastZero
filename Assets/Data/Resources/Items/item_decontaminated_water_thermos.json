@@ -2,7 +2,7 @@
   "id": "item_decontaminated_water_thermos",
   "displayName": "Decontaminated Water Thermos",
   "category": "Water",
-  "weightKg": 1.06,
+  "weightKg": 1.36,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

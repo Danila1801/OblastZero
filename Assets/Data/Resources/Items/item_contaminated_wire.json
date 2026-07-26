@@ -2,7 +2,7 @@
   "id": "item_contaminated_wire",
   "displayName": "Contaminated Wire",
   "category": "Crafting",
-  "weightKg": 0.24,
+  "weightKg": 0.55,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

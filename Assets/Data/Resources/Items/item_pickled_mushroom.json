@@ -2,7 +2,7 @@
   "id": "item_pickled_mushroom",
   "displayName": "Pickled Mushroom",
   "category": "Food",
-  "weightKg": 0.54,
+  "weightKg": 0.4,
   "durability": 100,
   "decayPerDay": 0.09,
   "utilityTags": [

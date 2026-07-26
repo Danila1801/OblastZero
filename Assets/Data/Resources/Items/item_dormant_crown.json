@@ -2,7 +2,7 @@
   "id": "item_dormant_crown",
   "displayName": "Dormant Crown",
   "category": "Artifact",
-  "weightKg": 0.96,
+  "weightKg": 0.33,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

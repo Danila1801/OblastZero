@@ -2,7 +2,7 @@
   "id": "item_kafedra_ampule",
   "displayName": "Kafedra Ampule",
   "category": "Medical",
-  "weightKg": 0.04,
+  "weightKg": 0.09,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

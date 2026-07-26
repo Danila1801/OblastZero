@@ -2,7 +2,7 @@
   "id": "item_dried_wheat",
   "displayName": "Dried Wheat",
   "category": "Food",
-  "weightKg": 0.33,
+  "weightKg": 0.59,
   "durability": 80,
   "decayPerDay": 0.15,
   "utilityTags": [

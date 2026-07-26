@@ -2,7 +2,7 @@
   "id": "item_log_personnel_transfer",
   "displayName": "Log: Personnel Transfer",
   "category": "Document",
-  "weightKg": 0.1,
+  "weightKg": 0.12,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

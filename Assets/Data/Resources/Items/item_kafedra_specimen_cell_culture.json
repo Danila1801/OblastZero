@@ -2,7 +2,7 @@
   "id": "item_kafedra_specimen_cell_culture",
   "displayName": "Kafedra Specimen: Cell Culture",
   "category": "Artifact",
-  "weightKg": 0.41,
+  "weightKg": 0.2,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

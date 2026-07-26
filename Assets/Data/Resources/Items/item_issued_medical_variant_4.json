@@ -2,7 +2,7 @@
   "id": "item_issued_medical_variant_4",
   "displayName": "Issued Medical Variant 4",
   "category": "Medical",
-  "weightKg": 0.86,
+  "weightKg": 1.53,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

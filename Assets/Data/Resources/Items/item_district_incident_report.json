@@ -2,7 +2,7 @@
   "id": "item_district_incident_report",
   "displayName": "District Incident Report",
   "category": "Document",
-  "weightKg": 0.29,
+  "weightKg": 0.1,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

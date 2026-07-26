@@ -2,7 +2,7 @@
   "id": "item_issued_military_kit",
   "displayName": "Issued Military Kit",
   "category": "Medical",
-  "weightKg": 0.37,
+  "weightKg": 1.23,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

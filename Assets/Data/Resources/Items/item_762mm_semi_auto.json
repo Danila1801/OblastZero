@@ -2,7 +2,7 @@
   "id": "item_762mm_semi_auto",
   "displayName": "7.62mm Semi-Auto",
   "category": "Weapon",
-  "weightKg": 0.69,
+  "weightKg": 3.46,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

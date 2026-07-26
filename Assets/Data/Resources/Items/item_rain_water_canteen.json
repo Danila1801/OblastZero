@@ -2,7 +2,7 @@
   "id": "item_rain_water_canteen",
   "displayName": "Rain Water Canteen",
   "category": "Water",
-  "weightKg": 1.11,
+  "weightKg": 1.06,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

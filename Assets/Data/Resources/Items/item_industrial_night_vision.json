@@ -2,7 +2,7 @@
   "id": "item_industrial_night_vision",
   "displayName": "Industrial Night Vision",
   "category": "Tool",
-  "weightKg": 1.57,
+  "weightKg": 1.42,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

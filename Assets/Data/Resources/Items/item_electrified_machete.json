@@ -2,7 +2,7 @@
   "id": "item_electrified_machete",
   "displayName": "Electrified Machete",
   "category": "Weapon",
-  "weightKg": 1.97,
+  "weightKg": 0.84,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

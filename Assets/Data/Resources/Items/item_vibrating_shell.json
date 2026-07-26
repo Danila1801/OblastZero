@@ -2,7 +2,7 @@
   "id": "item_vibrating_shell",
   "displayName": "Vibrating Shell",
   "category": "Artifact",
-  "weightKg": 1.0,
+  "weightKg": 0.5,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

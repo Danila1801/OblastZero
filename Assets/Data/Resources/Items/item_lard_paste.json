@@ -2,7 +2,7 @@
   "id": "item_lard_paste",
   "displayName": "Lard Paste",
   "category": "Food",
-  "weightKg": 0.09,
+  "weightKg": 0.93,
   "durability": 70,
   "decayPerDay": 0.3,
   "utilityTags": [

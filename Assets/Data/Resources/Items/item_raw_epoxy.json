@@ -2,7 +2,7 @@
   "id": "item_raw_epoxy",
   "displayName": "Raw Epoxy",
   "category": "Crafting",
-  "weightKg": 0.76,
+  "weightKg": 0.61,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

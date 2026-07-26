@@ -2,7 +2,7 @@
   "id": "item_emergency_antiseptic",
   "displayName": "Emergency Antiseptic",
   "category": "Medical",
-  "weightKg": 0.08,
+  "weightKg": 0.35,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

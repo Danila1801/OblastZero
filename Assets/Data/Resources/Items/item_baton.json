@@ -2,7 +2,7 @@
   "id": "item_baton",
   "displayName": "Baton",
   "category": "Weapon",
-  "weightKg": 1.87,
+  "weightKg": 1.52,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

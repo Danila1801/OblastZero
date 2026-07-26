@@ -2,7 +2,7 @@
   "id": "item_emergency_syringe",
   "displayName": "Emergency Syringe",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.13,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

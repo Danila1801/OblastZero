@@ -2,7 +2,7 @@
   "id": "item_salted_rabbit",
   "displayName": "Salted Rabbit",
   "category": "Food",
-  "weightKg": 0.46,
+  "weightKg": 0.26,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

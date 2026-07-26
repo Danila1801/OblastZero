@@ -2,7 +2,7 @@
   "id": "item_margin_note",
   "displayName": "Margin Note",
   "category": "Artifact",
-  "weightKg": 0.03,
+  "weightKg": 0.11,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

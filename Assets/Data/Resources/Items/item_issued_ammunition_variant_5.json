@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_5",
   "displayName": "Issued Ammunition Variant 5",
   "category": "Ammunition",
-  "weightKg": 0.67,
+  "weightKg": 0.1,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

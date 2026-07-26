@@ -2,7 +2,7 @@
   "id": "item_worn_carbine",
   "displayName": "Worn Carbine",
   "category": "Weapon",
-  "weightKg": 0.52,
+  "weightKg": 3.47,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

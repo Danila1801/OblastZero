@@ -2,7 +2,7 @@
   "id": "item_issued_painkiller",
   "displayName": "Issued Painkiller",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 1.43,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

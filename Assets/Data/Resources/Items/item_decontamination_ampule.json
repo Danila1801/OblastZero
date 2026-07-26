@@ -2,7 +2,7 @@
   "id": "item_decontamination_ampule",
   "displayName": "Decontamination Ampule",
   "category": "Medical",
-  "weightKg": 0.09,
+  "weightKg": 0.13,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

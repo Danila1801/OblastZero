@@ -2,7 +2,7 @@
   "id": "item_precision_spectrometer",
   "displayName": "Precision Spectrometer",
   "category": "Tool",
-  "weightKg": 0.35,
+  "weightKg": 4.45,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

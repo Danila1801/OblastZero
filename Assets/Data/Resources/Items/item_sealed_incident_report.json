@@ -2,7 +2,7 @@
   "id": "item_sealed_incident_report",
   "displayName": "Sealed Incident Report",
   "category": "Document",
-  "weightKg": 0.1,
+  "weightKg": 0.14,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_22_lr_rounds",
   "displayName": ".22 LR Rounds",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.06,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -25,13 +25,23 @@ namespace OblastZero.Gameplay
     /// </summary>
     public class InventoryManager
     {
+        /// <summary>Tolerance on carry-weight comparisons so a load of exactly the cap still fits.</summary>
+        private const float kWeightEpsilon = 0.0005f;
+
         private readonly GameDatabase _db;
         private RunData _run;
+        private float _scavengeCapacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
 
         public event Action<ItemInstance, InventoryChannel> ItemAdded;
         public event Action<ItemInstance, InventoryChannel> ItemRemoved;
         public event Action<ItemInstance, InventoryChannel> ItemChanged;
         public event Action<ItemInstance, InventoryChannel, InventoryChannel> ItemTransferred;
+
+        /// <summary>Scavenged load moved. Args: currentKg, capacityKg.</summary>
+        public event Action<float, float> ScavengeLoadChanged;
+
+        /// <summary>A Blowout pickup was refused for weight. Args: itemDataId, itemKg, currentKg, capacityKg.</summary>
+        public event Action<string, float, float, float> ScavengePickupRejected;
 
         public InventoryManager(GameDatabase db)
         {
@@ -42,7 +52,59 @@ namespace OblastZero.Gameplay
         public void Bind(RunData run)
         {
             _run = run ?? throw new ArgumentNullException(nameof(run));
-            Debug.Log($"[InventoryManager] Bound to run '{run.runId}'.");
+            Debug.Log($"[InventoryManager] Bound to run '{run.runId}'. " +
+                      $"Scavenge carry capacity {_scavengeCapacityKg:0.##} kg.");
+            RaiseScavengeLoadChanged();
+        }
+
+        // ---- Scavenge carry capacity ----
+
+        /// <summary>
+        /// Weight ceiling in kg on the Scavenged channel during the 60-second Blowout. Defaults to
+        /// <see cref="BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG"/>. Settable so a run can override the
+        /// baseline (loadout perks, a lead crew member's carry capacity) without this class knowing why.
+        /// The Bunker channel is deliberately uncapped — shelf space is a Phase-2 problem, not a Phase-A one.
+        /// </summary>
+        public float ScavengeCarryCapacityKg
+        {
+            get { return _scavengeCapacityKg; }
+            set
+            {
+                float clamped = Mathf.Max(0f, value);
+                if (Mathf.Abs(clamped - _scavengeCapacityKg) < kWeightEpsilon) return;
+                _scavengeCapacityKg = clamped;
+                Debug.Log($"[InventoryManager] Scavenge carry capacity set to {_scavengeCapacityKg:0.##} kg.");
+                RaiseScavengeLoadChanged();
+            }
+        }
+
+        /// <summary>Current weight in kg carried on the Scavenged channel. 0 when no run is bound.</summary>
+        public float ScavengeLoadKg
+        {
+            get { return _run == null ? 0f : WeightOf(_run.ScavengedInventory); }
+        }
+
+        /// <summary>Headroom in kg before the Blowout carry cap is hit.</summary>
+        public float ScavengeRemainingKg
+        {
+            get { return Mathf.Max(0f, _scavengeCapacityKg - ScavengeLoadKg); }
+        }
+
+        /// <summary>
+        /// Whether a prospective Blowout pickup fits under the carry cap. All-or-nothing: a stack that
+        /// only partly fits is refused whole, so the world object stays grabbable and the player keeps the
+        /// choice. <paramref name="incomingKg"/> is the weight the pickup would add.
+        /// </summary>
+        public bool WouldFitInScavenge(string itemDataId, int quantity, out float incomingKg)
+        {
+            incomingKg = 0f;
+            if (quantity <= 0) return false;
+
+            var data = _db.GetItem(itemDataId);
+            if (data == null) return false;
+
+            incomingKg = Mathf.Max(0f, data.weightKg) * quantity;
+            return ScavengeLoadKg + incomingKg <= _scavengeCapacityKg + kWeightEpsilon;
         }
 
         // ---- Mutations ----
@@ -64,6 +126,23 @@ namespace OblastZero.Gameplay
             var data = _db.GetItem(itemDataId);
             if (data == null) return null; // GameDatabase already logged the miss
 
+            // Blowout carry cap. Enforced here rather than at the pickup site so every route into the
+            // Scavenged channel obeys it — world grabs, scripted grants, debug tools alike.
+            if (channel == InventoryChannel.Scavenged)
+            {
+                float incomingKg = Mathf.Max(0f, data.weightKg) * quantity;
+                float currentKg = WeightOf(_run.ScavengedInventory);
+
+                if (currentKg + incomingKg > _scavengeCapacityKg + kWeightEpsilon)
+                {
+                    Debug.Log($"[InventoryManager] Pickup refused (too heavy): '{itemDataId}' x{quantity} " +
+                              $"weighs {incomingKg:0.##} kg but only {Mathf.Max(0f, _scavengeCapacityKg - currentKg):0.##} kg " +
+                              $"of {_scavengeCapacityKg:0.##} kg remains (carrying {currentKg:0.##} kg).");
+                    ScavengePickupRejected?.Invoke(itemDataId, incomingKg, currentKg, _scavengeCapacityKg);
+                    return null;
+                }
+            }
+
             int maxDur = Mathf.Max(0, data.durability);
             int durabilityValue = Mathf.Clamp(durability ?? maxDur, 0, maxDur);
             var list = Channel(channel);
@@ -74,6 +153,7 @@ namespace OblastZero.Gameplay
                 stack.quantity += quantity;
                 Debug.Log($"[InventoryManager] Stacked +{quantity} '{itemDataId}' in {channel} (now {stack.quantity}).");
                 ItemChanged?.Invoke(stack, channel);
+                if (channel == InventoryChannel.Scavenged) RaiseScavengeLoadChanged();
                 return stack;
             }
 
@@ -87,6 +167,7 @@ namespace OblastZero.Gameplay
             list.Add(inst);
             Debug.Log($"[InventoryManager] Added new stack '{itemDataId}' x{quantity} to {channel}.");
             ItemAdded?.Invoke(inst, channel);
+            if (channel == InventoryChannel.Scavenged) RaiseScavengeLoadChanged();
             return inst;
         }
 
@@ -117,6 +198,8 @@ namespace OblastZero.Gameplay
                     ItemChanged?.Invoke(inst, channel);
                 }
             }
+
+            if (channel == InventoryChannel.Scavenged) RaiseScavengeLoadChanged();
 
             if (remaining > 0)
             {
@@ -152,6 +235,9 @@ namespace OblastZero.Gameplay
                     ItemTransferred?.Invoke(landed, InventoryChannel.Scavenged, InventoryChannel.Bunker);
             }
             Debug.Log($"[InventoryManager] Transferred {snapshot.Count} scavenged stack(s) into the bunker.");
+
+            // The pack is empty again — the next Blowout starts from zero.
+            RaiseScavengeLoadChanged();
         }
 
         /// <summary>
@@ -189,13 +275,7 @@ namespace OblastZero.Gameplay
         public float GetTotalWeight(InventoryChannel channel)
         {
             if (!Ready(nameof(GetTotalWeight))) return 0f;
-            float total = 0f;
-            foreach (var inst in Channel(channel))
-            {
-                var data = _db.GetItem(inst.itemDataId);
-                if (data != null) total += data.weightKg * inst.quantity;
-            }
-            return total;
+            return WeightOf(Channel(channel));
         }
 
         /// <summary>Read-only view of a channel's stacks. Never mutate the returned list directly.</summary>
@@ -206,6 +286,28 @@ namespace OblastZero.Gameplay
 
         private List<ItemInstance> Channel(InventoryChannel c)
             => c == InventoryChannel.Scavenged ? _run.ScavengedInventory : _run.BunkerInventory;
+
+        /// <summary>
+        /// Summed kg of a stack list. Scans the run's own list (tens of entries at most), never the
+        /// content set — the GameDatabase lookup behind it is an O(1) id index.
+        /// </summary>
+        private float WeightOf(List<ItemInstance> list)
+        {
+            float total = 0f;
+            foreach (var inst in list)
+            {
+                if (!_db.TryGetItem(inst.itemDataId, out var data) || data == null) continue;
+                total += Mathf.Max(0f, data.weightKg) * inst.quantity;
+            }
+            return total;
+        }
+
+        /// <summary>Fires <see cref="ScavengeLoadChanged"/> with the live load. Safe before Bind.</summary>
+        private void RaiseScavengeLoadChanged()
+        {
+            if (_run == null) return;
+            ScavengeLoadChanged?.Invoke(WeightOf(_run.ScavengedInventory), _scavengeCapacityKg);
+        }
 
         private bool Ready(string op)
         {

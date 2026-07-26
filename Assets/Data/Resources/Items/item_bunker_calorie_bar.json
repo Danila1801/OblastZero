@@ -2,7 +2,7 @@
   "id": "item_bunker_calorie_bar",
   "displayName": "Bunker Calorie Bar",
   "category": "Food",
-  "weightKg": 0.37,
+  "weightKg": 0.28,
   "durability": 60,
   "decayPerDay": 0.05,
   "utilityTags": [

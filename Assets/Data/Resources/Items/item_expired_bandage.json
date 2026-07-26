@@ -2,7 +2,7 @@
   "id": "item_expired_bandage",
   "displayName": "Expired Bandage",
   "category": "Medical",
-  "weightKg": 0.09,
+  "weightKg": 0.19,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

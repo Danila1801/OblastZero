@@ -2,7 +2,7 @@
   "id": "item_expired_splint",
   "displayName": "Expired Splint",
   "category": "Medical",
-  "weightKg": 0.16,
+  "weightKg": 0.36,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

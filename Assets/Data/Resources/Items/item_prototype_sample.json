@@ -2,7 +2,7 @@
   "id": "item_prototype_sample",
   "displayName": "Prototype Sample",
   "category": "Special",
-  "weightKg": 0.23,
+  "weightKg": 1.99,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

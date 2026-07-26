@@ -2,7 +2,7 @@
   "id": "item_well_water_thermos",
   "displayName": "Well Water Thermos",
   "category": "Water",
-  "weightKg": 0.8,
+  "weightKg": 1.3,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

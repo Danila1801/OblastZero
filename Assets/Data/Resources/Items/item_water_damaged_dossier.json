@@ -2,7 +2,7 @@
   "id": "item_water_damaged_dossier",
   "displayName": "Water-Damaged Dossier",
   "category": "Document",
-  "weightKg": 0.2,
+  "weightKg": 0.17,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

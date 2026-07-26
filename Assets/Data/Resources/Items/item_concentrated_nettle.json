@@ -2,7 +2,7 @@
   "id": "item_concentrated_nettle",
   "displayName": "Concentrated Nettle",
   "category": "Food",
-  "weightKg": 0.23,
+  "weightKg": 0.29,
   "durability": 80,
   "decayPerDay": 0.08,
   "utilityTags": [

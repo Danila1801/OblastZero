@@ -111,6 +111,9 @@ namespace OblastZero.Core
         private void EndRun()
         {
             Debug.Log("[SurvivalPhase2D] All crew dead — ending run.");
+
+            // EndCurrentRun captures GameManager.LastRunSummary before it clears the run, so RunFailedState
+            // still has the numbers to display even though CurrentRun is null by the time it enters.
             GameManager.Instance.EndCurrentRun(RunEndReason.AllCrewDead);
             RequestTransition(GameState.RunFailed);
         }

@@ -2,7 +2,7 @@
   "id": "item_issued_bolt_action",
   "displayName": "Issued Bolt-Action",
   "category": "Weapon",
-  "weightKg": 1.01,
+  "weightKg": 3.85,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

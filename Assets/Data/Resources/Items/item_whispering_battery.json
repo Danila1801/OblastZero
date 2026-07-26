@@ -2,7 +2,7 @@
   "id": "item_whispering_battery",
   "displayName": "Whispering Battery",
   "category": "Artifact",
-  "weightKg": 1.86,
+  "weightKg": 0.13,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

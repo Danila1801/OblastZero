@@ -2,7 +2,7 @@
   "id": "item_issued_meal_pack",
   "displayName": "Issued Meal Pack",
   "category": "Food",
-  "weightKg": 0.21,
+  "weightKg": 0.53,
   "durability": 80,
   "decayPerDay": 0.14,
   "utilityTags": [

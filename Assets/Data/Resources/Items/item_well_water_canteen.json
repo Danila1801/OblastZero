@@ -2,7 +2,7 @@
   "id": "item_well_water_canteen",
   "displayName": "Well Water Canteen",
   "category": "Water",
-  "weightKg": 1.25,
+  "weightKg": 1.09,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

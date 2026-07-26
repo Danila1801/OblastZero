@@ -2,7 +2,7 @@
   "id": "item_torch",
   "displayName": "Torch",
   "category": "Tool",
-  "weightKg": 1.82,
+  "weightKg": 0.82,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

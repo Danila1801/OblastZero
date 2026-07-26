@@ -2,7 +2,7 @@
   "id": "item_artifact_vortex",
   "displayName": "Artifact: Vortex",
   "category": "Artifact",
-  "weightKg": 0.66,
+  "weightKg": 0.26,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

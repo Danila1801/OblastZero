@@ -2,7 +2,7 @@
   "id": "item_12_gauge_carbine",
   "displayName": "12 Gauge Carbine",
   "category": "Weapon",
-  "weightKg": 0.73,
+  "weightKg": 3.02,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

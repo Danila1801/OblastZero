@@ -2,7 +2,7 @@
   "id": "item_worn_chisel",
   "displayName": "Worn Chisel",
   "category": "Tool",
-  "weightKg": 1.77,
+  "weightKg": 0.58,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

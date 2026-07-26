@@ -2,7 +2,7 @@
   "id": "item_standard_antiseptic",
   "displayName": "Standard Antiseptic",
   "category": "Medical",
-  "weightKg": 0.08,
+  "weightKg": 0.34,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

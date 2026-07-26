@@ -2,7 +2,7 @@
   "id": "item_veterinary_antiseptic",
   "displayName": "Veterinary Antiseptic",
   "category": "Medical",
-  "weightKg": 0.07,
+  "weightKg": 0.28,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

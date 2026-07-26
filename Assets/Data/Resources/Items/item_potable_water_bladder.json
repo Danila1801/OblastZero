@@ -2,7 +2,7 @@
   "id": "item_potable_water_bladder",
   "displayName": "Potable Water Bladder",
   "category": "Water",
-  "weightKg": 1.67,
+  "weightKg": 1.1,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

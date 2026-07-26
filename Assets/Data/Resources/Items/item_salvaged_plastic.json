@@ -2,7 +2,7 @@
   "id": "item_salvaged_plastic",
   "displayName": "Salvaged Plastic",
   "category": "Crafting",
-  "weightKg": 0.34,
+  "weightKg": 0.33,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

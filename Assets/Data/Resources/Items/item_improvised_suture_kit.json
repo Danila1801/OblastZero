@@ -2,7 +2,7 @@
   "id": "item_improvised_suture_kit",
   "displayName": "Improvised Suture Kit",
   "category": "Medical",
-  "weightKg": 0.11,
+  "weightKg": 1.02,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_rusted_hunting_knife",
   "displayName": "Rusted Hunting Knife",
   "category": "Weapon",
-  "weightKg": 2.96,
+  "weightKg": 0.45,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

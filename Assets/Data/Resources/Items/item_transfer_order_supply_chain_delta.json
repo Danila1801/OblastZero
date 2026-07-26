@@ -2,7 +2,7 @@
   "id": "item_transfer_order_supply_chain_delta",
   "displayName": "Transfer Order: Supply Chain Delta",
   "category": "Document",
-  "weightKg": 0.21,
+  "weightKg": 0.07,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

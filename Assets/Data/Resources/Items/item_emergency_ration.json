@@ -2,7 +2,7 @@
   "id": "item_emergency_ration",
   "displayName": "Emergency Ration",
   "category": "Food",
-  "weightKg": 0.16,
+  "weightKg": 0.39,
   "durability": 90,
   "decayPerDay": 0.08,
   "utilityTags": [

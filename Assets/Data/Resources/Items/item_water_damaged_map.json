@@ -2,7 +2,7 @@
   "id": "item_water_damaged_map",
   "displayName": "Water-Damaged Map",
   "category": "Document",
-  "weightKg": 0.2,
+  "weightKg": 0.13,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

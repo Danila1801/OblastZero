@@ -2,7 +2,7 @@
   "id": "item_arrows",
   "displayName": "Arrows",
   "category": "Ammunition",
-  "weightKg": 0.03,
+  "weightKg": 0.56,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

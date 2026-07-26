@@ -2,7 +2,7 @@
   "id": "item_potable_water_sealed_pouch",
   "displayName": "Potable Water Sealed Pouch",
   "category": "Water",
-  "weightKg": 1.13,
+  "weightKg": 0.54,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

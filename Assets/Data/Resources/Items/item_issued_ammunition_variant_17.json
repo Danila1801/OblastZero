@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_17",
   "displayName": "Issued Ammunition Variant 17",
   "category": "Ammunition",
-  "weightKg": 0.22,
+  "weightKg": 0.07,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

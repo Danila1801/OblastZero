@@ -2,7 +2,7 @@
   "id": "item_powdered_curd",
   "displayName": "Powdered Curd",
   "category": "Food",
-  "weightKg": 0.19,
+  "weightKg": 0.46,
   "durability": 80,
   "decayPerDay": 0.43,
   "utilityTags": [

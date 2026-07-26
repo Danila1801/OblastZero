@@ -2,7 +2,7 @@
   "id": "item_emergency_ampule",
   "displayName": "Emergency Ampule",
   "category": "Medical",
-  "weightKg": 0.05,
+  "weightKg": 0.12,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_ceremonial_shotgun",
   "displayName": "Ceremonial Shotgun",
   "category": "Weapon",
-  "weightKg": 0.85,
+  "weightKg": 3.65,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_document_variant_9",
   "displayName": "Issued Document Variant 9",
   "category": "Document",
-  "weightKg": 0.17,
+  "weightKg": 0.14,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

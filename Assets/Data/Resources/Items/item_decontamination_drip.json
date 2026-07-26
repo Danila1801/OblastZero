@@ -2,7 +2,7 @@
   "id": "item_decontamination_drip",
   "displayName": "Decontamination Drip",
   "category": "Medical",
-  "weightKg": 0.09,
+  "weightKg": 0.89,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

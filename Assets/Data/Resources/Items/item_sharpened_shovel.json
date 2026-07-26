@@ -2,7 +2,7 @@
   "id": "item_sharpened_shovel",
   "displayName": "Sharpened Shovel",
   "category": "Weapon",
-  "weightKg": 0.96,
+  "weightKg": 3.06,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

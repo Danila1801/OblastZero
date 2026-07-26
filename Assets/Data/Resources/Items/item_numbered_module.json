@@ -2,7 +2,7 @@
   "id": "item_numbered_module",
   "displayName": "Numbered Module",
   "category": "Special",
-  "weightKg": 0.34,
+  "weightKg": 1.08,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

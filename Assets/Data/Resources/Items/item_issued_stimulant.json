@@ -2,7 +2,7 @@
   "id": "item_issued_stimulant",
   "displayName": "Issued Stimulant",
   "category": "Medical",
-  "weightKg": 0.01,
+  "weightKg": 0.07,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

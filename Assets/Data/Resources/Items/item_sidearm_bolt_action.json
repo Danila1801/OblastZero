@@ -2,7 +2,7 @@
   "id": "item_sidearm_bolt_action",
   "displayName": "Sidearm Bolt-Action",
   "category": "Weapon",
-  "weightKg": 0.53,
+  "weightKg": 3.35,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

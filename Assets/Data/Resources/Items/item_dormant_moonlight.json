@@ -2,7 +2,7 @@
   "id": "item_dormant_moonlight",
   "displayName": "Dormant Moonlight",
   "category": "Artifact",
-  "weightKg": 0.3,
+  "weightKg": 0.43,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

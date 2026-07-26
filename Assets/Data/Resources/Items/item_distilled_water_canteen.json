@@ -2,7 +2,7 @@
   "id": "item_distilled_water_canteen",
   "displayName": "Distilled Water Canteen",
   "category": "Water",
-  "weightKg": 0.68,
+  "weightKg": 1.05,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

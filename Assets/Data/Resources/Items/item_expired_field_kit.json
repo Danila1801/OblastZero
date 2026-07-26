@@ -2,7 +2,7 @@
   "id": "item_expired_field_kit",
   "displayName": "Expired Field Kit",
   "category": "Medical",
-  "weightKg": 0.16,
+  "weightKg": 1.14,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

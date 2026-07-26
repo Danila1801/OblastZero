@@ -2,7 +2,7 @@
   "id": "item_improvised_chisel",
   "displayName": "Improvised Chisel",
   "category": "Tool",
-  "weightKg": 1.6,
+  "weightKg": 0.38,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

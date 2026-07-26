@@ -12,6 +12,7 @@ Checks, in order:
 
 Exit 0 = all green. Any failure prints FAIL and exits 1.
 """
+import os
 import re
 import shutil
 import subprocess
@@ -72,6 +73,28 @@ for gone in ("Facepunch.Steamworks.Posix", "Facepunch.Steamworks.Win32"):
     csproj = re.sub(r'[ \t]*<Reference Include="' + re.escape(gone) + r'">.*?</Reference>\r?\n',
                     "", csproj, flags=re.S)
 csproj = re.sub(r"<OutputPath>[^<]*</OutputPath>", f"<OutputPath>{OUTDIR}</OutputPath>", csproj)
+
+# Unity only lists a .cs file in Assembly-CSharp.csproj once the Editor has imported it. Scripts written
+# by an outside process (which is how most of this project is authored) are therefore absent until Unity
+# next has focus — and compiling without them reports CS0246 for types that are perfectly fine on disk.
+# Inject anything missing so this check reflects what the Editor will compile, not what it happens to
+# have noticed yet. Editor-only scripts are skipped: they belong to Assembly-CSharp-Editor, not this one.
+listed = {p.lower().replace("/", os.sep) for p in re.findall(r'<Compile Include="([^"]+)"', csproj)}
+unimported = []
+for path in sorted((PROJ / "Assets").rglob("*.cs")):
+    rel = path.relative_to(PROJ)
+    if "Editor" in rel.parts:
+        continue
+    win = str(rel).replace("/", os.sep)
+    if win.lower() not in listed:
+        unimported.append(win)
+if unimported:
+    block = "".join(f'    <Compile Include="{p}" />\n' for p in unimported)
+    csproj = csproj.replace("</Project>", "  <ItemGroup>\n" + block + "  </ItemGroup>\n</Project>")
+    print(f"  [note] injected {len(unimported)} source(s) Unity has not imported yet:")
+    for p in unimported:
+        print(f"         {p}")
+
 SCRATCH.write_text(csproj, encoding="utf-8")
 try:
     res = subprocess.run(["dotnet", "build", SCRATCH.name, "--nologo", "-v", "m"],

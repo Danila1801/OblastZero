@@ -2,7 +2,7 @@
   "id": "item_ceremonial_bolt_action",
   "displayName": "Ceremonial Bolt-Action",
   "category": "Weapon",
-  "weightKg": 1.19,
+  "weightKg": 4.18,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

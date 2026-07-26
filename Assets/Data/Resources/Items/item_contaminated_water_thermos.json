@@ -2,7 +2,7 @@
   "id": "item_contaminated_water_thermos",
   "displayName": "Contaminated Water Thermos",
   "category": "Water",
-  "weightKg": 1.59,
+  "weightKg": 1.16,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

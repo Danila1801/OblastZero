@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_10",
   "displayName": "Issued Artifact Variant 10",
   "category": "Artifact",
-  "weightKg": 0.97,
+  "weightKg": 0.52,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

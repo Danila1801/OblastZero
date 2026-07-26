@@ -2,7 +2,7 @@
   "id": "item_numbered_relic",
   "displayName": "Numbered Relic",
   "category": "Special",
-  "weightKg": 0.94,
+  "weightKg": 1.18,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

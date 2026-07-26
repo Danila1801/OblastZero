@@ -2,7 +2,7 @@
   "id": "item_tinned_pike",
   "displayName": "Tinned Pike",
   "category": "Food",
-  "weightKg": 0.44,
+  "weightKg": 0.61,
   "durability": 100,
   "decayPerDay": 0.15,
   "utilityTags": [

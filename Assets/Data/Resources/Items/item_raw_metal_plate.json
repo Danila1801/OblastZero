@@ -2,7 +2,7 @@
   "id": "item_raw_metal_plate",
   "displayName": "Raw Metal Plate",
   "category": "Crafting",
-  "weightKg": 0.73,
+  "weightKg": 1.31,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

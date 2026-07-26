@@ -2,7 +2,7 @@
   "id": "item_tinned_beef",
   "displayName": "Tinned Beef",
   "category": "Food",
-  "weightKg": 0.5,
+  "weightKg": 0.51,
   "durability": 80,
   "decayPerDay": 0.17,
   "utilityTags": [

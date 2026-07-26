@@ -2,7 +2,7 @@
   "id": "item_792mm_ammunition",
   "displayName": "7.92mm Ammunition",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.08,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_11",
   "displayName": "Issued Artifact Variant 11",
   "category": "Artifact",
-  "weightKg": 0.16,
+  "weightKg": 0.19,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

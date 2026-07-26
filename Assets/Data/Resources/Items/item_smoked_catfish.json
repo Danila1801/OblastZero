@@ -2,7 +2,7 @@
   "id": "item_smoked_catfish",
   "displayName": "Smoked Catfish",
   "category": "Food",
-  "weightKg": 0.34,
+  "weightKg": 0.51,
   "durability": 90,
   "decayPerDay": 0.02,
   "utilityTags": [

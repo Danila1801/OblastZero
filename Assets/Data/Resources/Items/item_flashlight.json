@@ -2,7 +2,7 @@
   "id": "item_flashlight",
   "displayName": "Flashlight",
   "category": "Tool",
-  "weightKg": 1.14,
+  "weightKg": 0.87,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

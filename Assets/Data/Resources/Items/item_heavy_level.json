@@ -2,7 +2,7 @@
   "id": "item_heavy_level",
   "displayName": "Heavy Level",
   "category": "Tool",
-  "weightKg": 1.5,
+  "weightKg": 0.68,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

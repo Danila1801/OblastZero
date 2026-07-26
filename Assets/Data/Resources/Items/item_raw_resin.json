@@ -2,7 +2,7 @@
   "id": "item_raw_resin",
   "displayName": "Raw Resin",
   "category": "Crafting",
-  "weightKg": 0.78,
+  "weightKg": 0.55,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_unclassified_device",
   "displayName": "Unclassified Device",
   "category": "Special",
-  "weightKg": 0.92,
+  "weightKg": 1.13,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

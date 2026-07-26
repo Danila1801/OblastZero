@@ -2,7 +2,7 @@
   "id": "item_prototype_beacon",
   "displayName": "Prototype Beacon",
   "category": "Special",
-  "weightKg": 0.19,
+  "weightKg": 1.92,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

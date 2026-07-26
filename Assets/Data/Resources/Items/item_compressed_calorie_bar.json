@@ -2,7 +2,7 @@
   "id": "item_compressed_calorie_bar",
   "displayName": "Compressed Calorie Bar",
   "category": "Food",
-  "weightKg": 0.18,
+  "weightKg": 0.3,
   "durability": 70,
   "decayPerDay": 0.28,
   "utilityTags": [

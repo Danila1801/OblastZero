@@ -2,7 +2,7 @@
   "id": "item_worn_pliers",
   "displayName": "Worn Pliers",
   "category": "Tool",
-  "weightKg": 1.37,
+  "weightKg": 4.46,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

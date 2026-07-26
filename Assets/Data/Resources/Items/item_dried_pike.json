@@ -2,7 +2,7 @@
   "id": "item_dried_pike",
   "displayName": "Dried Pike",
   "category": "Food",
-  "weightKg": 0.19,
+  "weightKg": 0.51,
   "durability": 60,
   "decayPerDay": 0.1,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_emergency_sedative",
   "displayName": "Emergency Sedative",
   "category": "Medical",
-  "weightKg": 0.01,
+  "weightKg": 0.09,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

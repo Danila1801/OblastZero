@@ -2,7 +2,7 @@
   "id": "item_issued_tool_variant_3",
   "displayName": "Issued Tool Variant 3",
   "category": "Tool",
-  "weightKg": 0.84,
+  "weightKg": 1.74,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

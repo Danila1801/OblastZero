@@ -2,7 +2,7 @@
   "id": "item_redacted_audit_sheet",
   "displayName": "Redacted Audit Sheet",
   "category": "Document",
-  "weightKg": 0.19,
+  "weightKg": 0.1,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

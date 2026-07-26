@@ -2,7 +2,7 @@
   "id": "item_oscilloscope",
   "displayName": "Oscilloscope",
   "category": "Tool",
-  "weightKg": 1.47,
+  "weightKg": 4.43,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

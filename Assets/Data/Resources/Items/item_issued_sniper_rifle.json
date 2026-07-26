@@ -2,7 +2,7 @@
   "id": "item_issued_sniper_rifle",
   "displayName": "Issued Sniper Rifle",
   "category": "Weapon",
-  "weightKg": 1.0,
+  "weightKg": 4.13,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

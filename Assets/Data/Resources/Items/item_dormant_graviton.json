@@ -2,7 +2,7 @@
   "id": "item_dormant_graviton",
   "displayName": "Dormant Graviton",
   "category": "Artifact",
-  "weightKg": 0.82,
+  "weightKg": 0.54,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

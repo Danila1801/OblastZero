@@ -2,7 +2,7 @@
   "id": "item_flares",
   "displayName": "Flares",
   "category": "Ammunition",
-  "weightKg": 0.09,
+  "weightKg": 0.57,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

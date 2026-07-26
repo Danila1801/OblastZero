@@ -2,7 +2,7 @@
   "id": "item_foraged_roots",
   "displayName": "Foraged Roots",
   "category": "Food",
-  "weightKg": 0.11,
+  "weightKg": 0.87,
   "durability": 80,
   "decayPerDay": 0.21,
   "utilityTags": [

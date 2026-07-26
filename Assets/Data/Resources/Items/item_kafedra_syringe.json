@@ -2,7 +2,7 @@
   "id": "item_kafedra_syringe",
   "displayName": "Kafedra Syringe",
   "category": "Medical",
-  "weightKg": 0.05,
+  "weightKg": 0.09,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_artifact_variant_1",
   "displayName": "Issued Artifact Variant 1",
   "category": "Artifact",
-  "weightKg": 0.13,
+  "weightKg": 0.47,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

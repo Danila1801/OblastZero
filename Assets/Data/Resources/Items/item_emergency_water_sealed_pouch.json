@@ -2,7 +2,7 @@
   "id": "item_emergency_water_sealed_pouch",
   "displayName": "Emergency Water Sealed Pouch",
   "category": "Water",
-  "weightKg": 0.73,
+  "weightKg": 0.57,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

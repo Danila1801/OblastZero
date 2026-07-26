@@ -2,7 +2,7 @@
   "id": "item_anti_rad_syringe",
   "displayName": "Anti-Rad Syringe",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.12,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

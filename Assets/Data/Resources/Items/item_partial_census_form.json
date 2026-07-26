@@ -2,7 +2,7 @@
   "id": "item_partial_census_form",
   "displayName": "Partial Census Form",
   "category": "Document",
-  "weightKg": 0.09,
+  "weightKg": 0.1,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

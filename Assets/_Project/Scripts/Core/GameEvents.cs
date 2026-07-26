@@ -66,6 +66,24 @@ namespace OblastZero.Core
         public string CrewDataId;
     }
 
+    // Raised whenever the weight carried on the Scavenged channel moves, so the Blowout HUD can show
+    // the load bar. Also fires once on run bind, so the HUD starts at a truthful 0 / capacity.
+    public struct ScavengeLoadChangedEvent
+    {
+        public float CurrentKg;
+        public float CapacityKg;
+    }
+
+    // Raised when a Blowout pickup is refused because it would breach the carry cap. The world object
+    // stays where it is — the player has to drop something, or leave it.
+    public struct ScavengePickupRejectedEvent
+    {
+        public string ItemDataId;
+        public float ItemWeightKg;
+        public float CurrentKg;
+        public float CapacityKg;
+    }
+
     // Raised by the bunker-entrance trigger when the player reaches safety before the emission hits.
     public struct ReachBunkerEvent { }
 

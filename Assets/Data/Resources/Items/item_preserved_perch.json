@@ -2,7 +2,7 @@
   "id": "item_preserved_perch",
   "displayName": "Preserved Perch",
   "category": "Food",
-  "weightKg": 0.41,
+  "weightKg": 0.57,
   "durability": 100,
   "decayPerDay": 0.13,
   "utilityTags": [

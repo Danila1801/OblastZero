@@ -2,7 +2,7 @@
   "id": "item_canned_pumpkin",
   "displayName": "Canned Pumpkin",
   "category": "Food",
-  "weightKg": 0.41,
+  "weightKg": 0.46,
   "durability": 100,
   "decayPerDay": 0.34,
   "utilityTags": [

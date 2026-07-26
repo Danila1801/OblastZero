@@ -2,7 +2,7 @@
   "id": "item_emergency_water_flask",
   "displayName": "Emergency Water Flask",
   "category": "Water",
-  "weightKg": 0.64,
+  "weightKg": 1.08,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

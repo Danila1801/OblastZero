@@ -2,7 +2,7 @@
   "id": "item_field_surgery_military",
   "displayName": "Field Surgery Military",
   "category": "Medical",
-  "weightKg": 0.43,
+  "weightKg": 0.81,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

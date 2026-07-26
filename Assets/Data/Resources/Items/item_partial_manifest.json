@@ -2,7 +2,7 @@
   "id": "item_partial_manifest",
   "displayName": "Partial Manifest",
   "category": "Document",
-  "weightKg": 0.14,
+  "weightKg": 0.13,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

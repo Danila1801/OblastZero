@@ -2,7 +2,7 @@
   "id": "item_issued_document_variant_3",
   "displayName": "Issued Document Variant 3",
   "category": "Document",
-  "weightKg": 0.68,
+  "weightKg": 0.13,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

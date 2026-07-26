@@ -2,7 +2,7 @@
   "id": "item_processed_plastic",
   "displayName": "Processed Plastic",
   "category": "Crafting",
-  "weightKg": 0.12,
+  "weightKg": 0.53,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_prototype_chip",
   "displayName": "Prototype Chip",
   "category": "Special",
-  "weightKg": 0.42,
+  "weightKg": 0.18,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

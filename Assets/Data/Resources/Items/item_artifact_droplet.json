@@ -2,7 +2,7 @@
   "id": "item_artifact_droplet",
   "displayName": "Artifact: Droplet",
   "category": "Artifact",
-  "weightKg": 0.65,
+  "weightKg": 0.17,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_wheat_hardtack",
   "displayName": "Wheat Hardtack",
   "category": "Food",
-  "weightKg": 0.17,
+  "weightKg": 0.68,
   "durability": 60,
   "decayPerDay": 0.16,
   "utilityTags": [

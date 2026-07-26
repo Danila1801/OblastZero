@@ -2,7 +2,7 @@
   "id": "item_box_of_762mm",
   "displayName": "Box of 7.62mm",
   "category": "Ammunition",
-  "weightKg": 0.42,
+  "weightKg": 2.01,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

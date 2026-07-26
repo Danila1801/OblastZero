@@ -2,7 +2,7 @@
   "id": "item_axe",
   "displayName": "Axe",
   "category": "Weapon",
-  "weightKg": 1.8,
+  "weightKg": 2.88,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

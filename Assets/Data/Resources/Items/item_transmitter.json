@@ -2,7 +2,7 @@
   "id": "item_transmitter",
   "displayName": "Transmitter",
   "category": "Tool",
-  "weightKg": 0.88,
+  "weightKg": 3.97,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

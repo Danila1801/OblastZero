@@ -2,7 +2,7 @@
   "id": "item_partial_log",
   "displayName": "Partial Log",
   "category": "Document",
-  "weightKg": 0.11,
+  "weightKg": 0.14,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

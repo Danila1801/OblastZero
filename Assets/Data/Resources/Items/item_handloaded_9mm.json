@@ -2,7 +2,7 @@
   "id": "item_handloaded_9mm",
   "displayName": "Handloaded 9mm",
   "category": "Ammunition",
-  "weightKg": 0.03,
+  "weightKg": 0.06,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_psychiatric_powder",
   "displayName": "Psychiatric Powder",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.42,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

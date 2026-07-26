@@ -2,7 +2,7 @@
   "id": "item_psychiatric_paste",
   "displayName": "Psychiatric Paste",
   "category": "Medical",
-  "weightKg": 0.02,
+  "weightKg": 0.72,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -1,18 +1,16 @@
-using UnityEngine;
-using UnityEngine.UI;
-using OblastZero.Data;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
+using OblastZero.Data;
+using OblastZero.UI;
 
 namespace OblastZero.Core.States
 {
     /// <summary>
-    /// Run setup screen. Player selects:
-    /// 1. Starting crew (from available crew archetypes in the database)
-    /// 2. Scavenge site (region/location for Phase A)
-    /// 3. RNG seed (or random if not specified)
+    /// Run setup. Spawns <see cref="RunSetupUI"/>, feeds it the site catalogue and the crew roster, and on
+    /// confirmation calls <see cref="GameManager.BeginNewRun"/> before handing off to Phase A.
     ///
-    /// Then calls GameManager.BeginNewRun() and transitions to ScavengePhase3D.
+    /// The state owns everything the UI is not allowed to: reading the GameDatabase, generating the seed,
+    /// and starting the run. The screen only reports which id the player picked.
     /// </summary>
     public class RunSetupState : BaseGameState
     {
@@ -26,40 +24,79 @@ namespace OblastZero.Core.States
             var gm = GameManager.Instance;
             if (gm == null || gm.Database == null)
             {
-                Debug.LogError("[RunSetupState] GameManager or Database unavailable.");
+                Debug.LogError("[RunSetupState] GameManager or Database unavailable — returning to MainMenu.");
                 RequestTransition(GameState.MainMenu);
                 return;
             }
 
             Debug.Log("[RunSetupState] Entered — showing run setup screen.");
-            _ui = new RunSetupUI(gm.Database, Context?.MetaProgress);
-            _ui.OnRunCommitted += OnRunCommitted;
-            _ui.OnCancelPressed += OnCancelPressed;
-            _ui.Show();
+
+            var host = new GameObject("RunSetupUI");
+            host.transform.SetParent(transform, false);
+            _ui = host.AddComponent<RunSetupUI>();
+
+            _ui.RunConfirmed += OnRunConfirmed;
+            _ui.Cancelled += OnCancelPressed;
+
+            _ui.Populate(ScavengeSiteCatalog.All, AvailableCrew(gm.Database), NewSeed());
         }
 
         protected override void HandleExit()
         {
             if (_ui != null)
             {
-                _ui.OnRunCommitted -= OnRunCommitted;
-                _ui.OnCancelPressed -= OnCancelPressed;
-                _ui.Hide();
+                _ui.RunConfirmed -= OnRunConfirmed;
+                _ui.Cancelled -= OnCancelPressed;
+                Destroy(_ui.gameObject);
                 _ui = null;
             }
 
             Debug.Log("[RunSetupState] Exited.");
         }
 
-        private void OnRunCommitted(string crewId, string siteId, int seed)
+        /// <summary>
+        /// The crew the player may register as lead operator. Every authored crew member is offered today;
+        /// once MetaProgressData.unlockedCrewArchetypes is populated by meta-progression this filters on it.
+        /// </summary>
+        private List<CrewMemberData> AvailableCrew(GameDatabase database)
         {
-            Debug.Log($"[RunSetupState] Run committed: crew={crewId}, site={siteId}, seed={seed}");
-            
-            var gm = GameManager.Instance;
-            gm.BeginNewRun(siteId, seed);
+            var roster = new List<CrewMemberData>();
+            var all = database.AllCrew;
+            if (all == null) return roster;
 
-            // Transition to Phase A. ScavengePhase3DState owns the emission clock and loads the
-            // Scavenge level additively on top of _Bootstrap.
+            var unlocked = Context?.MetaProgress?.unlockedCrewArchetypes;
+            bool filter = unlocked != null && unlocked.Count > 0;
+
+            foreach (var member in all)
+            {
+                if (member == null || string.IsNullOrEmpty(member.id)) continue;
+                if (filter && !unlocked.Contains(member.id)) continue;
+                roster.Add(member);
+            }
+
+            if (roster.Count == 0)
+                Debug.LogError("[RunSetupState] No crew members in the database — the roster will be empty.");
+
+            return roster;
+        }
+
+        /// <summary>A fresh run seed. Runs are reproducible from this value alone.</summary>
+        private static int NewSeed() => Random.Range(1, int.MaxValue);
+
+        private void OnRunConfirmed(string siteId, string leadCrewId, int seed)
+        {
+            var site = ScavengeSiteCatalog.Get(siteId);
+            if (site == null || !site.IsAvailable)
+            {
+                Debug.LogError($"[RunSetupState] Site '{siteId}' is not available for entry. Staying on setup.");
+                return;
+            }
+
+            Debug.Log($"[RunSetupState] Run committed: site={siteId}, lead={leadCrewId}, seed={seed}");
+
+            GameManager.Instance.BeginNewRun(siteId, seed, leadCrewId);
+
+            // Phase A. ScavengePhase3DState owns the emission clock and loads the level additively.
             RequestTransition(GameState.ScavengePhase3D);
         }
 
@@ -67,222 +104,6 @@ namespace OblastZero.Core.States
         {
             Debug.Log("[RunSetupState] Setup cancelled — returning to MainMenu.");
             RequestTransition(GameState.MainMenu);
-        }
-    }
-
-    /// <summary>
-    /// Self-building run setup UI. Shows crew selector, site selector, seed field.
-    /// </summary>
-    internal class RunSetupUI
-    {
-        private GameDatabase _database;
-        private MetaProgressData _meta;
-        private Canvas _canvas;
-        private GameObject _root;
-
-        private CrewMemberData _selectedCrew;
-        private string _selectedSiteId = "default_site"; // Placeholder site ID
-        private int _selectedSeed;
-
-        public event System.Action<string, string, int> OnRunCommitted;
-        public event System.Action OnCancelPressed;
-
-        public RunSetupUI(GameDatabase database, MetaProgressData meta)
-        {
-            _database = database;
-            _meta = meta;
-            _selectedSeed = Random.Range(0, int.MaxValue);
-        }
-
-        public void Show()
-        {
-            _root = new GameObject("RunSetupUI");
-            _canvas = _root.AddComponent<Canvas>();
-            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.sortingOrder = 60;
-
-            var scaler = _root.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
-
-            // Dark background.
-            var bgGo = new GameObject("Background");
-            bgGo.transform.SetParent(_root.transform, false);
-            var bgImage = bgGo.AddComponent<Image>();
-            bgImage.color = new Color(0.08f, 0.08f, 0.08f, 1f);
-            var bgLayout = bgGo.AddComponent<LayoutElement>();
-            bgLayout.preferredWidth = 1920;
-            bgLayout.preferredHeight = 1080;
-
-            // Main container.
-            var containerGo = new GameObject("Container");
-            containerGo.transform.SetParent(_root.transform, false);
-            var containerLayout = containerGo.AddComponent<LayoutElement>();
-            containerLayout.preferredWidth = 1000;
-            containerLayout.preferredHeight = 700;
-            var containerVLayout = containerGo.AddComponent<VerticalLayoutGroup>();
-            containerVLayout.spacing = 30;
-                        containerVLayout.padding = new RectOffset(40, 40, 40, 40);
-                        containerVLayout.childControlWidth = true;
-                        containerVLayout.childControlHeight = false;
-                        containerVLayout.childForceExpandHeight = false;
-
-            // Title.
-            var titleGo = new GameObject("Title");
-            titleGo.transform.SetParent(containerGo.transform, false);
-            var titleText = titleGo.AddComponent<Text>();
-            titleText.text = "— EXPEDITION SETUP —";
-            titleText.font = Resources.Load<Font>("Arial");
-            titleText.fontSize = 44;
-            titleText.fontStyle = FontStyle.Bold;
-            titleText.alignment = TextAnchor.MiddleCenter;
-            titleText.color = new Color(0.7f, 0.7f, 0.7f, 1f);
-            var titleLayout = titleGo.AddComponent<LayoutElement>();
-            titleLayout.preferredHeight = 80;
-
-            // Crew selection section.
-            CreateSectionLabel(containerGo, "Select Crew");
-
-            var crewButtonsGo = new GameObject("CrewButtons");
-            crewButtonsGo.transform.SetParent(containerGo.transform, false);
-            var crewHLayout = crewButtonsGo.AddComponent<HorizontalLayoutGroup>();
-            crewHLayout.spacing = 15;
-            crewHLayout.childControlWidth = false;
-            crewHLayout.childControlHeight = true;
-            crewHLayout.childForceExpandWidth = false;
-
-            // Populate crew from database.
-            var allCrew = _database.allCrewMembers;
-            foreach (var crewData in allCrew.Take(3)) // Show first 3 crew for now.
-            {
-                var crewBtn = new GameObject(crewData.displayName + "Btn");
-                crewBtn.transform.SetParent(crewButtonsGo.transform, false);
-
-                var btnImage = crewBtn.AddComponent<Image>();
-                btnImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
-
-                var btn = crewBtn.AddComponent<Button>();
-                btn.onClick.AddListener(() =>
-                {
-                    _selectedCrew = crewData;
-                    Debug.Log($"[RunSetupUI] Selected crew: {crewData.displayName}");
-                });
-
-                var btnText = new GameObject("Text");
-                btnText.transform.SetParent(crewBtn.transform, false);
-                var textComp = btnText.AddComponent<Text>();
-                textComp.text = crewData.displayName;
-                textComp.font = Resources.Load<Font>("Arial");
-                textComp.fontSize = 20;
-                textComp.alignment = TextAnchor.MiddleCenter;
-                textComp.color = Color.white;
-
-                var btnLayout = crewBtn.AddComponent<LayoutElement>();
-                btnLayout.preferredWidth = 250;
-                btnLayout.preferredHeight = 80;
-            }
-
-            // Site selection (stub).
-            CreateSectionLabel(containerGo, "Scavenge Site");
-
-            var siteButtonGo = new GameObject("SiteButton");
-            siteButtonGo.transform.SetParent(containerGo.transform, false);
-            var siteImage = siteButtonGo.AddComponent<Image>();
-            siteImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
-
-            var siteBtn = siteButtonGo.AddComponent<Button>();
-            siteBtn.onClick.AddListener(() =>
-            {
-                _selectedSiteId = "default_site";
-                Debug.Log("[RunSetupUI] Default site selected.");
-            });
-
-            var siteText = new GameObject("Text");
-            siteText.transform.SetParent(siteButtonGo.transform, false);
-            var siteTxtComp = siteText.AddComponent<Text>();
-            siteTxtComp.text = "Thermal Plant [Contaminated]";
-            siteTxtComp.font = Resources.Load<Font>("Arial");
-            siteTxtComp.fontSize = 24;
-            siteTxtComp.alignment = TextAnchor.MiddleCenter;
-            siteTxtComp.color = Color.white;
-
-            var siteLayout = siteButtonGo.AddComponent<LayoutElement>();
-            siteLayout.preferredHeight = 80;
-
-            // Bottom buttons (Commit / Cancel).
-            var bottomButtonsGo = new GameObject("BottomButtons");
-            bottomButtonsGo.transform.SetParent(containerGo.transform, false);
-            var bottomHLayout = bottomButtonsGo.AddComponent<HorizontalLayoutGroup>();
-            bottomHLayout.spacing = 20;
-            bottomHLayout.childControlWidth = false;
-            bottomHLayout.childControlHeight = true;
-            bottomHLayout.childForceExpandWidth = false;
-
-            CreateSetupButton(bottomButtonsGo, "Begin Expedition", 200, 80, () =>
-            {
-                if (_selectedCrew == null)
-                {
-                    Debug.LogWarning("[RunSetupUI] No crew selected. Choose a crew member.");
-                    return;
-                }
-
-                OnRunCommitted?.Invoke(_selectedCrew.id, _selectedSiteId, _selectedSeed);
-            });
-
-            CreateSetupButton(bottomButtonsGo, "Cancel", 200, 80, () => OnCancelPressed?.Invoke());
-
-            Debug.Log("[RunSetupUI] Setup screen displayed.");
-        }
-
-        public void Hide()
-        {
-            if (_root != null)
-            {
-                Object.Destroy(_root);
-                _root = null;
-                _canvas = null;
-            }
-        }
-
-        private void CreateSectionLabel(GameObject parent, string label)
-        {
-            var labelGo = new GameObject(label + "Label");
-            labelGo.transform.SetParent(parent.transform, false);
-            var labelText = labelGo.AddComponent<Text>();
-            labelText.text = label;
-            labelText.font = Resources.Load<Font>("Arial");
-            labelText.fontSize = 28;
-            labelText.fontStyle = FontStyle.Bold;
-            labelText.alignment = TextAnchor.MiddleLeft;
-            labelText.color = new Color(0.6f, 0.6f, 0.6f, 1f);
-            var labelLayout = labelGo.AddComponent<LayoutElement>();
-            labelLayout.preferredHeight = 40;
-        }
-
-        private void CreateSetupButton(GameObject parent, string label, float width, float height, System.Action onClick)
-        {
-            var btnGo = new GameObject(label + "Btn");
-            btnGo.transform.SetParent(parent.transform, false);
-
-            var btnImage = btnGo.AddComponent<Image>();
-            btnImage.color = new Color(0.25f, 0.25f, 0.25f, 1f);
-
-            var btn = btnGo.AddComponent<Button>();
-            btn.onClick.AddListener(() => onClick?.Invoke());
-
-            var txtGo = new GameObject("Text");
-            txtGo.transform.SetParent(btnGo.transform, false);
-            var txtComp = txtGo.AddComponent<Text>();
-            txtComp.text = label;
-            txtComp.font = Resources.Load<Font>("Arial");
-            txtComp.fontSize = 24;
-            txtComp.fontStyle = FontStyle.Bold;
-            txtComp.alignment = TextAnchor.MiddleCenter;
-            txtComp.color = Color.white;
-
-            var btnLayout = btnGo.AddComponent<LayoutElement>();
-            btnLayout.preferredWidth = width;
-            btnLayout.preferredHeight = height;
         }
     }
 }

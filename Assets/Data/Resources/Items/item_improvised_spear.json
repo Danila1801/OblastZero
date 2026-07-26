@@ -2,7 +2,7 @@
   "id": "item_improvised_spear",
   "displayName": "Improvised Spear",
   "category": "Weapon",
-  "weightKg": 2.99,
+  "weightKg": 2.62,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

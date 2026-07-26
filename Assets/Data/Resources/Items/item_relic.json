@@ -2,7 +2,7 @@
   "id": "item_relic",
   "displayName": "Relic",
   "category": "Special",
-  "weightKg": 0.18,
+  "weightKg": 1.61,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

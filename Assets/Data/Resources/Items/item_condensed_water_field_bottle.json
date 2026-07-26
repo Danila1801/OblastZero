@@ -2,7 +2,7 @@
   "id": "item_condensed_water_field_bottle",
   "displayName": "Condensed Water Field Bottle",
   "category": "Water",
-  "weightKg": 1.11,
+  "weightKg": 0.98,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_standard_kit",
   "displayName": "Issued Standard Kit",
   "category": "Medical",
-  "weightKg": 0.36,
+  "weightKg": 1.13,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

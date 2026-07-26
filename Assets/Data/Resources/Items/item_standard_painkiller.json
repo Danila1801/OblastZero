@@ -2,7 +2,7 @@
   "id": "item_standard_painkiller",
   "displayName": "Standard Painkiller",
   "category": "Medical",
-  "weightKg": 0.05,
+  "weightKg": 0.98,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

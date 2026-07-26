@@ -2,7 +2,7 @@
   "id": "item_irradiated_kidney",
   "displayName": "Irradiated Kidney",
   "category": "Food",
-  "weightKg": 0.45,
+  "weightKg": 0.29,
   "durability": 90,
   "decayPerDay": 0.06,
   "utilityTags": [

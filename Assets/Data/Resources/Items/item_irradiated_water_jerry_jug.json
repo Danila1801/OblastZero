@@ -2,7 +2,7 @@
   "id": "item_irradiated_water_jerry_jug",
   "displayName": "Irradiated Water Jerry Jug",
   "category": "Water",
-  "weightKg": 0.57,
+  "weightKg": 1.5,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

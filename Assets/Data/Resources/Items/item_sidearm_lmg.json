@@ -2,7 +2,7 @@
   "id": "item_sidearm_lmg",
   "displayName": "Sidearm LMG",
   "category": "Weapon",
-  "weightKg": 0.45,
+  "weightKg": 4.46,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

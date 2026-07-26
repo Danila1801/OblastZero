@@ -2,7 +2,7 @@
   "id": "item_issued_special_variant_2",
   "displayName": "Issued Special Variant 2",
   "category": "Special",
-  "weightKg": 0.38,
+  "weightKg": 0.75,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

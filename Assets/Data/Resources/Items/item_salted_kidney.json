@@ -2,7 +2,7 @@
   "id": "item_salted_kidney",
   "displayName": "Salted Kidney",
   "category": "Food",
-  "weightKg": 0.37,
+  "weightKg": 0.48,
   "durability": 100,
   "decayPerDay": 0.11,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_kidney_jerky",
   "displayName": "Kidney Jerky",
   "category": "Food",
-  "weightKg": 0.23,
+  "weightKg": 0.39,
   "durability": 80,
   "decayPerDay": 0.19,
   "utilityTags": [

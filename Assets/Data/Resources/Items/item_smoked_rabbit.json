@@ -2,7 +2,7 @@
   "id": "item_smoked_rabbit",
   "displayName": "Smoked Rabbit",
   "category": "Food",
-  "weightKg": 0.24,
+  "weightKg": 0.33,
   "durability": 90,
   "decayPerDay": 0.25,
   "utilityTags": [

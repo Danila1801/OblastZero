@@ -2,7 +2,7 @@
   "id": "item_smoked_pork",
   "displayName": "Smoked Pork",
   "category": "Food",
-  "weightKg": 0.34,
+  "weightKg": 0.58,
   "durability": 60,
   "decayPerDay": 0.25,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_ceremonial_rifle",
   "displayName": "Ceremonial Rifle",
   "category": "Weapon",
-  "weightKg": 1.19,
+  "weightKg": 3.64,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

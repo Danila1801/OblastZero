@@ -2,7 +2,7 @@
   "id": "item_salvaged_wire_cutter",
   "displayName": "Salvaged Wire Cutter",
   "category": "Tool",
-  "weightKg": 0.52,
+  "weightKg": 2.98,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

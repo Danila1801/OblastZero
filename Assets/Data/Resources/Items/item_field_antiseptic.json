@@ -2,7 +2,7 @@
   "id": "item_field_antiseptic",
   "displayName": "Field Antiseptic",
   "category": "Medical",
-  "weightKg": 0.19,
+  "weightKg": 0.26,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

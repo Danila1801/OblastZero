@@ -2,7 +2,7 @@
   "id": "item_redacted_manifest",
   "displayName": "Redacted Manifest",
   "category": "Document",
-  "weightKg": 0.14,
+  "weightKg": 0.13,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

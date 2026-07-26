@@ -2,7 +2,7 @@
   "id": "item_boiled_water_jerrycan",
   "displayName": "Boiled Water Jerrycan",
   "category": "Water",
-  "weightKg": 1.21,
+  "weightKg": 1.43,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

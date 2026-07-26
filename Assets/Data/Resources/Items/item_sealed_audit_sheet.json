@@ -2,7 +2,7 @@
   "id": "item_sealed_audit_sheet",
   "displayName": "Sealed Audit Sheet",
   "category": "Document",
-  "weightKg": 0.18,
+  "weightKg": 0.09,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_mutant_venison",
   "displayName": "Mutant Venison",
   "category": "Food",
-  "weightKg": 0.33,
+  "weightKg": 0.28,
   "durability": 90,
   "decayPerDay": 0.34,
   "utilityTags": [

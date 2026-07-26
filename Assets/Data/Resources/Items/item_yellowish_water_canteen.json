@@ -2,7 +2,7 @@
   "id": "item_yellowish_water_canteen",
   "displayName": "Yellowish Water Canteen",
   "category": "Water",
-  "weightKg": 1.45,
+  "weightKg": 1.05,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

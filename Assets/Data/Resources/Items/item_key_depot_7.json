@@ -2,7 +2,7 @@
   "id": "item_key_depot_7",
   "displayName": "Key: Depot 7",
   "category": "Special",
-  "weightKg": 0.15,
+  "weightKg": 0.16,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

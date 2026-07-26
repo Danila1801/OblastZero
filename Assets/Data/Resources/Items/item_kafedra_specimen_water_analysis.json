@@ -2,7 +2,7 @@
   "id": "item_kafedra_specimen_water_analysis",
   "displayName": "Kafedra Specimen: Water Analysis",
   "category": "Artifact",
-  "weightKg": 0.48,
+  "weightKg": 0.37,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

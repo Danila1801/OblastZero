@@ -2,7 +2,7 @@
   "id": "item_irradiated_carp",
   "displayName": "Irradiated Carp",
   "category": "Food",
-  "weightKg": 0.35,
+  "weightKg": 0.42,
   "durability": 80,
   "decayPerDay": 0.43,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_foraged_lichen",
   "displayName": "Foraged Lichen",
   "category": "Food",
-  "weightKg": 0.17,
+  "weightKg": 0.34,
   "durability": 100,
   "decayPerDay": 0.24,
   "utilityTags": [

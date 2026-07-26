@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_3",
   "displayName": "Issued Ammunition Variant 3",
   "category": "Ammunition",
-  "weightKg": 0.91,
+  "weightKg": 0.06,
   "durability": 70,
   "decayPerDay": 0,
   "utilityTags": [

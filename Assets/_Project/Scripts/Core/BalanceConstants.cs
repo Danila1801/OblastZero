@@ -27,7 +27,13 @@ namespace OblastZero.Core
         public const float SCAVENGE_TIMER_SECONDS = 60f;
         public const float SCAVENGE_TIMER_WARNING_THRESHOLD = 15f;  // UI flashes red below this
         public const float SCAVENGE_TIMER_CRITICAL_THRESHOLD = 5f;  // Emission rumble begins
-        public const int   SCAVENGE_MAX_CARRY_WEIGHT_KG = 25;
+        /// <summary>
+        /// Weight ceiling on what the player can haul out of the Blowout, in kg. Enforced by
+        /// InventoryManager on the Scavenged channel — a pickup that would breach it is refused whole and
+        /// the world object stays put. Tuned against the Collapsed Grain Depot, which holds roughly twice
+        /// this in loot, so "what do I leave behind" is a live decision every run rather than a formality.
+        /// </summary>
+        public const int   SCAVENGE_MAX_CARRY_WEIGHT_KG = 15;
         public const float SCAVENGE_PICKUP_LERP_DURATION = 0.25f;   // SmoothDamp time for instant-pickup visual
 
         // ─── Bunker Phase (2D, Phase B) ─────────────────────────────────────────

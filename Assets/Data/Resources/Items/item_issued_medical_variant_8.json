@@ -2,7 +2,7 @@
   "id": "item_issued_medical_variant_8",
   "displayName": "Issued Medical Variant 8",
   "category": "Medical",
-  "weightKg": 0.47,
+  "weightKg": 0.43,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

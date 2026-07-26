@@ -2,7 +2,7 @@
   "id": "item_modified_sniper_rifle",
   "displayName": "Modified Sniper Rifle",
   "category": "Weapon",
-  "weightKg": 0.8,
+  "weightKg": 3.47,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

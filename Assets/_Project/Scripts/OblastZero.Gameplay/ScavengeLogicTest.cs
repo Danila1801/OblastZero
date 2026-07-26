@@ -69,6 +69,8 @@ namespace OblastZero.Gameplay
             Check("expiry event fired exactly once", expiries == 1);
             Check("per-second tick events fired", ticks >= 2);
 
+            RunCarryCapChecks(db);
+
             EventBus.Unsubscribe(onPick);
             EventBus.Unsubscribe(onRescue);
             EventBus.Unsubscribe(onTick);
@@ -79,6 +81,79 @@ namespace OblastZero.Gameplay
             string verdict = allPass ? "ALL PASS" : $"{_checks - _passed} FAILED";
             if (allPass) Debug.Log($"──────── RESULT: {_passed}/{_checks} — {verdict} ────────");
             else Debug.LogError($"──────── RESULT: {_passed}/{_checks} — {verdict} ────────");
+        }
+
+        /// <summary>
+        /// The Blowout carry cap. This is the constraint the whole of Phase A hangs on, so it is checked
+        /// on its own run with its own managers: an exact-fit add must succeed, the very next gram must be
+        /// refused whole, the refusal must reach the EventBus, the bunker channel must stay uncapped, and
+        /// raising the cap must let the refused pickup through — the negative control that proves the gate
+        /// is actually doing the refusing rather than something else failing quietly.
+        /// </summary>
+        private void RunCarryCapChecks(GameDatabase db)
+        {
+            Debug.Log("──── carry cap ────");
+
+            var inventory = new InventoryManager(db);
+            var crew = new CrewManager(db);
+            var bridge = new ManagerEventBridge();
+            bridge.Connect(inventory, crew);
+
+            var run = new RunData { runId = Guid.NewGuid().ToString("N"), runStartedUtc = DateTime.UtcNow };
+            inventory.Bind(run);
+            crew.Bind(run);
+
+            int rejections = 0;
+            float lastLoadSeen = -1f;
+            Action<ScavengePickupRejectedEvent> onReject = _ => rejections++;
+            Action<ScavengeLoadChangedEvent> onLoad = e => lastLoadSeen = e.CurrentKg;
+            EventBus.Subscribe(onReject);
+            EventBus.Subscribe(onLoad);
+
+            // meat = 0.4 kg, axe = 3.2 kg (see BuildInMemoryDatabase). Cap of 4.0 makes axe + 2 meat an
+            // exact fit, so the boundary itself gets exercised rather than only the comfortable cases.
+            inventory.ScavengeCarryCapacityKg = 4f;
+            Check("capacity defaults are settable", Mathf.Approximately(inventory.ScavengeCarryCapacityKg, 4f));
+            Check("empty pack weighs nothing", inventory.ScavengeLoadKg < 0.001f);
+
+            Check("axe fits (3.2 of 4.0)",
+                  inventory.AddItem(InventoryChannel.Scavenged, "item_axe", 1) != null);
+            Check("2 meat fit exactly to the cap (4.0 of 4.0)",
+                  inventory.AddItem(InventoryChannel.Scavenged, "item_canned_meat", 2) != null);
+            Check("load reads 4.0 kg", Mathf.Abs(inventory.ScavengeLoadKg - 4f) < 0.001f);
+            Check("no headroom left", inventory.ScavengeRemainingKg < 0.001f);
+            Check("load change reached the EventBus", Mathf.Abs(lastLoadSeen - 4f) < 0.001f);
+
+            // One gram over: refused whole, nothing added, nothing partially added.
+            int stacksBefore = run.ScavengedInventory.Count;
+            int meatBefore = StackQty(run.ScavengedInventory, "item_canned_meat");
+            Check("over-cap pickup returns null",
+                  inventory.AddItem(InventoryChannel.Scavenged, "item_canned_meat", 1) == null);
+            Check("over-cap pickup added no stack", run.ScavengedInventory.Count == stacksBefore);
+            Check("over-cap pickup did not partially fill",
+                  StackQty(run.ScavengedInventory, "item_canned_meat") == meatBefore);
+            Check("rejection surfaced on the EventBus", rejections == 1);
+            Check("WouldFitInScavenge agrees it does not fit",
+                  !inventory.WouldFitInScavenge("item_canned_meat", 1, out _));
+
+            // The cap is Phase A only — bunker storage is not weight-limited.
+            Check("bunker channel ignores the cap",
+                  inventory.AddItem(InventoryChannel.Bunker, "item_axe", 3) != null);
+
+            // Negative control: if the gate is real, raising the ceiling admits the same pickup.
+            inventory.ScavengeCarryCapacityKg = 10f;
+            Check("raising the cap admits the refused pickup",
+                  inventory.AddItem(InventoryChannel.Scavenged, "item_canned_meat", 1) != null);
+            Check("no second rejection was logged", rejections == 1);
+
+            // Handing off to the bunker empties the pack for the next Blowout.
+            inventory.TransferScavengedToBunker();
+            Check("transfer empties the scavenged channel", run.ScavengedInventory.Count == 0);
+            Check("load returns to zero after transfer", inventory.ScavengeLoadKg < 0.001f);
+
+            EventBus.Unsubscribe(onReject);
+            EventBus.Unsubscribe(onLoad);
+            bridge.Disconnect();
         }
 
         private GameDatabase BuildInMemoryDatabase()

@@ -2,7 +2,7 @@
   "id": "item_inert_moonlight",
   "displayName": "Inert Moonlight",
   "category": "Artifact",
-  "weightKg": 0.78,
+  "weightKg": 0.22,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

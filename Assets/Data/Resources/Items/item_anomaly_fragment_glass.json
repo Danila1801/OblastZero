@@ -2,7 +2,7 @@
   "id": "item_anomaly_fragment_glass",
   "displayName": "Anomaly Fragment: Glass",
   "category": "Artifact",
-  "weightKg": 0.41,
+  "weightKg": 0.15,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

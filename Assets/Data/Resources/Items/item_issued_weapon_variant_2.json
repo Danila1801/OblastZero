@@ -2,7 +2,7 @@
   "id": "item_issued_weapon_variant_2",
   "displayName": "Issued Weapon Variant 2",
   "category": "Weapon",
-  "weightKg": 0.45,
+  "weightKg": 3.04,
   "durability": 80,
   "decayPerDay": 0,
   "utilityTags": [

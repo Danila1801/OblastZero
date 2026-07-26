@@ -2,7 +2,7 @@
   "id": "item_wild_lichen",
   "displayName": "Wild Lichen",
   "category": "Food",
-  "weightKg": 0.12,
+  "weightKg": 0.38,
   "durability": 80,
   "decayPerDay": 0.05,
   "utilityTags": [

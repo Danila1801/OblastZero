@@ -2,7 +2,7 @@
   "id": "item_worn_shotgun",
   "displayName": "Worn Shotgun",
   "category": "Weapon",
-  "weightKg": 0.58,
+  "weightKg": 3.44,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

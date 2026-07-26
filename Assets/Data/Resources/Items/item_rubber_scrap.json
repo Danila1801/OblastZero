@@ -2,7 +2,7 @@
   "id": "item_rubber_scrap",
   "displayName": "Rubber Scrap",
   "category": "Crafting",
-  "weightKg": 0.04,
+  "weightKg": 0.41,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

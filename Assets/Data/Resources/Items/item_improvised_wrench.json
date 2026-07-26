@@ -2,7 +2,7 @@
   "id": "item_improvised_wrench",
   "displayName": "Improvised Wrench",
   "category": "Tool",
-  "weightKg": 1.13,
+  "weightKg": 1.62,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

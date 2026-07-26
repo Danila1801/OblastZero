@@ -2,7 +2,7 @@
   "id": "item_worn_saw",
   "displayName": "Worn Saw",
   "category": "Tool",
-  "weightKg": 2.63,
+  "weightKg": 2.36,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

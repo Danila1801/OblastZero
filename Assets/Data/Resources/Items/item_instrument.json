@@ -2,7 +2,7 @@
   "id": "item_instrument",
   "displayName": "Instrument",
   "category": "Special",
-  "weightKg": 0.15,
+  "weightKg": 0.89,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

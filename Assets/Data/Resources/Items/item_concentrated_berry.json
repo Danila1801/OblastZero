@@ -2,7 +2,7 @@
   "id": "item_concentrated_berry",
   "displayName": "Concentrated Berry",
   "category": "Food",
-  "weightKg": 0.28,
+  "weightKg": 0.29,
   "durability": 60,
   "decayPerDay": 0.45,
   "utilityTags": [

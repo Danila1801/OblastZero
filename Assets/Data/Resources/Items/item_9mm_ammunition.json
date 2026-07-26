@@ -2,7 +2,7 @@
   "id": "item_9mm_ammunition",
   "displayName": "9mm Ammunition",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.05,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

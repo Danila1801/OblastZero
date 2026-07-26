@@ -2,7 +2,7 @@
   "id": "item_rain_water_tin_bottle",
   "displayName": "Rain Water Tin Bottle",
   "category": "Water",
-  "weightKg": 0.68,
+  "weightKg": 0.91,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

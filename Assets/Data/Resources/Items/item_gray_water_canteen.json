@@ -2,7 +2,7 @@
   "id": "item_gray_water_canteen",
   "displayName": "Gray Water Canteen",
   "category": "Water",
-  "weightKg": 0.84,
+  "weightKg": 1.04,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

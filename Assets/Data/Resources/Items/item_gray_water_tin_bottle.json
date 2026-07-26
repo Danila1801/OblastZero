@@ -2,7 +2,7 @@
   "id": "item_gray_water_tin_bottle",
   "displayName": "Gray Water Tin Bottle",
   "category": "Water",
-  "weightKg": 1.33,
+  "weightKg": 0.87,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_spectrometer",
   "displayName": "Spectrometer",
   "category": "Tool",
-  "weightKg": 0.39,
+  "weightKg": 3.97,
   "durability": 80,
   "decayPerDay": 0.0,
   "utilityTags": [

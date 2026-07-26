@@ -2,7 +2,7 @@
   "id": "item_issued_ammunition_variant_7",
   "displayName": "Issued Ammunition Variant 7",
   "category": "Ammunition",
-  "weightKg": 0.86,
+  "weightKg": 0.04,
   "durability": 90,
   "decayPerDay": 0,
   "utilityTags": [

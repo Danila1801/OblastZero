@@ -2,7 +2,7 @@
   "id": "item_potable_water_field_bottle",
   "displayName": "Potable Water Field Bottle",
   "category": "Water",
-  "weightKg": 1.95,
+  "weightKg": 0.95,
   "durability": 100,
   "decayPerDay": 0.0,
   "utilityTags": [

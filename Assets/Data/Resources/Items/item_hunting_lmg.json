@@ -2,7 +2,7 @@
   "id": "item_hunting_lmg",
   "displayName": "Hunting LMG",
   "category": "Weapon",
-  "weightKg": 1.46,
+  "weightKg": 4.33,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

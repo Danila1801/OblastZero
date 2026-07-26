@@ -2,7 +2,7 @@
   "id": "item_pickled_squash",
   "displayName": "Pickled Squash",
   "category": "Food",
-  "weightKg": 0.64,
+  "weightKg": 0.46,
   "durability": 60,
   "decayPerDay": 0.15,
   "utilityTags": [

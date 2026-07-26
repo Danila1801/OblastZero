@@ -40,6 +40,8 @@ namespace OblastZero.Gameplay
             _inventory.ItemRemoved += OnBunkerInventoryTouched;
             _inventory.ItemChanged += OnBunkerInventoryTouched;
             _inventory.ItemTransferred += OnItemTransferred;
+            _inventory.ScavengeLoadChanged += OnScavengeLoadChanged;
+            _inventory.ScavengePickupRejected += OnScavengePickupRejected;
 
             _crew.CrewAdded += OnCrewAdded;
             _crew.CrewStatsChanged += OnCrewStatsChanged;
@@ -64,6 +66,8 @@ namespace OblastZero.Gameplay
             _inventory.ItemRemoved -= OnBunkerInventoryTouched;
             _inventory.ItemChanged -= OnBunkerInventoryTouched;
             _inventory.ItemTransferred -= OnItemTransferred;
+            _inventory.ScavengeLoadChanged -= OnScavengeLoadChanged;
+            _inventory.ScavengePickupRejected -= OnScavengePickupRejected;
 
             _crew.CrewAdded -= OnCrewAdded;
             _crew.CrewStatsChanged -= OnCrewStatsChanged;
@@ -101,6 +105,18 @@ namespace OblastZero.Gameplay
             if (to == InventoryChannel.Bunker)
                 EventBus.Raise(new BunkerInventoryChangedEvent { ItemDataId = inst.itemDataId });
         }
+
+        private void OnScavengeLoadChanged(float currentKg, float capacityKg)
+            => EventBus.Raise(new ScavengeLoadChangedEvent { CurrentKg = currentKg, CapacityKg = capacityKg });
+
+        private void OnScavengePickupRejected(string itemDataId, float itemKg, float currentKg, float capacityKg)
+            => EventBus.Raise(new ScavengePickupRejectedEvent
+            {
+                ItemDataId = itemDataId,
+                ItemWeightKg = itemKg,
+                CurrentKg = currentKg,
+                CapacityKg = capacityKg
+            });
 
         // ---- Crew ----
 

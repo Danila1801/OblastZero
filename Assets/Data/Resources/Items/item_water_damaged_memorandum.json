@@ -2,7 +2,7 @@
   "id": "item_water_damaged_memorandum",
   "displayName": "Water-Damaged Memorandum",
   "category": "Document",
-  "weightKg": 0.28,
+  "weightKg": 0.13,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

@@ -2,7 +2,7 @@
   "id": "item_issued_weapon_variant_5",
   "displayName": "Issued Weapon Variant 5",
   "category": "Weapon",
-  "weightKg": 0.45,
+  "weightKg": 2.38,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

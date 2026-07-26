@@ -2,7 +2,7 @@
   "id": "item_veterinary_suture_kit",
   "displayName": "Veterinary Suture Kit",
   "category": "Medical",
-  "weightKg": 0.05,
+  "weightKg": 1.1,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

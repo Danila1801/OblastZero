@@ -2,7 +2,7 @@
   "id": "item_kafedra_signal_receiver",
   "displayName": "Kafedra Signal Receiver",
   "category": "Tool",
-  "weightKg": 0.43,
+  "weightKg": 3.43,
   "durability": 90,
   "decayPerDay": 0.0,
   "utilityTags": [

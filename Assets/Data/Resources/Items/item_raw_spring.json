@@ -2,7 +2,7 @@
   "id": "item_raw_spring",
   "displayName": "Raw Spring",
   "category": "Crafting",
-  "weightKg": 0.54,
+  "weightKg": 1.24,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

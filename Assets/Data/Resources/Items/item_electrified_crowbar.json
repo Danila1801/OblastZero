@@ -2,7 +2,7 @@
   "id": "item_electrified_crowbar",
   "displayName": "Electrified Crowbar",
   "category": "Weapon",
-  "weightKg": 2.35,
+  "weightKg": 1.73,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [

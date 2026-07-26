@@ -2,7 +2,7 @@
   "id": "item_stale_sukhar",
   "displayName": "Stale Sukhar",
   "category": "Food",
-  "weightKg": 0.2,
+  "weightKg": 0.69,
   "durability": 60,
   "decayPerDay": 0.31,
   "utilityTags": [

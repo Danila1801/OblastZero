@@ -2,7 +2,7 @@
   "id": "item_compressed_provision_pack",
   "displayName": "Compressed Provision Pack",
   "category": "Food",
-  "weightKg": 0.18,
+  "weightKg": 0.5,
   "durability": 90,
   "decayPerDay": 0.31,
   "utilityTags": [

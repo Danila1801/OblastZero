@@ -2,7 +2,7 @@
   "id": "item_issued_tool_variant_8",
   "displayName": "Issued Tool Variant 8",
   "category": "Tool",
-  "weightKg": 0.65,
+  "weightKg": 1.19,
   "durability": 100,
   "decayPerDay": 0,
   "utilityTags": [

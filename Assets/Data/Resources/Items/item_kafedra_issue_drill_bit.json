@@ -2,7 +2,7 @@
   "id": "item_kafedra_issue_drill_bit",
   "displayName": "Kafedra-Issue Drill Bit",
   "category": "Tool",
-  "weightKg": 3.15,
+  "weightKg": 0.4,
   "durability": 70,
   "decayPerDay": 0.0,
   "utilityTags": [

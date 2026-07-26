@@ -2,7 +2,7 @@
   "id": "item_handloaded_12_gauge",
   "displayName": "Handloaded 12 Gauge",
   "category": "Ammunition",
-  "weightKg": 0.02,
+  "weightKg": 0.09,
   "durability": 60,
   "decayPerDay": 0.0,
   "utilityTags": [
