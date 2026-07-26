@@ -71,6 +71,22 @@ SCENE_PATH = "Assets/Scenes/Scavenge.unity"
 BOX_LOCAL = {"Cube": (1, 1, 1), "Cylinder": (1, 2, 1), "Sphere": (1, 1, 1),
              "Capsule": (1, 2, 1), "Quad": (1, 1, 0), "Plane": (10, 0, 10)}
 
+# Item silhouettes. This module is checked against VisualArchetype.cs before the scene is
+# written; the C# file is the authority and generation aborts if the two have drifted.
+import visual_archetypes as va  # noqa: E402  (kept next to the tables it belongs with)
+
+# Y half-extent of the uniform 0.34 cube every pickup used to be. Archetype shapes are
+# dropped by the difference so their BOTTOM stays on the surface the manifest was authored
+# against, rather than their centre.
+LEGACY_PICKUP_HALF_Y = 0.17
+
+# World-space edge length of a pickup's trigger box, held constant across archetypes so a
+# flat document is no harder to hit than a crate. Matches the old 0.34 x 1.9 local box.
+PICKUP_TRIGGER_WORLD_M = 0.646
+
+# id -> ItemCategory name, loaded from the live database in main(). Empty until then.
+ITEM_CATEGORIES = {}
+
 PLAYER_SPAWN = (-44, 0.15, -30)
 PLAYER_FACING = (0, 38, 0)
 EYE_HEIGHT = 1.62
@@ -97,9 +113,11 @@ PICKUPS = [
     # -- Admin / office: documents and medical, the densest small-item room ---------------
     ("item_industrial_radio",      ITEM, 1, 60, 0.0,  (-18, 0.98, -20),  -18,  "M_Pickup_Tool"),
     ("item_bureau_dossier",        ITEM, 1, -1, 0.0,  (-8, 0.95, -30),    34,  "M_Pickup_Document"),
-    ("item_redacted_manifest",     ITEM, 2, -1, 0.0,  (-20.6, 1.92, -34), -8,  "M_Pickup_Document"),
+    # 1.97, not 1.92: Filing_Cabinet_2's top is at y=1.80, so the old value sank the pickup
+    # 5 cm into the cabinet. A 0.34 cube hid that; a 5 cm-thick folder is swallowed whole.
+    ("item_redacted_manifest",     ITEM, 2, -1, 0.0,  (-20.6, 1.97, -34), -8,  "M_Pickup_Document"),
     ("item_issued_bandage",        ITEM, 3, -1, 0.0,  (6, 0.96, -22),     26,  "M_Pickup_Medical"),
-    ("item_anti_rad_syringe",      ITEM, 2, -1, 0.0,  (13, 1.92, -18),    44,  "M_Pickup_Medical"),
+    ("item_anti_rad_syringe",      ITEM, 2, -1, 0.0,  (13, 1.97, -18),    44,  "M_Pickup_Medical"),
     ("item_service_pistol",        ITEM, 1, 55, 0.0,  (-8.3, 0.95, -29.2), 78, "M_Pickup_Weapon"),
 
     # -- Loading dock: the heavy, bulky haul ---------------------------------------------
@@ -731,30 +749,60 @@ def build():
             "  playerTag: Player\n")
 
     # ══ PICKUPS ═════════════════════════════════════════════════════════════════════════
-    # Trigger colliders, oversized relative to the visual: they must not block the
-    # CharacterController, but they must be easy to hit with a 3 m crosshair raycast.
+    # Shape comes from the item's VisualArchetype, so a pry bar reads as a bar on the shelf
+    # and a dossier reads as paperwork, instead of 22 identical cubes. The archetype tables
+    # are owned by VisualArchetype.cs and mirrored in tools/visual_archetypes.py, which
+    # main() has already proved identical before we get here.
+    #
+    # Trigger colliders stay a fixed generous box regardless of the visual: they must not
+    # block the CharacterController, but a flattened document still has to be easy to hit
+    # with a 3 m crosshair raycast. Decoupling them is deliberate — shrinking the trigger to
+    # match a 5 cm-thick folder would make it nearly unclickable under time pressure.
     pick = group("=== PICKUPS ===")
+    archetype_census = {}
     for data_id, kind, qty, dur, contam, pos, yaw, mat in PICKUPS:
         is_crew = kind == CREW
         name = ("Crew_" if is_crew else "Pickup_") + data_id
+
+        archetype = "Crew" if is_crew else va.derive(ITEM_CATEGORIES.get(data_id), data_id)
+        mesh, scale = va.SHAPES[archetype]
+        archetype_census[archetype] = archetype_census.get(archetype, 0) + 1
+
+        # Half-extents in world units, accounting for non-unit primitive meshes: a Cylinder
+        # or Capsule mesh is 2 units tall, so its Y half-extent is the Y scale, not half of it.
+        base = BOX_LOCAL[mesh]
+        half = tuple(scale[i] * base[i] / 2.0 for i in range(3))
+
+        # The manifest's Y values were authored against the old 0.34 cube resting on a surface.
+        # Keep each pickup's BOTTOM where it was and let the silhouette change above it —
+        # otherwise a flattened document hovers 14 cm in the air and the support check fails.
+        drop = LEGACY_PICKUP_HALF_Y - half[1]
+        pos = (pos[0], pos[1] - drop, pos[2]) if not is_crew else pos
+
         if is_crew:
-            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 58),
-                           scale=(0.78, 0.86, 0.78))
-            sb.mesh_renderer(go, "Capsule", mat, cast_shadows=True)
+            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 58), scale=scale)
+            sb.mesh_renderer(go, mesh, mat, cast_shadows=True)
             sb.capsule_collider(go, is_trigger=True, radius=0.62, height=2.3)
             placed.append((name, pos, (0.62, 0.72, 0.62), True))
         else:
-            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 0),
-                           scale=(0.34, 0.34, 0.34))
-            sb.mesh_renderer(go, "Cube", mat, cast_shadows=False)
-            sb.box_collider(go, is_trigger=True, size=(1.9, 1.9, 1.9))
-            placed.append((name, pos, (0.17, 0.17, 0.17), False))
+            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 0), scale=scale)
+            sb.mesh_renderer(go, mesh, mat, cast_shadows=False)
+            # Collider size is LOCAL, so a fixed number would scale with the mesh and give a
+            # 1.6 m trigger on a rifle and a 0.3 m one on a can. Divide out the scale to keep
+            # every pickup the same size to the crosshair.
+            sb.box_collider(go, is_trigger=True,
+                            size=tuple(PICKUP_TRIGGER_WORLD_M / s for s in scale))
+            placed.append((name, pos, half, False))
+
         sb.mono(go, "ScavengePickup", "Assembly-CSharp::OblastZero.Gameplay.ScavengePickup",
                 "  kind: %d\n"
                 "  dataId: %s\n"
                 "  quantity: %d\n"
                 "  durabilityOverride: %d\n"
                 "  contamination: %s\n" % (kind, data_id, qty, dur, f(contam)))
+
+    print("pickup silhouettes: " + ", ".join(
+        "%s x%d" % (k, v) for k, v in sorted(archetype_census.items())))
 
     return sb, sun_light_id, solids, placed
 
@@ -997,6 +1045,42 @@ def verify(scene_text):
     return problems
 
 
+def load_item_categories():
+    """
+    id -> ItemCategory name for every item in the live database. Read from the shipped data
+    rather than restated here, so a re-categorised item changes its silhouette on the next
+    generation instead of quietly keeping the old one.
+
+    The .asset items serialize category as the enum's integer, so the ordering below must
+    match ItemCategory in ItemData.cs.
+    """
+    import glob
+    import json
+    import re
+
+    enum_order = ["Food", "Water", "Medical", "Weapon", "Ammunition",
+                  "Tool", "Document", "Artifact", "Crafting", "Special"]
+    categories = {}
+
+    for path in glob.glob("Assets/Data/Resources/Items/*.json"):
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        if data.get("id"):
+            categories[data["id"]] = data.get("category")
+
+    for path in glob.glob("Assets/Data/Definitions/Items/*.asset"):
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        m_id = re.search(r"^\s+id:\s*(\S+)", text, re.M)
+        m_cat = re.search(r"^\s+category:\s*(\d+)", text, re.M)
+        if not m_id or m_id.group(1) in categories:
+            continue
+        idx = int(m_cat.group(1)) if m_cat else -1
+        categories[m_id.group(1)] = enum_order[idx] if 0 <= idx < len(enum_order) else None
+
+    return categories
+
+
 def verify_pickup_ids():
     """Fail loudly if a manifest id is not in the shipped item/crew database."""
     import glob
@@ -1046,6 +1130,18 @@ def main():
         raise SystemExit("pickup ids not in the database: " + ", ".join(missing))
     print("database check: %d item ids, %d crew ids, all %d pickup ids resolve"
           % (n_items, n_crew, len(PICKUPS)))
+
+    # Gate: the silhouettes baked into the scene must be the ones the runtime would spawn.
+    # Aborts before anything is written if visual_archetypes.py has drifted from the C#.
+    print("archetype check: " + va.assert_matches_csharp())
+
+    global ITEM_CATEGORIES
+    ITEM_CATEGORIES = load_item_categories()
+    uncategorised = [d for d, k, *_ in PICKUPS if k == ITEM and not ITEM_CATEGORIES.get(d)]
+    if uncategorised:
+        raise SystemExit("pickup items with no category, cannot pick a silhouette: "
+                         + ", ".join(uncategorised))
+    print("category check: %d items categorised" % len(ITEM_CATEGORIES))
 
     # Materials
     for name, (base, smooth, metal, emis) in sorted(MATERIALS.items()):

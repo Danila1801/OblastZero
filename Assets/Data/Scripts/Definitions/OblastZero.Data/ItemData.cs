@@ -40,6 +40,12 @@ namespace OblastZero.Data
         public Sprite icon;
         public GameObject worldPrefab; // for Phase A pickup
 
+        [Tooltip("Optional override for how this item renders in the 3D scavenge. Leave on Auto — the " +
+                 "usual case — and VisualArchetypeMapping derives the shape from category and id. Set it " +
+                 "only when an item's category misrepresents its silhouette. Not read by ItemJsonLoader " +
+                 "yet, so today this is an authored-asset override.")]
+        public VisualArchetype visualArchetype = VisualArchetype.Auto;
+
         [Header("Physical")]
         public float weightKg;
         [Range(0, 100)] public int durability;
