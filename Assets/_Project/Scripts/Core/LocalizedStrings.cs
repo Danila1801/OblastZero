@@ -17,6 +17,19 @@ namespace OblastZero.Core
     {
         private static readonly Dictionary<string, string> _table = new();
 
+        /// <summary>
+        /// Number of keys currently registered. Zero means every <see cref="Get"/> call returns its key
+        /// verbatim — the exact symptom of a language table that never loaded, so boot diagnostics assert
+        /// on this rather than assuming the loader ran.
+        /// </summary>
+        public static int Count => _table.Count;
+
+        /// <summary>
+        /// Language code of the table currently loaded, or null before any load. Set by the loader in
+        /// OblastZero.Services; read by diagnostics and by any future language-switch UI.
+        /// </summary>
+        public static string ActiveLanguageCode { get; set; }
+
         /// <summary>Registers (or overwrites) a single key → display-string mapping.</summary>
         public static void Register(string key, string value)
         {
@@ -40,6 +53,11 @@ namespace OblastZero.Core
 
         public static bool Has(string key) => !string.IsNullOrEmpty(key) && _table.ContainsKey(key);
 
-        public static void Clear() => _table.Clear();
+        /// <summary>Empties the table and forgets the active language. The loader calls this before a swap.</summary>
+        public static void Clear()
+        {
+            _table.Clear();
+            ActiveLanguageCode = null;
+        }
     }
 }

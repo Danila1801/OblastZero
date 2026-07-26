@@ -1,6 +1,7 @@
 using UnityEngine;
 using OblastZero.Data;
 using OblastZero.Gameplay;
+using OblastZero.Services;
 
 namespace OblastZero.Core
 {
@@ -93,6 +94,10 @@ namespace OblastZero.Core
 
         private void InitializeDataLayer()
         {
+            // Language table before content: a language load swaps the whole table, so it has to happen
+            // before anything registers inline display strings while deserializing content.
+            LocalizationJsonLoader.LoadLanguage(LocalizationJsonLoader.DefaultLanguageCode);
+
             if (gameDatabase == null)
             {
                 Debug.LogError("[GameManager] GameDatabase is not assigned in the inspector. " +
@@ -101,6 +106,7 @@ namespace OblastZero.Core
             }
 
             gameDatabase.Initialize();
+            LogContentDiagnostics();
 
             _inventory = new InventoryManager(gameDatabase);
             _crew = new CrewManager(gameDatabase);
@@ -111,6 +117,49 @@ namespace OblastZero.Core
             _bridge.Connect(_inventory, _crew, _reputation, _events);
 
             Debug.Log("[GameManager] Data layer wired: GameDatabase + Inventory/Crew/Reputation managers + EventEngine + EventBus bridge.");
+        }
+
+        /// <summary>
+        /// One line at boot saying exactly how much content actually made it into memory, plus a hard
+        /// error per channel that came back short.
+        ///
+        /// This exists because the failure it catches is invisible: <c>GameDatabase.Initialize</c> succeeds
+        /// whether the Resources JSON loaders returned 703 items or zero, and the game boots either way.
+        /// The first symptom would otherwise be an event resolving against an id that is not in the index,
+        /// many minutes into a run. Counts are read from AllItems/AllEvents rather than the serialized
+        /// lists, so this measures the merged authored + JSON set the game will actually query.
+        /// </summary>
+        private void LogContentDiagnostics()
+        {
+            int itemCount = gameDatabase.AllItems?.Count ?? 0;
+            int eventCount = gameDatabase.AllEvents?.Count ?? 0;
+            int crewCount = gameDatabase.AllCrew?.Count ?? 0;
+            int factionCount = gameDatabase.factions?.Count ?? 0;
+
+            Debug.Log($"[GameManager] GameDatabase loaded: {itemCount} items, {eventCount} events, " +
+                      $"{crewCount} crew, {factionCount} factions. " +
+                      $"Localization: {LocalizedStrings.Count} keys ('{LocalizedStrings.ActiveLanguageCode ?? "none"}').");
+
+            if (itemCount < BalanceConstants.CONTENT_MIN_EXPECTED_ITEMS)
+                Debug.LogError($"[GameManager] CRITICAL: only {itemCount} items loaded (expected at least " +
+                               $"{BalanceConstants.CONTENT_MIN_EXPECTED_ITEMS}). Check ItemJsonLoader and Assets/Data/Resources/Items/.");
+
+            if (eventCount < BalanceConstants.CONTENT_MIN_EXPECTED_EVENTS)
+                Debug.LogError($"[GameManager] CRITICAL: only {eventCount} events loaded (expected at least " +
+                               $"{BalanceConstants.CONTENT_MIN_EXPECTED_EVENTS}). Check EventJsonLoader and Assets/Data/Resources/Events/.");
+
+            if (crewCount < BalanceConstants.CONTENT_MIN_EXPECTED_CREW)
+                Debug.LogError($"[GameManager] CRITICAL: {crewCount} crew loaded. RunSetup has no operator to " +
+                               "register as lead, so every run reaches the bunker empty.");
+
+            if (factionCount < BalanceConstants.CONTENT_MIN_EXPECTED_FACTIONS)
+                Debug.LogError($"[GameManager] CRITICAL: {factionCount} factions loaded (expected " +
+                               $"{BalanceConstants.CONTENT_MIN_EXPECTED_FACTIONS}: Scale Society, Cordon, Kafedra). " +
+                               "Reputation lookups will return null.");
+
+            if (LocalizedStrings.Count == 0)
+                Debug.LogError("[GameManager] CRITICAL: no localization keys loaded. Every UI string will " +
+                               "render as its raw key. Check Assets/Data/Resources/Locale/.");
         }
 
         /// <summary>

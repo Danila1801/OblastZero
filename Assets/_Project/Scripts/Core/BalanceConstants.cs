@@ -70,6 +70,19 @@ namespace OblastZero.Core
         public const string SAVE_BACKUP_SUFFIX = ".bak";
         public const int    MAX_SAVE_SLOTS = 3;
 
+        // ─── Content integrity tripwires ────────────────────────────────────────
+        // Floors, not targets. The shipped set is ~711 items and ~1023 events (authored .asset content
+        // plus the Resources JSON blitz); these sit well below that so ordinary content churn stays
+        // quiet, while a JSON loader that silently returned nothing trips them immediately. A boot that
+        // reports 8 items instead of 711 is otherwise indistinguishable from a working one until an
+        // event tries to resolve an id that is not in the index.
+        public const int CONTENT_MIN_EXPECTED_ITEMS = 600;
+        public const int CONTENT_MIN_EXPECTED_EVENTS = 900;
+        /// <summary>Below this the roster is unplayable — RunSetup has nobody to register as lead.</summary>
+        public const int CONTENT_MIN_EXPECTED_CREW = 1;
+        /// <summary>Scale Society, Cordon, Kafedra. Reputation is enum-driven and expects all three.</summary>
+        public const int CONTENT_MIN_EXPECTED_FACTIONS = 3;
+
         // ─── Debug ──────────────────────────────────────────────────────────────
         public const bool VERBOSE_STATE_LOGGING = true;
         public const bool VERBOSE_SAVE_LOGGING = true;
