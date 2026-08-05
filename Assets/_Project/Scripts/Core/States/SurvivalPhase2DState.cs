@@ -94,7 +94,10 @@ namespace OblastZero.Core
                 return;
             }
 
-            BunkerTurnResult result = _phase.EndDay();
+            // The tags MUST be passed. EventEngine rejects any event carrying regionTagsAny when the caller
+            // supplies none, and every shipped event carries them — calling EndDay() bare selects nothing,
+            // every day, for the whole run, and logs only a routine "no event this day" line while doing it.
+            BunkerTurnResult result = _phase.EndDay(RegionTags.BunkerPhaseActive);
             if (result.runEnded) EndRun();
         }
 
