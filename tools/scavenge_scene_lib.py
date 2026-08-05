@@ -32,6 +32,13 @@ SCRIPT_GUIDS = {
     # reason that gate exists (CLAUDE.md §14: a wrong GUID is a component that runs no code, silently).
     "PickupHoverHighlight":     "fb6bb5a39b1cbe3498e90ab89a8dcf3e",
     "EmissionVfxController":    "6a3cdde8fc6fa9988f912247232ee2f4",
+    # Phase A anomalies (bible SS5 / BESTIARY.md). Same caveat as PickupHoverHighlight above: Unity was
+    # open when these landed, so these are the Editor's GUIDs, harvested from the .cs.meta on disk.
+    "CarbonCopyAnomaly":        "414e165fc5c5351489fc5f00dfa0e8ab",
+    "InterviewAnomaly":         "e8b57e07fecdaa247a16f972bcf0cd8a",
+    "BacklogAnomaly":           "4090922ea27bb9e40a0b1ad0d30d896e",
+    "AnomalyAudioCue":          "cf169464cd33cfc428bca99b7a844f54",
+    "BacklogMotes":             "922909b762c153644e158b2f9a3af7df",
     # URP / SRP core components
     "UniversalAdditionalCameraData": "a79441f348de89743a2939f4d699eac1",
     "UniversalAdditionalLightData":  "474bcb49853aa07438625e644c072ee6",
@@ -71,6 +78,8 @@ PROJECT_SCRIPTS = (
     "ScavengePlayerController", "ScavengeController", "ScavengePickup",
     "BunkerEntranceTrigger", "ScavengeHUD", "FluorescentFlicker", "ScavengePropDresser",
     "ScavengeDustField", "PickupHoverHighlight", "EmissionVfxController",
+    "CarbonCopyAnomaly", "InterviewAnomaly", "BacklogAnomaly", "AnomalyAudioCue",
+    "BacklogMotes",
 )
 
 _ASSETS_ROOT = os.path.join(

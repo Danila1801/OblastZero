@@ -183,6 +183,212 @@ namespace OblastZero.Core
         /// <summary>Scale Society, Cordon, Kafedra. Reputation is enum-driven and expects all three.</summary>
         public const int CONTENT_MIN_EXPECTED_FACTIONS = 3;
 
+        // ─── Phase A hazards: anomalies (bible §5) ──────────────────────────────
+        // The three anomalies are the signature mechanic, and each is tuned around a different decision.
+        // Carbon Copy: "is this the crate I already took?" Interview: "is the reward worth the unknown?"
+        // Backlog: "is the shortcut still a shortcut?" The numbers below exist to keep those three
+        // questions live; a value that makes any of them obvious has been mistuned.
+
+        /// <summary>
+        /// Copies one Carbon Copy zone will produce before it stops. The bible's own figure ("players grab
+        /// 3-4 copies"). Uncapped it is an item printer — stand in the volume and mine one crate until the
+        /// carry cap intervenes — and the cap is what keeps it a trick rather than an exploit. Four is also
+        /// roughly what fits in the seconds a player spends before the clock pulls them off it, so the
+        /// ceiling rarely announces itself.
+        /// </summary>
+        public const int CARBON_COPY_MAX_DUPLICATES = 4;
+
+        /// <summary>
+        /// Player speed inside a Backlog, as a fraction of normal. The bible specifies subjective time at
+        /// 40×–100× slower; 0.02 is the 50× midpoint. At 4.5 m/s walk that is 9 cm/s, so crossing a 6 m
+        /// corridor costs about 67 seconds against a 60-second clock — which is the point. Entering with
+        /// the clock low is meant to be unsurvivable, not merely expensive.
+        /// </summary>
+        public const float BACKLOG_TIME_DILATION_FACTOR = 0.02f;
+
+        /// <summary>
+        /// Seconds of enforced delay between grabs inside a Backlog. The bible slows *interaction* as well
+        /// as movement, and without this a player could stand at the boundary and harvest a shelf at full
+        /// speed while only their feet were slowed.
+        /// </summary>
+        public const float BACKLOG_INTERACTION_DELAY_SECONDS = 2.5f;
+
+        /// <summary>
+        /// Pitch multiplier applied to the ambient and music beds inside a Backlog. A perfect fourth down.
+        /// The emission siren is deliberately excluded (see AudioManager.SetTemporalDrag): the whole
+        /// mechanic is that the clock does not slow, and pitching the siren would tell the player's ear
+        /// otherwise.
+        /// </summary>
+        public const float BACKLOG_AUDIO_PITCH_FACTOR = 0.75f;
+
+        /// <summary>Seconds the screen takes to fade to black when the player sits for the Interview.</summary>
+        public const float INTERVIEW_FADE_SECONDS = 1.5f;
+
+        /// <summary>
+        /// Sanity charged to the operator for consenting to the correction of their file. The consent
+        /// branch pays the Stamped Tongue — a one-time override of any Scale Society event — so it has to
+        /// cost something the player feels for the rest of the run rather than being a free pick.
+        /// </summary>
+        public const int INTERVIEW_CONSENT_SANITY_COST = 12;
+
+        // ─── Carbon Copy defects, felt in Phase B ───────────────────────────────
+        // The copy's cost lands when a crew member uses it, days after the grab that seemed free. Each
+        // defect is a wrong detail rather than a broken object — the bible's register — and each is sized
+        // to be worse than not having the item at all, because otherwise taking the copy is still correct.
+
+        /// <summary>Health lost when a defective med kit's syringes turn out to hold the wrong fluid.</summary>
+        public const int DEFECT_MEDICAL_HEALTH_PENALTY = 15;
+
+        /// <summary>Sanity lost by the crew member who administered it and then read the ampoule.</summary>
+        public const int DEFECT_MEDICAL_SANITY_PENALTY = 8;
+
+        /// <summary>Chance a defective ration's contents do not match its label. Half the time it is food.</summary>
+        public const float DEFECT_FOOD_POISONING_CHANCE = 0.5f;
+
+        public const int DEFECT_FOOD_HEALTH_PENALTY = 10;
+        public const int DEFECT_FOOD_FATIGUE_PENALTY = 12;
+
+        /// <summary>
+        /// Standing lost with the Scale Society for filing a document whose countersignature could not have
+        /// been made. They are the faction that reads signatures, so they are the faction that notices.
+        /// </summary>
+        public const int DEFECT_DOCUMENT_REPUTATION_PENALTY = 8;
+
+        /// <summary>Chance a defective weapon's misaligned sights turn a success into a failure.</summary>
+        public const float DEFECT_WEAPON_FAILURE_CHANCE = 0.25f;
+
+        // ─── Phase A hazards: Geiger detection ──────────────────────────────────
+
+        /// <summary>Metres at which a carried Geiger counter starts clicking at a detectable anomaly.</summary>
+        public const float GEIGER_DETECTION_RANGE_M = 14f;
+
+        /// <summary>Seconds between clicks at the boundary of a detectable volume.</summary>
+        public const float GEIGER_CLICK_PERIOD_NEAR = 0.14f;
+
+        /// <summary>Seconds between clicks at the edge of detection range.</summary>
+        public const float GEIGER_CLICK_PERIOD_FAR = 1.1f;
+
+        /// <summary>Gap between the two halves of the bible's characteristic double-click, in seconds.</summary>
+        public const float GEIGER_DOUBLE_CLICK_GAP = 0.06f;
+
+        public const float GEIGER_CLICK_VOLUME = 0.42f;
+
+        /// <summary>Click pitch. Well above the UI cue it borrows, so it does not read as a menu sound.</summary>
+        public const float GEIGER_CLICK_PITCH = 1.9f;
+
+        /// <summary>Seconds between re-checks of whether the player is carrying a counter.</summary>
+        public const float GEIGER_INVENTORY_POLL_SECONDS = 1.5f;
+
+        // ─── Phase A hazards: mutants (bible §5) ────────────────────────────────
+
+        /// <summary>Census-Taker move speed, m/s. Walking pace — slower than the player's 4.5 m/s walk,
+        /// so it can always be outpaced and never outrun forever.</summary>
+        public const float CENSUS_TAKER_MOVE_SPEED = 1.2f;
+
+        /// <summary>Metres within which the Census-Taker begins following.</summary>
+        public const float CENSUS_TAKER_AGGRO_RANGE_M = 12f;
+
+        /// <summary>
+        /// Seconds the player must be near-stationary, in line of sight, before registration starts.
+        /// The bible's figure. Long enough that ordinary looting does not trip it, short enough that
+        /// standing still to read the HUD does.
+        /// </summary>
+        public const float CENSUS_TAKER_STOP_THRESHOLD_SECONDS = 10f;
+
+        /// <summary>Speed below which the player counts as stopped, m/s.</summary>
+        public const float CENSUS_TAKER_STOP_SPEED_MS = 0.5f;
+
+        /// <summary>Seconds to complete an entry once writing begins. Moving interrupts it.</summary>
+        public const float CENSUS_TAKER_REGISTRATION_SECONDS = 15f;
+
+        /// <summary>Metres the Census-Taker must be within to write. Clipboard range.</summary>
+        public const float CENSUS_TAKER_WRITING_RANGE_M = 3.5f;
+
+        /// <summary>Health lost per completed registration. Stacks; permanent for the run.</summary>
+        public const int REGISTRATION_HEALTH_PENALTY = 10;
+
+        /// <summary>Sanity lost per completed registration. Stacks; permanent for the run.</summary>
+        public const int REGISTRATION_SANITY_PENALTY = 5;
+
+        /// <summary>Seconds of continuous line of sight before the Editor redacts an item label.</summary>
+        public const float EDITOR_REDACT_AFTER_SECONDS = 3f;
+
+        /// <summary>Seconds of continuous line of sight before the Editor deletes an item.</summary>
+        public const float EDITOR_DELETE_AFTER_SECONDS = 6f;
+
+        /// <summary>Seconds of continuous line of sight before the Editor substitutes an item.</summary>
+        public const float EDITOR_REPLACE_AFTER_SECONDS = 10f;
+
+        /// <summary>
+        /// Seconds the player must keep the Editor out of sight before exposure decays. Non-zero so a
+        /// player cannot defeat it by flicking the camera away for a single frame each second.
+        /// </summary>
+        public const float EDITOR_LOOK_AWAY_GRACE_SECONDS = 1.25f;
+
+        /// <summary>Seconds the Editor spends reading a dropped document before resuming.</summary>
+        public const float EDITOR_DISTRACTION_SECONDS = 5f;
+
+        /// <summary>Seconds out of sight after which the Editor disappears entirely.</summary>
+        public const float EDITOR_DESPAWN_AFTER_SECONDS = 3f;
+
+        /// <summary>Base chance an Editor appears at all during one Blowout, before the site's threat multiplier.</summary>
+        public const float EDITOR_BASE_SPAWN_CHANCE = 0.15f;
+
+        /// <summary>Metres from the player the Editor materialises. Visible, well outside reach.</summary>
+        public const float EDITOR_SPAWN_DISTANCE_M = 18f;
+
+        // ─── Expeditions (Phase B) ──────────────────────────────────────────────
+
+        /// <summary>Shortest expedition, in bunker days.</summary>
+        public const int EXPEDITION_MIN_DAYS = 3;
+
+        /// <summary>Longest expedition, in bunker days.</summary>
+        public const int EXPEDITION_MAX_DAYS = 5;
+
+        /// <summary>Most expeditions that can be in flight at once. A bunker that empties itself starves.</summary>
+        public const int EXPEDITION_MAX_CONCURRENT = 2;
+
+        /// <summary>Loadout slots offered when dispatching. Small enough that the choice is a real one.</summary>
+        public const int EXPEDITION_MAX_LOADOUT_ITEMS = 3;
+
+        /// <summary>Items a routine expedition brings home, before region and loadout modifiers.</summary>
+        public const int EXPEDITION_BASE_ITEM_YIELD = 2;
+
+        /// <summary>Extra items per loadout slot filled. Sending kit out is how you get more back.</summary>
+        public const float EXPEDITION_YIELD_PER_LOADOUT_ITEM = 0.75f;
+
+        /// <summary>Fatigue accrued per day in the field. Charged in full on return.</summary>
+        public const int EXPEDITION_FATIGUE_PER_DAY = 6;
+
+        /// <summary>Radiation accrued per day in the field, before the Notarized Heart's halving.</summary>
+        public const int EXPEDITION_RADIATION_PER_DAY = 3;
+
+        /// <summary>Chance a returning expedition is delayed by a Backlog. Adds 1-3 days.</summary>
+        public const float EXPEDITION_BACKLOG_DELAY_CHANCE = 0.12f;
+
+        /// <summary>Chance the Editor rewrites part of a returning pack.</summary>
+        public const float EXPEDITION_EDITOR_EDIT_CHANCE = 0.10f;
+
+        /// <summary>Chance a Census-Taker registers a crew member in the field. Applies the same penalties.</summary>
+        public const float EXPEDITION_REGISTRATION_CHANCE = 0.14f;
+
+        /// <summary>Chance a crew member does not come back at all. Deliberately low — permadeath already bites.</summary>
+        public const float EXPEDITION_LOSS_CHANCE = 0.05f;
+
+        // ─── Artifact uses (bible artifacts table) ──────────────────────────────
+
+        /// <summary>In-game days between Margin Note re-rolls. One per week, per the bible.</summary>
+        public const int MARGIN_NOTE_COOLDOWN_DAYS = 7;
+
+        /// <summary>Radiation multiplier for the crew member holding a Notarized Heart. Bible: -50%.</summary>
+        public const float NOTARIZED_HEART_RADIATION_MULTIPLIER = 0.5f;
+
+        /// <summary>Highest value Final Draft can rewrite a stat to. Prevents a stat above its own ceiling.</summary>
+        public const int FINAL_DRAFT_MAX_STAT_VALUE = 100;
+
+        /// <summary>Lowest value Final Draft can write. Zero health would be a rewrite into a corpse.</summary>
+        public const int FINAL_DRAFT_MIN_STAT_VALUE = 1;
+
         // ─── Debug ──────────────────────────────────────────────────────────────
         public const bool VERBOSE_STATE_LOGGING = true;
         public const bool VERBOSE_SAVE_LOGGING = true;

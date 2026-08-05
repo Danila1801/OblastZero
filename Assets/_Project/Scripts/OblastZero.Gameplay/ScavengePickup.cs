@@ -27,11 +27,37 @@ namespace OblastZero.Gameplay
         [Tooltip("Radiation contamination on this instance (items only).")]
         [SerializeField, Range(0f, 100f)] private float contamination = 0f;
 
+        [Tooltip("True when this object was produced by a Carbon Copy anomaly (ANM-Δ-07/CC). Copies enter " +
+                 "the inventory as defective stacks and misbehave during Phase B event resolution. Set at " +
+                 "runtime by the anomaly — never author this on a scene pickup.")]
+        [SerializeField] private bool isCopy = false;
+
         public PickupKind Kind => kind;
         public string DataId => dataId;
         public int Quantity => Mathf.Max(1, quantity);
         public int DurabilityOverride => durabilityOverride;
         public float Contamination => contamination;
+
+        /// <summary>
+        /// True when this object is a Carbon Copy duplicate rather than the thing it looks like. Read by
+        /// <see cref="ScavengeController"/> at grab time and carried into the inventory as
+        /// <c>ItemInstance.isDefective</c>.
+        /// </summary>
+        public bool IsCopy => isCopy;
+
+        /// <summary>
+        /// Flags this pickup as a Carbon Copy duplicate. Called only by
+        /// <c>Anomalies.CarbonCopyAnomaly</c> on a freshly cloned object.
+        ///
+        /// <para>A method rather than a public setter on purpose. The flag is a one-way door — nothing in
+        /// the game turns a copy back into an original — and a settable property invites exactly the
+        /// mistake that would break the anomaly: clearing it somewhere downstream so every copy launders
+        /// itself into a genuine item.</para>
+        /// </summary>
+        public void MarkAsCarbonCopy()
+        {
+            isCopy = true;
+        }
 
         /// <summary>Verb shown in the HUD interaction prompt ("Take" for items, "Rescue" for crew).</summary>
         public string InteractionVerb => kind == PickupKind.Crew ? "Rescue" : "Take";

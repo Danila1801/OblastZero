@@ -113,8 +113,13 @@ namespace OblastZero.Gameplay
         /// Adds an item to a channel, merging into a matching stack when possible.
         /// <paramref name="durability"/> defaults to the item's max; pass a value for field-found items.
         /// </summary>
+        /// <param name="defective">
+        /// True when the stack is a Carbon Copy duplicate. Part of stack identity, so a defective stack
+        /// never merges into a genuine one — see <see cref="ItemInstance.isDefective"/>.
+        /// </param>
         public ItemInstance AddItem(InventoryChannel channel, string itemDataId, int quantity = 1,
-                                    int? durability = null, float contamination = 0f)
+                                    int? durability = null, float contamination = 0f,
+                                    bool defective = false)
         {
             if (!Ready(nameof(AddItem))) return null;
             if (quantity <= 0)
@@ -147,7 +152,7 @@ namespace OblastZero.Gameplay
             int durabilityValue = Mathf.Clamp(durability ?? maxDur, 0, maxDur);
             var list = Channel(channel);
 
-            var stack = FindStack(list, itemDataId, durabilityValue, contamination);
+            var stack = FindStack(list, itemDataId, durabilityValue, contamination, defective);
             if (stack != null)
             {
                 stack.quantity += quantity;
@@ -162,13 +167,106 @@ namespace OblastZero.Gameplay
                 itemDataId = itemDataId,
                 currentDurability = durabilityValue,
                 currentContamination = contamination,
-                quantity = quantity
+                quantity = quantity,
+                isDefective = defective
             };
             list.Add(inst);
-            Debug.Log($"[InventoryManager] Added new stack '{itemDataId}' x{quantity} to {channel}.");
+            Debug.Log($"[InventoryManager] Added new stack '{itemDataId}' x{quantity} to {channel}" +
+                      (defective ? " (defective — Carbon Copy duplicate)." : "."));
             ItemAdded?.Invoke(inst, channel);
             if (channel == InventoryChannel.Scavenged) RaiseScavengeLoadChanged();
             return inst;
+        }
+
+        /// <summary>
+        /// Removes exactly one unit and reports whether the unit taken was a Carbon Copy duplicate.
+        /// Returns false when the channel holds none.
+        ///
+        /// <para><b>Which unit gets taken is weighted chance, and that is the mechanic.</b> The bible is
+        /// explicit that the crew cannot tell a copy from the original — "the crate on the table looks
+        /// correct, the crate on the floor also looks correct" — so a player holding one genuine med kit
+        /// and three copies runs a 75% risk every time one is used. Taking the genuine stack first would
+        /// make the copies a delayed inconvenience; taking the defective one first would make them an
+        /// immediate tax. Weighting by quantity is the only version where the player's own decision at the
+        /// anomaly — how many did I grab? — is what sets the odds.</para>
+        ///
+        /// <para><paramref name="selectionRoll"/> is a pre-drawn value in [0,1) from the run's RNG stream.
+        /// Passed in rather than drawn here because <see cref="InventoryManager"/> holds no RNG and must
+        /// not: everything that branches goes through the seed + stream counter on <c>RunData</c>, or the
+        /// run stops being reproducible.</para>
+        /// </summary>
+        public bool RemoveOneWeighted(InventoryChannel channel, string itemDataId, float selectionRoll,
+                                      out bool wasDefective)
+        {
+            wasDefective = false;
+            if (!Ready(nameof(RemoveOneWeighted))) return false;
+
+            var list = Channel(channel);
+
+            int total = 0;
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].itemDataId == itemDataId) total += Mathf.Max(0, list[i].quantity);
+
+            if (total <= 0) return false;
+
+            // Walk the stacks accumulating quantity until the roll's share is crossed. Equivalent to
+            // picking one unit uniformly at random out of every unit held, without materialising them.
+            int target = Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(selectionRoll) * total), 0, total - 1);
+            int cursor = 0;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var inst = list[i];
+                if (inst.itemDataId != itemDataId) continue;
+
+                int q = Mathf.Max(0, inst.quantity);
+                if (target >= cursor + q) { cursor += q; continue; }
+
+                wasDefective = inst.isDefective;
+                inst.quantity -= 1;
+
+                if (inst.quantity <= 0)
+                {
+                    list.RemoveAt(i);
+                    ItemRemoved?.Invoke(inst, channel);
+                }
+                else
+                {
+                    ItemChanged?.Invoke(inst, channel);
+                }
+
+                if (channel == InventoryChannel.Scavenged) RaiseScavengeLoadChanged();
+
+                Debug.Log($"[InventoryManager] Consumed 1 '{itemDataId}' from {channel} " +
+                          $"({(wasDefective ? "a copy" : "genuine")}; {total - 1} left of that id).");
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>True when the channel holds at least one defective stack of this item.</summary>
+        public bool HasDefective(InventoryChannel channel, string itemDataId)
+        {
+            if (!Ready(nameof(HasDefective))) return false;
+
+            var list = Channel(channel);
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].itemDataId == itemDataId && list[i].isDefective && list[i].quantity > 0)
+                    return true;
+            return false;
+        }
+
+        /// <summary>Total defective units held in a channel, across every item id. Drives the bunker readout.</summary>
+        public int DefectiveUnitCount(InventoryChannel channel)
+        {
+            if (!Ready(nameof(DefectiveUnitCount))) return 0;
+
+            int n = 0;
+            var list = Channel(channel);
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].isDefective) n += Mathf.Max(0, list[i].quantity);
+            return n;
         }
 
         /// <summary>Removes <paramref name="quantity"/> of an item from a channel. Returns false if short.</summary>
@@ -229,8 +327,11 @@ namespace OblastZero.Gameplay
             scavenged.Clear();
             foreach (var inst in snapshot)
             {
+                // isDefective must cross the phase boundary with the stack. This is the single line that
+                // makes the Carbon Copy a two-phase mechanic instead of a Phase A curiosity: drop it and
+                // every duplicate launders itself into a genuine item at the transition cutscene.
                 var landed = AddItem(InventoryChannel.Bunker, inst.itemDataId, inst.quantity,
-                                     inst.currentDurability, inst.currentContamination);
+                                     inst.currentDurability, inst.currentContamination, inst.isDefective);
                 if (landed != null)
                     ItemTransferred?.Invoke(landed, InventoryChannel.Scavenged, InventoryChannel.Bunker);
             }
@@ -316,13 +417,22 @@ namespace OblastZero.Gameplay
             return false;
         }
 
-        private static ItemInstance FindStack(List<ItemInstance> list, string id, int durability, float contamination)
+        /// <summary>
+        /// A matching stack, or null. <paramref name="defective"/> is part of the identity: a Carbon Copy
+        /// duplicate and the genuine article are the same item id with the same durability and the same
+        /// contamination, and merging them is exactly the outcome the anomaly must not produce. Keeping
+        /// them apart is what leaves the player with two crates on the table and no way to tell which is
+        /// which — the bible's whole scene.
+        /// </summary>
+        private static ItemInstance FindStack(List<ItemInstance> list, string id, int durability,
+                                              float contamination, bool defective)
         {
             const float eps = 0.0001f;
             foreach (var inst in list)
             {
                 if (inst.itemDataId == id
                     && inst.currentDurability == durability
+                    && inst.isDefective == defective
                     && Mathf.Abs(inst.currentContamination - contamination) < eps)
                     return inst;
             }

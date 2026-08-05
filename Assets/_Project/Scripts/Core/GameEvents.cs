@@ -161,4 +161,122 @@ namespace OblastZero.Core
         public int ChoiceIndex;
         public string ActingCrewInstanceId;
     }
+
+    // ─── Phase A hazards: anomalies (bible §5 / BESTIARY.md) ──────────────────
+    // Raised by the zones in OblastZero.Gameplay.Anomalies. The HUD is the only subscriber that matters;
+    // everything else about an anomaly is applied by the zone itself, because the effects (speed, clock,
+    // inventory) each have exactly one owner already and routing them through the bus would add a second.
+
+    /// <summary>An anomaly did the thing it does. Purely informational — the effect is already applied.</summary>
+    public struct AnomalyTriggeredEvent
+    {
+        public string ClassificationCode;  // e.g. "ANM-Δ-07/CC" — stable, never localized
+        public string DisplayName;
+        public UnityEngine.Vector3 Position;
+    }
+
+    /// <summary>Show or clear a world-interaction prompt that is not a pickup ("Sit for the interview").</summary>
+    public struct AnomalyPromptEvent
+    {
+        public bool Show;
+        public string Text;
+    }
+
+    /// <summary>An anomaly paid out. The item is already in the inventory when this fires.</summary>
+    public struct AnomalyRewardEvent
+    {
+        public string ClassificationCode;
+        public string ItemDataId;
+        public string Reason;
+    }
+
+    /// <summary>
+    /// The player crossed a Backlog boundary. The HUD uses this for the time-dilation readout; the speed
+    /// change itself is applied directly by the zone.
+    /// </summary>
+    public struct BacklogStateChangedEvent
+    {
+        public bool Inside;
+        public float DilationFactor;   // 1 = normal, 0.02 = the bible's crawl
+    }
+
+    // ─── Phase A hazards: mutants (bible §5 / BESTIARY.md) ────────────────────
+
+    /// <summary>
+    /// A Drowned Census-Taker's pursuit state changed. Drives the HUD's "FOLLOWED" indicator, which is
+    /// deliberately understated — the Oblast does not raise its voice.
+    /// </summary>
+    public struct CensusTakerPursuitEvent
+    {
+        public bool Pursuing;
+        public float DistanceMetres;
+    }
+
+    /// <summary>
+    /// Registration progress, 0..1. Fires while a Census-Taker is writing the player's name; a value of 1
+    /// means the entry was completed and <see cref="PlayerRegisteredEvent"/> follows.
+    /// </summary>
+    public struct RegistrationProgressEvent
+    {
+        public float Progress01;
+        public bool Interrupted;
+    }
+
+    /// <summary>The player was entered in the register. Stat penalties are already applied and stack.</summary>
+    public struct PlayerRegisteredEvent
+    {
+        public int TotalRegistrations;
+        public int HealthPenaltyApplied;
+        public int SanityPenaltyApplied;
+    }
+
+    /// <summary>
+    /// The Editor is (or is no longer) in the player's line of sight. <see cref="ExposureSeconds"/> is the
+    /// running total for the current sighting, which is what the redaction ladder escalates on.
+    /// </summary>
+    public struct EditorSightingEvent
+    {
+        public bool InSight;
+        public float ExposureSeconds;
+    }
+
+    /// <summary>The Editor altered the pack. Raised once per edit so the HUD can glitch in response.</summary>
+    public struct EditorEditEvent
+    {
+        public string Stage;          // "redacted" | "deleted" | "replaced" — stable keys, never localized
+        public string ItemDataId;
+        public string ReplacementItemDataId;
+    }
+
+    // ─── Expeditions (Phase B) ────────────────────────────────────────────────
+
+    /// <summary>A crew member was sent out. Raised by ExpeditionManager after the dispatch is recorded.</summary>
+    public struct ExpeditionDispatchedEvent
+    {
+        public string ExpeditionId;
+        public string CrewInstanceId;
+        public string OblastRegionId;
+        public int ReturnDay;
+    }
+
+    /// <summary>An expedition resolved — returned, returned late, or did not return.</summary>
+    public struct ExpeditionResolvedEvent
+    {
+        public string ExpeditionId;
+        public string CrewInstanceId;
+        public string OblastRegionId;
+        public bool CrewReturned;
+        public bool WasDelayed;
+        public int ItemsRecovered;
+        public string OutcomeSummary;
+    }
+
+    /// <summary>An artifact was consumed or spent. Raised by ArtifactSystem after the effect lands.</summary>
+    public struct ArtifactUsedEvent
+    {
+        public string ItemDataId;
+        public string TargetCrewInstanceId;
+        public string EffectSummary;
+        public bool Consumed;
+    }
 }

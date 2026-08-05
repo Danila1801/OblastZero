@@ -30,6 +30,15 @@ namespace OblastZero.Gameplay
         public List<string> lootAddedItemIds;
         public List<string> itemsLostItemIds;
 
+        /// <summary>
+        /// True when a Carbon Copy duplicate (ANM-Δ-07/CC) was the unit consumed by this resolution. The
+        /// UI reads this to explain an outcome that otherwise looks like the dice betraying the player.
+        /// </summary>
+        public bool defectiveItemUsed;
+
+        /// <summary>What the defect did, in the Oblast's own register. Empty when none was used.</summary>
+        public string defectSummary;
+
         public static EventResolution Invalid(string eventId, int choiceIndex) => new EventResolution
         {
             valid = false,
@@ -97,11 +106,13 @@ namespace OblastZero.Gameplay
         /// whose prerequisites pass. Fires <see cref="EventPresented"/> for the returned event.
         /// </summary>
         public ExpeditionEventData SelectNextEvent(IReadOnlyCollection<string> regionTags = null,
-                                                   string actingCrewInstanceId = null)
+                                                   string actingCrewInstanceId = null,
+                                                   IReadOnlyCollection<string> oblastRegions = null)
         {
             if (!Ready(nameof(SelectNextEvent))) return null;
 
             var regionSet = regionTags != null && regionTags.Count > 0 ? new HashSet<string>(regionTags) : null;
+            var oblastSet = oblastRegions != null && oblastRegions.Count > 0 ? new HashSet<string>(oblastRegions) : null;
 
             // 1. Scripted follow-ups fire first, regardless of weight or prerequisites (they were earned).
             var followUp = PeekEligibleFollowUp();
@@ -119,7 +130,7 @@ namespace OblastZero.Gameplay
             foreach (var evt in _db.AllEvents)
             {
                 if (evt == null || evt.baseWeight <= 0f) continue;
-                if (!PassesPrerequisites(evt, regionSet, actingCrewInstanceId)) continue;
+                if (!PassesPrerequisites(evt, regionSet, oblastSet, actingCrewInstanceId)) continue;
                 pool.Add(evt);
                 totalWeight += evt.baseWeight;
             }
@@ -435,13 +446,44 @@ namespace OblastZero.Gameplay
             }
 
             // 4. Items lost (one unit of each listed item).
+            //
+            //    Consumption goes through RemoveOneWeighted rather than RemoveItem so a Carbon Copy
+            //    duplicate can be the unit that gets used. That is the entire second half of ANM-Δ-07/CC:
+            //    the free crates the player grabbed under the clock come due here, on whichever crate the
+            //    crew happened to reach for, with the odds set by how many copies they took. Two draws per
+            //    item — one to pick the unit, one for the defect's own branch — both off the run stream,
+            //    so the whole resolution stays reproducible from the seed.
             if (outcome.itemsLost != null)
             {
                 foreach (var item in outcome.itemsLost)
                 {
                     if (item == null || string.IsNullOrEmpty(item.id)) continue;
-                    if (_inventory.RemoveItem(InventoryChannel.Bunker, item.id, 1))
-                        res.itemsLostItemIds.Add(item.id);
+
+                    bool wasDefective;
+                    float selectionRoll = _rng.NextFloat();
+                    if (!_inventory.RemoveOneWeighted(InventoryChannel.Bunker, item.id, selectionRoll,
+                                                      out wasDefective))
+                        continue;
+
+                    res.itemsLostItemIds.Add(item.id);
+                    if (!wasDefective) continue;
+
+                    var defect = Anomalies.DefectiveItemEffects.Apply(
+                        _db.GetItem(item.id), _crew, _rep, actingCrewInstanceId, _rng.NextFloat());
+
+                    if (!defect.Applied) continue;
+
+                    res.defectiveItemUsed = true;
+                    res.defectSummary = defect.Summary;
+                    Debug.Log($"[EventEngine] Carbon Copy defect during '{res.eventId}': {defect.Summary}");
+
+                    // A defect can pull a success down into a failure, but never the reverse. The player's
+                    // choice was sound; the object they made it with was not. Note that the outcome's other
+                    // effects have already been applied from the success branch — reversing them would mean
+                    // re-running resolution and drawing a second time from the RNG stream, which would
+                    // desynchronise the seed. Flagging the resolution is the honest report: the attempt
+                    // succeeded on paper and the equipment made it fail in practice.
+                    if (defect.ForcesFailure && res.success) res.success = false;
                 }
             }
 
@@ -496,7 +538,8 @@ namespace OblastZero.Gameplay
 
         // ─── Prerequisites ──────────────────────────────────────────────────────────
 
-        private bool PassesPrerequisites(ExpeditionEventData evt, HashSet<string> regionTags, string actingCrewInstanceId)
+        private bool PassesPrerequisites(ExpeditionEventData evt, HashSet<string> regionTags,
+                                         HashSet<string> oblastRegions, string actingCrewInstanceId)
         {
             if (_run.CompletedEventIds.Contains(evt.id)) return false;
 
@@ -525,13 +568,28 @@ namespace OblastZero.Gameplay
             if (p.requiredItemsAny != null && p.requiredItemsAny.Count > 0)
                 if (!AnyItemInBunker(p.requiredItemsAny)) return false;
 
-            // Region tags — if the event constrains region, at least one must be active.
+            // Proximity locales — if the event constrains locale, at least one must be active.
+            // FAIL-CLOSED: a caller that supplies no locales matches no locale-tagged event. Every shipped
+            // event carries locales, so a caller that forgets them selects nothing, every time, silently.
+            // ReportEmptyPool exists to name that case when it happens.
             if (p.regionTagsAny != null && p.regionTagsAny.Count > 0)
             {
                 if (regionTags == null) return false;
                 bool overlap = false;
                 foreach (var tag in p.regionTagsAny)
                     if (!string.IsNullOrEmpty(tag) && regionTags.Contains(tag)) { overlap = true; break; }
+                if (!overlap) return false;
+            }
+
+            // Canonical oblast regions — the geographic axis, orthogonal to the locales above.
+            // FAIL-OPEN, and the asymmetry is the point: a caller that supplies no regions matches
+            // everything, so this gate can narrow a pool but never empty one. One fail-closed content gate
+            // is all this pipeline can safely carry; see OblastRegions for the measured cost of a second.
+            if (oblastRegions != null && p.oblastRegionsAny != null && p.oblastRegionsAny.Count > 0)
+            {
+                bool overlap = false;
+                foreach (var region in p.oblastRegionsAny)
+                    if (!string.IsNullOrEmpty(region) && oblastRegions.Contains(region)) { overlap = true; break; }
                 if (!overlap) return false;
             }
 

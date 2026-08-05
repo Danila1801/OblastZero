@@ -2,6 +2,7 @@
 using UnityEngine;
 using OblastZero.Core;
 using OblastZero.Data;
+using OblastZero.Gameplay.Anomalies;
 
 namespace OblastZero.Gameplay
 {
@@ -71,8 +72,12 @@ namespace OblastZero.Gameplay
             {
                 case ScavengePickup.PickupKind.Item:
                     int? durability = pickup.DurabilityOverride < 0 ? (int?)null : pickup.DurabilityOverride;
+                    // IsCopy rides into the stack as isDefective. A Carbon Copy duplicate is otherwise
+                    // identical to the genuine article, so this flag is the only thing that will
+                    // distinguish them once both are on the bunker table.
                     var added = _inventory.AddItem(InventoryChannel.Scavenged, pickup.DataId,
-                                                   pickup.Quantity, durability, pickup.Contamination);
+                                                   pickup.Quantity, durability, pickup.Contamination,
+                                                   pickup.IsCopy);
                     collected = added != null;
                     archetype = ResolveArchetype(pickup.DataId);
                     break;
@@ -96,7 +101,16 @@ namespace OblastZero.Gameplay
                 return;
             }
 
-            Debug.Log($"[ScavengeController] Collected {pickup.Kind} '{pickup.DataId}'. Removing from world.");
+            Debug.Log($"[ScavengeController] Collected {pickup.Kind} '{pickup.DataId}'" +
+                      (pickup.IsCopy ? " (a copy)" : "") + ". Removing from world.");
+
+            // Carbon Copy (ANM-Δ-07/CC). This must happen while the world object still exists: the
+            // duplicate is cloned from it, and PickupVfx.Play below takes ownership of the destroy on the
+            // very next statement. Rebuilding the copy from the archetype tables afterwards would produce
+            // something subtly unlike the thing it copies — which is precisely the tell the anomaly exists
+            // to withhold.
+            var carbonCopy = AnomalyZone.ZoneAt<CarbonCopyAnomaly>(pickup.transform.position);
+            if (carbonCopy != null) carbonCopy.OnPickupCollected(pickup);
 
             // Sound is spatial and archetype-specific: the player needs to be able to tell a can from a
             // crate without looking at the HUD list, because they are already looking at the clock.

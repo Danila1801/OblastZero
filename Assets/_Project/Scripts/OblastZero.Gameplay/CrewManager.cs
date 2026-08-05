@@ -78,8 +78,6 @@ namespace OblastZero.Gameplay
             {
                 crewDataId = crewDataId,
                 instanceId = Guid.NewGuid().ToString("N"),
-                currentHealth = data.baseStats.maxHealth,
-                currentSanity = data.baseStats.maxSanity,
                 currentFatigue = 0,
                 currentRadiation = 0,
                 traitIds = traitIds,
@@ -87,8 +85,16 @@ namespace OblastZero.Gameplay
                 locationTag = "rescued_incoming"
             };
 
+            // Starting health/sanity are the *effective* maxima, so a trait that raises a ceiling also
+            // raises where the member starts. Assigned after construction because both resolvers read the
+            // instance's own trait list, which does not exist until the instance does.
+            inst.currentHealth = MaxHealth(inst);
+            inst.currentSanity = MaxSanity(inst);
+
             _run.RescuedCrew.Add(inst);
-            Debug.Log($"[CrewManager] Rescued '{crewDataId}' (instance {Short(inst.instanceId)}).");
+            Debug.Log($"[CrewManager] Rescued '{crewDataId}' (instance {Short(inst.instanceId)}) at " +
+                      $"{inst.currentHealth} health / {inst.currentSanity} sanity" +
+                      (traitIds.Count > 0 ? $", traits: {string.Join(", ", traitIds)}." : ", no traits."));
             CrewAdded?.Invoke(inst);
             return inst;
         }
@@ -131,18 +137,25 @@ namespace OblastZero.Gameplay
             if (c.currentHealth <= 0 && c.isAlive) Kill(c);
         }
 
-        /// <summary>Adds (or subtracts) sanity, clamped to max. Positive recovery is scaled by the member's recovery multiplier.</summary>
+        /// <summary>
+        /// Adds (or subtracts) sanity, clamped to max. Positive recovery is scaled by the member's recovery
+        /// multiplier — authored stat and traits together. Losses are never scaled: a trait that helps
+        /// someone recover should not also blunt what happens to them.
+        /// </summary>
         public void ApplySanityDelta(string instanceId, int delta)
         {
             var c = RequireAlive(instanceId, nameof(ApplySanityDelta));
             if (c == null) return;
 
             var data = _db.GetCrew(c.crewDataId);
-            int max = data != null ? data.baseStats.maxSanity : 100;
+            int max = MaxSanity(c);
 
             int effective = delta;
-            if (delta > 0 && data != null && data.baseStats.sanityRecoveryMultiplier > 0f)
-                effective = Mathf.RoundToInt(delta * data.baseStats.sanityRecoveryMultiplier);
+            if (delta > 0)
+            {
+                float multiplier = TraitEffects.SanityRecoveryMultiplier(c, data, _db);
+                effective = Mathf.RoundToInt(delta * multiplier);
+            }
 
             int old = c.currentSanity;
             c.currentSanity = Mathf.Clamp(c.currentSanity + effective, 0, max);
@@ -160,10 +173,9 @@ namespace OblastZero.Gameplay
             if (c == null) return;
 
             var data = _db.GetCrew(c.crewDataId);
-            float resist = data != null ? data.baseStats.radiationResistanceMultiplier : 1f;
-            if (resist <= 0f) resist = 1f;
+            float resist = TraitEffects.RadiationResistance(c, data, _db);
 
-            int effective = Mathf.RoundToInt(amount / Mathf.Max(0.01f, resist));
+            int effective = Mathf.RoundToInt(amount / resist);
             int old = c.currentRadiation;
             c.currentRadiation = Mathf.Clamp(c.currentRadiation + effective, 0, 100);
             Debug.Log($"[CrewManager] {Name(c)} radiation +{effective} -> {c.currentRadiation}/100 (resist x{resist:0.##}).");
@@ -214,6 +226,40 @@ namespace OblastZero.Gameplay
             return n;
         }
 
+        /// <summary>
+        /// The crew member currently out in the field, or null when nobody is. During Phase A that is the
+        /// lead operator, who lives in the rescued list until the transition cutscene commits them; once in
+        /// the bunker it falls back to the first living member of the roster.
+        ///
+        /// <para>Phase A hazards need this and cannot get it any other way. A Census-Taker registration or
+        /// an Interview's sanity cost lands on the person holding the torch, and during the Blowout that
+        /// person is in <see cref="RunData.RescuedCrew"/>, which <see cref="ActiveCrew"/> deliberately does
+        /// not include. Reaching for ActiveCrew from the scavenge scene therefore finds an empty list and
+        /// the penalty evaporates — silently, because there is no error in charging nobody.</para>
+        ///
+        /// <para>Rescued is searched first and in order: <c>GameManager.BeginNewRun</c> adds the lead before
+        /// the optional second operator, so index order is seniority order.</para>
+        /// </summary>
+        public CrewInstance FieldOperator()
+        {
+            if (!Ready(nameof(FieldOperator))) return null;
+
+            foreach (var c in _run.RescuedCrew) if (c != null && c.isAlive) return c;
+            foreach (var c in _run.ActiveCrew) if (c != null && c.isAlive) return c;
+            return null;
+        }
+
+        /// <summary>Every living member across both lists. Used by expedition dispatch and artifact targeting.</summary>
+        public List<CrewInstance> AllAlive()
+        {
+            var result = new List<CrewInstance>();
+            if (!Ready(nameof(AllAlive))) return result;
+
+            foreach (var c in _run.ActiveCrew) if (c != null && c.isAlive) result.Add(c);
+            foreach (var c in _run.RescuedCrew) if (c != null && c.isAlive) result.Add(c);
+            return result;
+        }
+
         /// <summary>True when this crew member is already rescued or already in the bunker roster.</summary>
         public bool IsAlreadyOnStrength(string crewDataId)
         {
@@ -252,10 +298,21 @@ namespace OblastZero.Gameplay
             return c;
         }
 
+        /// <summary>
+        /// Effective maximum health: authored base + this run's unlock bonus + trait deltas.
+        /// <see cref="TraitEffects"/> owns the composition; this only supplies the run-scoped bonus.
+        /// </summary>
         private int MaxHealth(CrewInstance c)
         {
             var data = _db.GetCrew(c.crewDataId);
-            return data != null ? data.baseStats.maxHealth : 100;
+            return TraitEffects.MaxHealth(c, data, _db, _run != null ? _run.crewMaxHealthBonus : 0);
+        }
+
+        /// <summary>Effective maximum sanity. Same composition as <see cref="MaxHealth"/>.</summary>
+        private int MaxSanity(CrewInstance c)
+        {
+            var data = _db.GetCrew(c.crewDataId);
+            return TraitEffects.MaxSanity(c, data, _db, _run != null ? _run.crewMaxSanityBonus : 0);
         }
 
         private string Name(CrewInstance c)

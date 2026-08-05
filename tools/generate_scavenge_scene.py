@@ -22,6 +22,7 @@ Run from the project root:  python tools/generate_scavenge_scene.py
 """
 
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -93,11 +94,20 @@ PLAYER_SPAWN = (-44, 0.15, -30)
 PLAYER_FACING = (0, 38, 0)
 EYE_HEIGHT = 1.62
 
-# Mirrors BalanceConstants.SCAVENGE_* so the scene never contradicts the balance file.
+# Mirrors BalanceConstants so the scene never contradicts the balance file. Every name here must
+# exist there with the same value; assert_balance_mirror() proves it before the scene is written.
+#
+# The mirror existed as a comment-only convention until the anomaly layer landed, and a comment is
+# not a gate. A drifted mirror is the quiet kind of wrong: the scene serializes one interaction
+# range onto the controller while BalanceConstants reports another to the HUD and the range ring,
+# so the ring draws a circle the raycast does not honour and nothing anywhere logs a complaint.
 SCAVENGE_TIMER_SECONDS = 60
 SCAVENGE_TIMER_WARNING_THRESHOLD = 15
 SCAVENGE_TIMER_CRITICAL_THRESHOLD = 5
 SCAVENGE_INTERACTION_RANGE = 3
+GEIGER_DETECTION_RANGE_M = 14
+BACKLOG_TIME_DILATION_FACTOR = 0.02
+CARBON_COPY_MAX_DUPLICATES = 4
 
 # ─── Atmosphere ─────────────────────────────────────────────────────────────────────────
 # Airborne dust. The emitter box is a fraction of the 104 x 72 m footprint and tracks the view,
@@ -174,6 +184,57 @@ FIXTURES = [
     ("Fixture_Silo_1",      -46, 4.5, 12, 12), ("Fixture_Silo_2",     -30, 4.5, 20, 12),
     ("Fixture_Headhouse",    44, 4.6, 29, 10),
 ]
+
+
+# ─── Anomaly zones (bible §5 / BESTIARY.md) ─────────────────────────────────────────────
+#
+# One of each of the three, placed against the decision each is meant to create. Format:
+#   (name, script_key, class_id, position, trigger_size, extra_yaml_fields)
+#
+# Placement reasoning, which is the part worth reviewing:
+#
+#   Carbon Copy — the warehouse floor, over the shelving row at X -3. It has to sit on a *cluster*
+#   of pickups or the duplication never fires: the zone only acts when something is grabbed inside
+#   it, so a volume over bare concrete is a volume that does nothing. The shelf rows are also where
+#   a player is already making take/leave decisions against the carry cap, which is exactly the
+#   judgement the copies are there to corrupt.
+#
+#   Interview — the admin/office room, which is the only interior space in the depot with a desk,
+#   and the bible names offices specifically. It is off the direct route, so it costs a detour to
+#   find: the reward is meant to be something you go looking for, not something you trip over.
+#
+#   Backlog — the EAST doorway of the Z=+5 wall (X +38..+43), which is the last gate on the fastest
+#   line from the spawn to the bunker door. This is the placement that makes the anomaly a decision
+#   rather than scenery. The direct route is ~18 s of the 60 s budget; routing around it through the
+#   central doorway at X -4..+2 and back east costs roughly six seconds of sprint. So a player with
+#   time in hand goes around and pays six seconds, and a player at fifteen seconds has to look at the
+#   haze and decide whether they believe it. Both readings are correct play. Putting it anywhere off
+#   the critical path would have made it free to ignore.
+#
+# The bible gives the Carbon Copy "~2 cubic meters", which as a literal trigger is a 1.26 m cube —
+# smaller than the shelf bay it sits in and effectively impossible to grab from on purpose. The
+# volume below is sized to the shelf section instead. That is a deliberate deviation from the
+# physical description in service of the mechanic it exists to support.
+ANOMALY_ZONES = [
+    ("Anomaly_CarbonCopy_Warehouse", "CarbonCopyAnomaly",
+     "Assembly-CSharp::OblastZero.Gameplay.Anomalies.CarbonCopyAnomaly",
+     (-3.0, 1.6, 19.0), (4.0, 3.2, 5.0),
+     "  maxDuplicates: 4\n"),
+
+    ("Anomaly_Interview_AdminRoom", "InterviewAnomaly",
+     "Assembly-CSharp::OblastZero.Gameplay.Anomalies.InterviewAnomaly",
+     (-4.0, 1.6, -25.0), (9.0, 3.2, 7.0),
+     "  sitPosition: {fileID: 0}\n"),
+
+    ("Anomaly_Backlog_EastDoorway", "BacklogAnomaly",
+     "Assembly-CSharp::OblastZero.Gameplay.Anomalies.BacklogAnomaly",
+     (40.5, 2.0, 5.0), (6.0, 4.0, 5.5),
+     "  timeDilationFactor: 0.02\n"),
+]
+
+# The Backlog's haze child. Sized from the zone's own trigger at runtime (BacklogAnomaly.Awake), so
+# the number here is only the pre-Awake default and cannot drift away from the collider.
+BACKLOG_MOTE_COUNT = 260
 
 
 def _rot_matrix(x, y, z):
@@ -901,6 +962,14 @@ def build():
         % (cam_tr, f(SCAVENGE_INTERACTION_RANGE),
            guid_for("Material::" + RANGE_RING_MATERIAL_NAME)))
 
+    # -- Geiger counter. Lives on the player because it is the player's ear, and it stays silent
+    # unless the pack actually contains item_kafedra_geiger_counter — detection is a purchase the
+    # player makes with carry weight, not a free sense. Only the Carbon Copy answers it.
+    sb.mono(player_go, "AnomalyAudioCue",
+            "Assembly-CSharp::OblastZero.Gameplay.Anomalies.AnomalyAudioCue",
+            "  detectionRange: %s\n"
+            "  scanInterval: 0.25\n" % f(GEIGER_DETECTION_RANGE_M))
+
     # -- ScavengeController: routes pickups into InventoryManager / CrewManager.
     ctrl_go, _ = sb.obj("Scavenge_Controller", parent=sysg)
     sb.mono(ctrl_go, "ScavengeController",
@@ -974,6 +1043,42 @@ def build():
             "  flashPeakAlpha: 0.6\n"
             "  flashFadeSeconds: 0.2\n"
             "  fovPunchSeconds: 0.3\n")
+
+    # ══ ANOMALIES ═══════════════════════════════════════════════════════════════════════
+    # The bible's three Phase A hazards (BESTIARY.md "ANOMALIES"). One of each in the depot,
+    # each placed against the decision it is meant to create rather than scattered for coverage.
+    #
+    # They are trigger volumes, so they are invisible to the walkability flood-fill and to the
+    # burial/support gate — correctly. An anomaly must never make a route impassable; the Backlog
+    # in particular has to be walkable, because a player who cannot enter it cannot be trapped by
+    # it, and choosing to enter is the whole mechanic. ANOMALY_ZONES is checked for mutual overlap
+    # in verify_placement() instead: AnomalyZone.ZoneAt takes the first match, so two overlapping
+    # volumes would resolve arbitrarily and hide a level bug behind plausible behaviour.
+    anom = group("=== ANOMALIES ===")
+
+    for name, script, cls, pos, size, fields in ANOMALY_ZONES:
+        go, tr = sb.obj(name, parent=anom, pos=pos)
+        sb.box_collider(go, is_trigger=True, size=size)
+        sb.mono(go, script, cls, fields)
+
+        # The Backlog is the one anomaly the bible requires the player to be able to see and avoid,
+        # so it gets the hanging-mote haze as a child. BacklogAnomaly.Awake re-sizes the emitter from
+        # its own collider, so the box below is only the pre-Awake default and cannot drift from the
+        # trigger the way two separately authored numbers would.
+        if script != "BacklogAnomaly":
+            continue
+
+        motes_go, _ = sb.obj(name + "_Motes", parent=tr)
+        sb.mono(motes_go, "BacklogMotes",
+                "Assembly-CSharp::OblastZero.Gameplay.Anomalies.BacklogMotes",
+                "  moteMaterial: {fileID: 2100000, guid: %s, type: 2}\n"
+                "  boxSize: {x: %s, y: %s, z: %s}\n"
+                "  moteCount: %d\n"
+                "  tint: {r: 0.82, g: 0.8, b: 0.72, a: 0.42}\n"
+                "  sizeMin: 0.03\n"
+                "  sizeMax: 0.09\n"
+                % (guid_for("Material::" + DUST_MATERIAL_NAME),
+                   f(size[0]), f(size[1]), f(size[2]), BACKLOG_MOTE_COUNT))
 
     # -- Bunker door trigger, spanning the stair mouth inside the headhouse.
     trig_go, _ = sb.obj("Bunker_Entrance_Trigger", parent=sysg, pos=(44, 1.4, 27))
@@ -1394,6 +1499,85 @@ def verify_pickup_ids():
 
 # ─── Entry point ────────────────────────────────────────────────────────────────────────
 
+BALANCE_CONSTANTS_PATH = "Assets/_Project/Scripts/Core/BalanceConstants.cs"
+
+# The Python mirrors above, paired with the C# constant each must equal.
+BALANCE_MIRROR = {
+    "SCAVENGE_TIMER_SECONDS": SCAVENGE_TIMER_SECONDS,
+    "SCAVENGE_TIMER_WARNING_THRESHOLD": SCAVENGE_TIMER_WARNING_THRESHOLD,
+    "SCAVENGE_TIMER_CRITICAL_THRESHOLD": SCAVENGE_TIMER_CRITICAL_THRESHOLD,
+    "SCAVENGE_INTERACTION_RANGE": SCAVENGE_INTERACTION_RANGE,
+    "GEIGER_DETECTION_RANGE_M": GEIGER_DETECTION_RANGE_M,
+    "BACKLOG_TIME_DILATION_FACTOR": BACKLOG_TIME_DILATION_FACTOR,
+    "CARBON_COPY_MAX_DUPLICATES": CARBON_COPY_MAX_DUPLICATES,
+}
+
+
+def assert_balance_mirror():
+    """
+    Proves every mirrored constant still equals its BalanceConstants counterpart.
+
+    The generator serializes some balance numbers directly into the scene — the controller's
+    interaction range, the Geiger's detection radius, the Backlog's dilation factor. Those are the
+    values the scene will use forever after; the C# constants are what every other system reads.
+    When the two disagree nothing errors, because both are individually valid: the range ring draws
+    one radius and the raycast honours another, and the bug presents as "the reach feels wrong"
+    months later.
+
+    CLAUDE.md §14's rule, applied to numbers instead of GUIDs: a mirror without a gate is a
+    comment, and a comment does not survive a retune.
+    """
+    pattern = re.compile(
+        r"public\s+const\s+(?:float|int)\s+([A-Z0-9_]+)\s*=\s*(-?[0-9.]+)f?\s*;")
+
+    with open(BALANCE_CONSTANTS_PATH, encoding="utf-8") as handle:
+        declared = {m.group(1): float(m.group(2)) for m in pattern.finditer(handle.read())}
+
+    problems = []
+    for name, mirrored in BALANCE_MIRROR.items():
+        if name not in declared:
+            problems.append("%s: not declared in BalanceConstants.cs" % name)
+        elif abs(declared[name] - float(mirrored)) > 1e-6:
+            problems.append("%s: generator says %s, BalanceConstants says %s"
+                            % (name, mirrored, declared[name]))
+
+    if problems:
+        raise SystemExit("balance mirror check FAILED:\n  " + "\n  ".join(problems))
+    return "balance mirror: %d constants match BalanceConstants.cs" % len(BALANCE_MIRROR)
+
+
+def verify_anomaly_zones():
+    """
+    Proves no two anomaly volumes overlap.
+
+    AnomalyZone.ZoneAt<T> returns the first match in registration order, so two overlapping volumes
+    resolve arbitrarily — and worse, BacklogAnomaly restores the player's speed multiplier to an
+    absolute 1 on exit rather than unwinding a stack, which is only correct while zones are
+    disjoint. Nested zones would let a player walk out of the inner one and leave the outer one's
+    slow permanently cleared while still standing inside it.
+
+    Overlap is tested on the AABBs, which is exact here: the zones are axis-aligned boxes with no
+    rotation, so there is no tilted-solid false positive of the kind that forced the OBB test in
+    verify_placement().
+    """
+    problems = []
+    boxes = []
+    for name, _script, _cls, pos, size, _fields in ANOMALY_ZONES:
+        half = (size[0] / 2.0, size[1] / 2.0, size[2] / 2.0)
+        boxes.append((name,
+                      (pos[0] - half[0], pos[1] - half[1], pos[2] - half[2]),
+                      (pos[0] + half[0], pos[1] + half[1], pos[2] + half[2])))
+
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            name_a, min_a, max_a = boxes[i]
+            name_b, min_b, max_b = boxes[j]
+            if all(min_a[k] < max_b[k] and min_b[k] < max_a[k] for k in range(3)):
+                problems.append("%s overlaps %s" % (name_a, name_b))
+
+    return problems
+
+
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as fh:
@@ -1417,6 +1601,18 @@ def main():
     # Gate: every project script GUID this scene references must still match its .cs.meta. A stale
     # entry produces a component that is present but never runs, which no other check would catch.
     print(assert_script_guids())
+
+    # Gate: balance numbers serialized into the scene must equal the C# constants everything else
+    # reads. A drifted mirror produces two internally-consistent halves that disagree with each other.
+    print(assert_balance_mirror())
+
+    # Gate: anomaly volumes must be disjoint. AnomalyZone.ZoneAt takes the first match and
+    # BacklogAnomaly restores speed to an absolute 1 on exit, both of which are only correct while
+    # no two zones overlap.
+    overlaps = verify_anomaly_zones()
+    if overlaps:
+        raise SystemExit("anomaly zones overlap:\n  " + "\n  ".join(overlaps))
+    print("anomaly check: %d zones, none overlapping" % len(ANOMALY_ZONES))
 
     global ITEM_CATEGORIES
     ITEM_CATEGORIES = load_item_categories()

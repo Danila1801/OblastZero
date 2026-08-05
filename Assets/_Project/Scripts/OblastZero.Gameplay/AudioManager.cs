@@ -106,6 +106,11 @@ namespace OblastZero.Gameplay
         private AudioSource _musicSource;
         private AudioSource _sirenSource;
 
+        // The two independent pitch controls on the looping beds, kept as ratios and multiplied in
+        // ApplyBedPitches. See SetTemporalDrag for why they must compose rather than each write pitch.
+        private float _musicTransposeRatio = 1f;
+        private float _temporalDragRatio = 1f;
+
         private string _ambientCue;
         private string _sirenCue;
         private float _sirenTargetVolume;
@@ -288,7 +293,53 @@ namespace OblastZero.Gameplay
         /// </summary>
         public void SetMusicTranspose(float semitones)
         {
-            _musicSource.pitch = Mathf.Pow(2f, Mathf.Clamp(semitones, -12f, 12f) / 12f);
+            _musicTransposeRatio = Mathf.Pow(2f, Mathf.Clamp(semitones, -12f, 12f) / 12f);
+            ApplyBedPitches();
+        }
+
+        /// <summary>
+        /// Drags the ambient and music beds down in pitch, for the Backlog anomaly (ANM-Χ-21/BL). 1 is
+        /// normal; 0.75 is a fourth down. Applied to the looping beds only.
+        ///
+        /// <para><b>The emission siren is deliberately exempt, and that exemption is the mechanic.</b> The
+        /// Backlog slows the player's subjective time by 40×–100× while the emission clock keeps running at
+        /// normal speed — that indifference is the entire trap. Pitching the siren down along with
+        /// everything else would tell the player's ear that the deadline had slowed too, which is the one
+        /// false conclusion that gets them killed. So the world goes thick and the alarm does not.</para>
+        ///
+        /// <para>One-shot voices are also unaffected: they are fired and forgotten from a pool, so a pitch
+        /// applied here could not reach a voice already in flight and would produce an inconsistent
+        /// treatment across the same sound depending on when it started.</para>
+        /// </summary>
+        public static void SetTemporalDrag(float pitchFactor)
+        {
+            if (Instance != null) Instance.ApplyTemporalDrag(pitchFactor);
+        }
+
+        private void ApplyTemporalDrag(float pitchFactor)
+        {
+            _temporalDragRatio = Mathf.Clamp(pitchFactor, 0.25f, 2f);
+            ApplyBedPitches();
+
+            if (!Mathf.Approximately(_temporalDragRatio, 1f))
+                Debug.Log($"[AudioManager] Temporal drag {_temporalDragRatio:0.00}x on ambient and music. " +
+                          "Siren unaffected — the emission clock does not slow down.");
+        }
+
+        /// <summary>
+        /// The two independent pitch controls on the looping beds — the run-state transpose and the
+        /// Backlog's temporal drag — multiplied into the sources.
+        ///
+        /// <para>They are composed rather than each writing <c>pitch</c> directly because they overlap in
+        /// exactly the situation that matters: a run going badly has already transposed the drone down, and
+        /// walking into a Backlog and out again would reset pitch to 1 and silently discard the transpose.
+        /// Keeping both as ratios makes leaving a Backlog restore whatever the run's state actually was
+        /// rather than a hardcoded normal.</para>
+        /// </summary>
+        private void ApplyBedPitches()
+        {
+            if (_musicSource != null) _musicSource.pitch = _musicTransposeRatio * _temporalDragRatio;
+            if (_ambientSource != null) _ambientSource.pitch = _temporalDragRatio;
         }
 
         /// <summary>

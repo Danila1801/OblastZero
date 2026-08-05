@@ -60,6 +60,20 @@ namespace OblastZero.Core
         public int bunkerMorale;
         public bool bunkerSealed;
 
+        // ─── Meta-unlock stat bonuses (run-scoped) ──────────────────────────────
+        // Stamped once by GameManager.BeginNewRun from the purchased-unlock aggregate, then read by
+        // CrewManager whenever it needs a maximum. They live on the run rather than being re-derived from
+        // the profile because a run must stay internally consistent: a player who buys +10 max health
+        // mid-run (the Supply Office is only reachable from the menu, but a save can outlive a purchase)
+        // must not find their existing crew's ceiling moving under them. A save written before these fields
+        // existed deserializes both to 0, which is the correct "no unlocks" reading.
+
+        /// <summary>Added to every crew member's maximum health for this run.</summary>
+        public int crewMaxHealthBonus;
+
+        /// <summary>Added to every crew member's maximum sanity for this run.</summary>
+        public int crewMaxSanityBonus;
+
         // RNG (seed + stream counter so a run is fully reproducible from its seed)
         public int rngSeed;
         public int rngStreamCounter;
@@ -73,6 +87,23 @@ namespace OblastZero.Core
         public int currentDurability;
         public float currentContamination;
         public int quantity;
+
+        /// <summary>
+        /// True when this stack came out of a Carbon Copy anomaly (ANM-Δ-07/CC) and is one of the
+        /// duplicates rather than the original. The bible's defects are subtle and specific — wrong
+        /// Cyrillic on the label, syringes that inject the wrong fluid, a signature belonging to someone
+        /// who could not have signed it — so the flag does nothing visible in the bunker list and only
+        /// surfaces when a crew member actually uses the thing, during event resolution.
+        ///
+        /// <para><b>Defective stacks never merge with genuine ones.</b> <c>InventoryManager.FindStack</c>
+        /// treats this field as part of a stack's identity. Merging them would either lose the information
+        /// outright or, worse, mark the player's real med kit defective because a copy of it landed in the
+        /// same slot.</para>
+        ///
+        /// <para>A save written before this field existed deserializes to false, which is the correct
+        /// reading for every item collected before the anomaly layer shipped.</para>
+        /// </summary>
+        public bool isDefective;
     }
 
     /// <summary>A concrete crew member instance. instanceId persists if the same member is recruited again.</summary>

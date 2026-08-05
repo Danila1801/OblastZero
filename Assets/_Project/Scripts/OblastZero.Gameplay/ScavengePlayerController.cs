@@ -54,8 +54,51 @@ namespace OblastZero.Gameplay
         /// <summary>Raised when the player presses interact while looking at a pickup in range.</summary>
         public event Action<ScavengePickup> PickupRequested;
 
+        /// <summary>
+        /// Raised when interact is pressed with nothing grabbable under the crosshair. Subscribed by world
+        /// interactions that are not pickups — today the Interview anomaly's chair.
+        ///
+        /// <para>Firing only on the empty-crosshair case rather than on every press is what keeps a player
+        /// reaching for a document on the desk from being seated by the same keypress. A pickup always
+        /// wins; a listener can never steal a grab.</para>
+        /// </summary>
+        public event Action InteractPressedWithNoTarget;
+
         /// <summary>Crosshair reach in metres, as the raycast actually uses it.</summary>
         public float InteractRange => interactRange;
+
+        /// <summary>True while the crosshair is on a grabbable pickup in range.</summary>
+        public bool HasLookTarget => _lookTarget != null;
+
+        /// <summary>
+        /// Scales walk and sprint speed. 1 is normal; the Backlog anomaly (ANM-Χ-21/BL) drops it to 0.02.
+        ///
+        /// <para>A multiplier rather than public base speeds. Exposing <c>walkSpeed</c>/<c>sprintSpeed</c>
+        /// for a hazard to overwrite means every hazard has to save and restore two values, and any pair of
+        /// them that overlaps restores the other's saved copy — the player walks out of one anomaly at
+        /// another's speed, permanently, with nothing logged. One multiplier has one owner at a time and
+        /// resets to a known constant.</para>
+        /// </summary>
+        public float SpeedMultiplier
+        {
+            get { return _speedMultiplier; }
+            set { _speedMultiplier = Mathf.Clamp(value, 0.001f, 4f); }
+        }
+
+        /// <summary>
+        /// Minimum seconds between grabs. 0 outside a Backlog. The bible slows interaction as well as
+        /// movement; without this a player could stand at the boundary with their feet slowed and strip a
+        /// shelf at full speed.
+        /// </summary>
+        public float InteractionDelaySeconds { get; set; }
+
+        /// <summary>
+        /// The player's horizontal speed this frame, m/s. Read by the Drowned Census-Taker (MTN-Β-04/DC),
+        /// whose entire threat is a stop-timer: measured from the CharacterController's realised motion
+        /// rather than from input, so a player held against a wall counts as stopped — which is exactly
+        /// what the mutant should notice, and what reading the input axis would miss.
+        /// </summary>
+        public float HorizontalSpeed { get; private set; }
 
         /// <summary>
         /// Raised when the player presses the pause action. The owning phase state decides what a
@@ -77,6 +120,8 @@ namespace OblastZero.Gameplay
         private float _verticalVelocity;
         private ScavengePickup _lookTarget;
         private PickupHoverHighlight _hovered;
+        private float _speedMultiplier = 1f;
+        private float _nextInteractAllowedAt;
 
         private void Awake()
         {
@@ -210,13 +255,25 @@ namespace OblastZero.Gameplay
             }
 
             Vector3 horizontal = Vector3.ClampMagnitude(transform.right * x + transform.forward * z, 1f);
-            float speed = sprinting ? sprintSpeed : walkSpeed;
+
+            // The multiplier scales horizontal speed only. Gravity is not subjective: a Backlog that also
+            // slowed the fall would leave the player hanging in mid-air on the way down a stairwell, which
+            // reads as a physics bug rather than as time distortion.
+            float speed = (sprinting ? sprintSpeed : walkSpeed) * _speedMultiplier;
 
             if (_controller.isGrounded && _verticalVelocity < 0f) _verticalVelocity = -2f;
             _verticalVelocity += gravity * Time.deltaTime;
 
             Vector3 motion = horizontal * speed + Vector3.up * _verticalVelocity;
+
+            Vector3 before = transform.position;
             _controller.Move(motion * Time.deltaTime);
+
+            // Realised speed, not intended speed. A player pushing into a wall has full input and zero
+            // motion, and the Census-Taker must read that as standing still.
+            Vector3 delta = transform.position - before;
+            delta.y = 0f;
+            HorizontalSpeed = Time.deltaTime > 0f ? delta.magnitude / Time.deltaTime : 0f;
         }
 
         /// <summary>
@@ -326,7 +383,21 @@ namespace OblastZero.Gameplay
 
         private void TryInteract()
         {
-            if (_lookTarget != null) PickupRequested?.Invoke(_lookTarget);
+            // Inside a Backlog every interaction takes seconds, not a keypress. The gate is here rather
+            // than in the anomaly so it covers both branches below with one rule — a player who cannot
+            // grab a crate also cannot sit down for an interview at normal speed.
+            if (Time.time < _nextInteractAllowedAt) return;
+            if (InteractionDelaySeconds > 0f) _nextInteractAllowedAt = Time.time + InteractionDelaySeconds;
+
+            if (_lookTarget != null)
+            {
+                PickupRequested?.Invoke(_lookTarget);
+                return;
+            }
+
+            // No pickup under the crosshair — offer the press to whatever else is listening. Ordering is
+            // deliberate: a pickup always wins, so a listener can never steal a grab.
+            InteractPressedWithNoTarget?.Invoke();
         }
 
         private ScavengePickup RaycastPickup()
