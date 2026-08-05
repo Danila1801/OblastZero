@@ -29,6 +29,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from scavenge_scene_lib import (                                    # noqa: E402
     MATERIALS, MATERIAL_DIR, VOLUME_PROFILE_PATH, SCRIPT_GUIDS,
     SceneBuilder, guid_for, material_yaml, volume_profile_yaml, f,
+    assert_script_guids,
 )
 
 SCENE_PATH = "Assets/Scenes/Scavenge.unity"
@@ -728,6 +729,18 @@ def build():
             "Assembly-CSharp::OblastZero.Gameplay.ScavengeController",
             "  player: {fileID: %d}\n" % player_ctrl_id)
 
+    # -- Prop dresser: swaps each pickup's primitive silhouette for its authored mesh once
+    # GLBPropLoader has the meshes resident. Deliberately NOT baked into this scene: the
+    # generator's burial, support and walkability gates all reason about the primitive extents,
+    # and referencing meshes here would make the scene un-regenerable without the Editor. The
+    # primitive stays the authority on placement and collision; the dresser owns appearance only.
+    dress_go, _ = sb.obj("Scavenge_Prop_Dresser", parent=sysg)
+    sb.mono(dress_go, "ScavengePropDresser",
+            "Assembly-CSharp::OblastZero.Gameplay.ScavengePropDresser",
+            "  dressOnStart: 1\n"
+            "  hideReplacedPrimitive: 1\n"
+            "  logCensus: 1\n")
+
     # -- HUD: self-building canvas. Thresholds mirror BalanceConstants.SCAVENGE_*.
     hud_go, _ = sb.obj("Scavenge_HUD", parent=sysg)
     sb.mono(hud_go, "ScavengeHUD", "Assembly-CSharp::OblastZero.UI.ScavengeHUD",
@@ -1134,6 +1147,10 @@ def main():
     # Gate: the silhouettes baked into the scene must be the ones the runtime would spawn.
     # Aborts before anything is written if visual_archetypes.py has drifted from the C#.
     print("archetype check: " + va.assert_matches_csharp())
+
+    # Gate: every project script GUID this scene references must still match its .cs.meta. A stale
+    # entry produces a component that is present but never runs, which no other check would catch.
+    print(assert_script_guids())
 
     global ITEM_CATEGORIES
     ITEM_CATEGORIES = load_item_categories()

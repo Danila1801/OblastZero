@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ffe9f84e802df444aa33f84f37b6124, type: 3}
+  m_Name: PropArchetypeRegistry
+  m_EditorClassIdentifier: 
+  entries:
+  - archetype: 1
+    resourceKey: Props/prop_crate
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 2
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 3
+    resourceKey: Props/prop_ammo_box
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 4
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 5
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 6
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 7
+    resourceKey: Props/prop_pry_bar
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 8
+    resourceKey: Props/prop_artifact
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 1
+  - archetype: 9
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 10
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0
+  - archetype: 11
+    resourceKey: 
+    fitMode: 0
+    extraScale: {x: 1, y: 1, z: 1}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationEuler: {x: 0, y: 0, z: 0}
+    useLOD: 1
+    lodCount: 3
+    useSceneMaterial: 0

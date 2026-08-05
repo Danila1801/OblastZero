@@ -12,6 +12,7 @@ because a wrong GUID produces a scene that opens with silently missing component
 
 import hashlib
 import math
+import os
 
 # ─── Project-fixed references (harvested from the real .meta files / packages) ───────────
 
@@ -22,6 +23,7 @@ SCRIPT_GUIDS = {
     "BunkerEntranceTrigger":    "74b55b54648c09a40ba7988899b82992",
     "ScavengeHUD":              "dd3cbf194b2223e4bb413132b96e7089",
     "FluorescentFlicker":       "4c0db41a545e64afcab7ef35b065ae47",
+    "ScavengePropDresser":      "c713638314d9e0c8e4973ae8a8f1a24f",
     # URP / SRP core components
     "UniversalAdditionalCameraData": "a79441f348de89743a2939f4d699eac1",
     "UniversalAdditionalLightData":  "474bcb49853aa07438625e644c072ee6",
@@ -47,6 +49,54 @@ STATIC_ALL = 4294967295   # "Everything" in the Static dropdown — bake/occlusi
 def guid_for(name):
     """Stable 32-hex GUID derived from a name, so regeneration never breaks references."""
     return hashlib.md5(("OblastZero::" + name).encode("utf-8")).hexdigest()
+
+
+# SCRIPT_GUIDS entries that belong to this project rather than to a Unity package. Only these can be
+# checked against a .meta on disk; the URP ones live in the package cache under a hashed folder name.
+PROJECT_SCRIPTS = (
+    "ScavengePlayerController", "ScavengeController", "ScavengePickup",
+    "BunkerEntranceTrigger", "ScavengeHUD", "FluorescentFlicker", "ScavengePropDresser",
+)
+
+_ASSETS_ROOT = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Assets")
+
+
+def assert_script_guids():
+    """
+    Verifies every project script GUID in SCRIPT_GUIDS still matches its .cs.meta on disk.
+
+    CLAUDE.md §14: a wrong script GUID yields a silently unassigned component, not an error — the
+    scene loads, the object is there, and the behaviour simply never runs. That is the single most
+    expensive failure mode in headless scene authoring, and until now the table was a set of
+    hand-copied constants with nothing watching them. Deleting a script, or letting Unity reimport
+    one into a fresh GUID, now fails the generator instead of shipping a dead component.
+    """
+    found, problems = {}, []
+    for root, _dirs, files in os.walk(_ASSETS_ROOT):
+        for filename in files:
+            if not filename.endswith(".cs.meta"):
+                continue
+            stem = filename[:-len(".cs.meta")]
+            if stem not in PROJECT_SCRIPTS:
+                continue
+            with open(os.path.join(root, filename), "r", encoding="utf-8") as handle:
+                for line in handle:
+                    if line.startswith("guid:"):
+                        found[stem] = line.split(":", 1)[1].strip()
+                        break
+
+    for name in PROJECT_SCRIPTS:
+        expected = SCRIPT_GUIDS.get(name)
+        actual = found.get(name)
+        if actual is None:
+            problems.append("%s: no .cs.meta found under Assets/ (has Unity imported it?)" % name)
+        elif actual != expected:
+            problems.append("%s: table says %s, meta says %s" % (name, expected, actual))
+
+    if problems:
+        raise SystemExit("script GUID check FAILED:\n  " + "\n  ".join(problems))
+    return "script guid check: %d project scripts match their .meta" % len(PROJECT_SCRIPTS)
 
 
 def euler_to_quat(x, y, z):

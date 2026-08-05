@@ -1,0 +1,184 @@
+{
+  "props": [
+    {
+      "lods": [
+        {
+          "level": 0,
+          "triangles": 7844,
+          "vertices": 3777
+        },
+        {
+          "level": 1,
+          "triangles": 2644,
+          "vertices": 1313
+        },
+        {
+          "level": 2,
+          "triangles": 869,
+          "vertices": 432
+        }
+      ],
+      "name": "prop_ammo_box",
+      "output_bytes": 791044,
+      "resource_key": "Props/prop_ammo_box",
+      "source_bytes": 41274760,
+      "source_longest_axis_m": 1.0,
+      "source_triangles": 1420814,
+      "textures": [
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        }
+      ]
+    },
+    {
+      "lods": [
+        {
+          "level": 0,
+          "triangles": 7791,
+          "vertices": 3846
+        },
+        {
+          "level": 1,
+          "triangles": 2938,
+          "vertices": 1446
+        },
+        {
+          "level": 2,
+          "triangles": 886,
+          "vertices": 427
+        }
+      ],
+      "name": "prop_artifact",
+      "output_bytes": 1072748,
+      "resource_key": "Props/prop_artifact",
+      "source_bytes": 43330432,
+      "source_longest_axis_m": 1.0,
+      "source_triangles": 1487070,
+      "textures": [
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        }
+      ]
+    },
+    {
+      "lods": [
+        {
+          "level": 0,
+          "triangles": 7496,
+          "vertices": 3618
+        },
+        {
+          "level": 1,
+          "triangles": 2615,
+          "vertices": 1261
+        },
+        {
+          "level": 2,
+          "triangles": 1000,
+          "vertices": 488
+        }
+      ],
+      "name": "prop_crate",
+      "output_bytes": 836148,
+      "resource_key": "Props/prop_crate",
+      "source_bytes": 42982780,
+      "source_longest_axis_m": 1.0,
+      "source_triangles": 1472911,
+      "textures": [
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        }
+      ]
+    },
+    {
+      "lods": [
+        {
+          "level": 0,
+          "triangles": 7905,
+          "vertices": 3945
+        },
+        {
+          "level": 1,
+          "triangles": 2864,
+          "vertices": 1425
+        },
+        {
+          "level": 2,
+          "triangles": 960,
+          "vertices": 481
+        }
+      ],
+      "name": "prop_pry_bar",
+      "output_bytes": 836964,
+      "resource_key": "Props/prop_pry_bar",
+      "source_bytes": 38746292,
+      "source_longest_axis_m": 1.0,
+      "source_triangles": 1339696,
+      "textures": [
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "px": [
+            1024,
+            1024
+          ]
+        }
+      ]
+    }
+  ]
+}
