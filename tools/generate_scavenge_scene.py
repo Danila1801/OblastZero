@@ -28,8 +28,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from scavenge_scene_lib import (                                    # noqa: E402
     MATERIALS, MATERIAL_DIR, VOLUME_PROFILE_PATH, SCRIPT_GUIDS,
-    SceneBuilder, guid_for, material_yaml, volume_profile_yaml, f,
-    assert_script_guids,
+    DUST_MATERIAL_NAME, RANGE_RING_MATERIAL_NAME,
+    SceneBuilder, guid_for, material_yaml, particle_material_yaml,
+    volume_profile_yaml, f, assert_script_guids,
 )
 
 SCENE_PATH = "Assets/Scenes/Scavenge.unity"
@@ -96,6 +97,23 @@ EYE_HEIGHT = 1.62
 SCAVENGE_TIMER_SECONDS = 60
 SCAVENGE_TIMER_WARNING_THRESHOLD = 15
 SCAVENGE_TIMER_CRITICAL_THRESHOLD = 5
+SCAVENGE_INTERACTION_RANGE = 3
+
+# ─── Atmosphere ─────────────────────────────────────────────────────────────────────────
+# Airborne dust. The emitter box is a fraction of the 104 x 72 m footprint and tracks the view,
+# because 300 motes spread across the whole depot is roughly one per twenty-five cubic metres and
+# reads as nothing at all; ScavengeDustField simulates in world space so they still hang in the air
+# as the player runs through them. Sizes and lifetimes are the brief's.
+DUST_TINT = (0.78, 0.78, 0.74, 0.30)
+DUST_BOX = (30, 8, 30)
+DUST_EMISSION_PER_SECOND = 15
+DUST_MAX_PARTICLES = 300
+DUST_LIFETIME = (10, 15)
+DUST_DRIFT = (0.10, 0.30)
+
+# Interaction-range ring. Faint, because it is a background affordance: the crosshair prompt and the
+# hover label are what actually tell the player what is in reach, and this only says how far that is.
+RANGE_RING_TINT = (0.35, 0.80, 0.85, 0.10)
 
 # ─── Pickup manifest ────────────────────────────────────────────────────────────────────
 # (dataId, kind, quantity, durabilityOverride, contamination, position, yaw, material)
@@ -175,6 +193,162 @@ def _rot_matrix(x, y, z):
 
 def _apply(m, v):
     return tuple(sum(m[i][k] * v[k] for k in range(3)) for i in range(3))
+
+
+# ─── Deterministic placement variety ────────────────────────────────────────────────────
+#
+# A depot nobody has swept in years does not lay its stock out on a grid. Every pickup already
+# carried an authored yaw (contrary to the Phase 3 brief, which described them as unrotated), so
+# what was actually missing was tilt and scale spread: five identical ration tins at five
+# identical sizes read as instanced, not as stock.
+#
+# Everything here is seeded from the object's own name, never from `random` or the clock, because
+# the scene is required to regenerate byte-identically (CLAUDE.md §14). Two runs of this script
+# must produce the same tilt on the same crate or the md5 determinism check is meaningless.
+
+PICKUP_TILT_FRACTION = 0.30     # share of pickups that have been knocked askew
+PICKUP_TILT_DEGREES = 5.0       # peak tilt on X and Z for those that have
+PICKUP_SCALE_SPREAD = 0.10      # ±10% on all axes
+
+# What the placement gates do and do not constrain here, measured rather than assumed:
+#
+#   * PICKUP_SCALE_SPREAD is gated. Raising it past ~0.5 starts tripping the burial check
+#     (item_bureau_dossier into Desk_2_Top first, then item_axe into Shelving_Row_3_Deck_1, and
+#     nine failures by 4.0). The shipped 0.10 therefore sits about five times below the first
+#     observed failure — a margin that was checked, not guessed.
+#
+#   * PICKUP_TILT_DEGREES is NOT gated, and cranking it to 75 degrees still passes both checks.
+#     That is the construction being provably safe rather than the gate being decoration, and the
+#     reason is worth stating so nobody later reads a passing run as a licence to tilt further.
+#     Rotating a box about X or Z lifts its world AABB and shrinks the horizontal reach of its
+#     dominant axis; it cannot grow the footprint. The support check tests the AABB base, and the
+#     `drop` arithmetic below re-seats that base on the authored surface for any tilt, so the check
+#     is satisfied identically at 5 degrees and at 75. The burial check tests whether the object's
+#     CENTRE is inside a solid, and tilt does not move the centre.
+#     A real tilt gate would need box-vs-box overlap rather than centre containment. At 5 degrees
+#     the largest excursion in the set is the 0.86 m WeaponLong lifting its tip 3.7 cm, so that gate
+#     is not worth writing today — but a tilt large enough to matter would need it first.
+
+
+def _jitter(seed_text, index, lo, hi):
+    """
+    Deterministic value in [lo, hi] from a name and a channel index.
+
+    md5 rather than Python's hash(): hash() of a str is salted per process (PYTHONHASHSEED), so a
+    generator keyed on it would emit a different scene on every invocation and quietly defeat the
+    byte-determinism the regeneration-as-validation workflow depends on.
+    """
+    import hashlib
+    digest = hashlib.md5(("OblastZero::jitter::%s::%d" % (seed_text, index)).encode("utf-8")).digest()
+    raw = int.from_bytes(digest[:4], "big") / 4294967295.0
+    return lo + (hi - lo) * raw
+
+
+def pickup_variation(name, base_scale, is_crew):
+    """
+    Returns (tilt_x, tilt_z, scale) for one pickup.
+
+    Crew get scale spread but never tilt. The manifest already rolls a crew capsule 58 degrees about
+    Z — a body slumped against whatever it fell on, which is why there is someone to rescue — and the
+    brief's instruction to make crew "upright, no tilt" would have stood all three wounded operators
+    up straight and thrown that away. Adding another few degrees of X/Z on top of a deliberate 58 is
+    also the one case where the tilt could plausibly push a capsule through a wall.
+    """
+    spread = PICKUP_SCALE_SPREAD
+    scale = tuple(base_scale[i] * (1.0 + _jitter(name, i, -spread, spread)) for i in range(3))
+
+    if is_crew:
+        return 0.0, 0.0, scale
+
+    knocked = _jitter(name, 3, 0.0, 1.0) < PICKUP_TILT_FRACTION
+    if not knocked:
+        return 0.0, 0.0, scale
+
+    return (_jitter(name, 4, -PICKUP_TILT_DEGREES, PICKUP_TILT_DEGREES),
+            _jitter(name, 5, -PICKUP_TILT_DEGREES, PICKUP_TILT_DEGREES),
+            scale)
+
+
+def rotated_half_extents(half, rot):
+    """
+    World AABB half-extents of an oriented box: sum_j |R[i][j]| * half[j].
+
+    This has to be fed to the placement gates rather than the un-rotated half, or tilting a pickup
+    would shrink the box the burial and support checks reason about at exactly the moment the object
+    actually started occupying more space. A gate that gets easier when the geometry gets harder is
+    worse than no gate.
+    """
+    m = _rot_matrix(*rot)
+    return tuple(sum(abs(m[i][j]) * half[j] for j in range(3)) for i in range(3))
+
+
+# ─── Clutter manifest ───────────────────────────────────────────────────────────────────
+# (label, anchor_xyz, companion_count, mesh, half_scale, material)
+#
+# Each cluster puts companion stock around a real pickup's authored position. The anchor Y is the
+# surface the pickup rests on; companions are offset laterally by up to CLUTTER_SPREAD_M and never
+# vertically, so a companion cannot end up floating over the shelf edge or sunk into it.
+CLUTTER_SPREAD_M = 0.55
+
+CLUTTER_CLUSTERS = [
+    # Loading dock: the crate stack the ammunition came out of.
+    ("Dock_Crates", (32.2, 1.72, -21.8), 3, "Cube", (0.30, 0.30, 0.30), "M_Timber_Crate"),
+    # Loading dock: spare ammunition boxes alongside the two live pickups.
+    ("Dock_Ammo", (35.0, 1.72, -19.0), 2, "Cube", (0.30, 0.18, 0.22), "M_Pickup_Ammo"),
+    # Admin: a second and third folder in the pile the dossier came off.
+    ("Admin_Files", (-8.6, 0.95, -30.4), 2, "Cube", (0.30, 0.05, 0.24), "M_Pickup_Document"),
+    # Admin: emptied medical packaging beside the bandages.
+    ("Admin_Medical", (6.5, 0.96, -22.6), 2, "Cube", (0.30, 0.20, 0.20), "M_Pickup_Medical"),
+    # Warehouse: ration tins that did not get requisitioned.
+    ("Warehouse_Tins", (-3.4, 1.12, 15.5), 3, "Cylinder", (0.20, 0.13, 0.20), "M_Pickup_Food"),
+]
+
+# Things that ended up on the floor. Fixed coordinates on open concrete, well clear of the routes
+# and of every pickup, so no clutter prop can be mistaken for loot the player failed to take.
+CLUTTER_FLOOR = [
+    ("Floor_Tin_1", (-38.4, 0.13, -28.2), "Cylinder", (0.20, 0.13, 0.20), "M_Pickup_Food"),
+    ("Floor_Folder_1", (-14.2, 0.03, -24.6), "Cube", (0.30, 0.05, 0.24), "M_Pickup_Document"),
+    ("Floor_Folder_2", (-13.1, 0.03, -25.4), "Cube", (0.30, 0.05, 0.24), "M_Pickup_Document"),
+    ("Floor_Crate_1", (9.6, 0.30, -26.8), "Cube", (0.30, 0.30, 0.30), "M_Timber_Crate"),
+    ("Floor_Tin_2", (11.8, 0.13, 21.4), "Cylinder", (0.20, 0.13, 0.20), "M_Pickup_Food"),
+    ("Floor_Ammo_1", (27.6, 0.18, -24.2), "Cube", (0.30, 0.18, 0.22), "M_Pickup_Ammo"),
+    ("Floor_Tin_3", (-46.2, 0.13, 8.6), "Cylinder", (0.20, 0.13, 0.20), "M_Pickup_Food"),
+    ("Floor_Crate_2", (20.4, 0.30, 6.2), "Cube", (0.30, 0.30, 0.30), "M_Timber_Crate"),
+]
+
+
+def build_clutter():
+    """
+    Expands the clutter manifest into concrete (name, pos, rot, mesh, scale, material) tuples.
+
+    Pure and deterministic — every offset and angle comes from _jitter keyed on the prop's own name,
+    so calling this twice returns identical lists. build() relies on that: it calls this once to
+    emit and once to count.
+    """
+    props = []
+
+    for label, anchor, count, mesh, scale, mat in CLUTTER_CLUSTERS:
+        for i in range(count):
+            name = "%s_%d" % (label, i + 1)
+            dx = _jitter(name, 0, -CLUTTER_SPREAD_M, CLUTTER_SPREAD_M)
+            dz = _jitter(name, 1, -CLUTTER_SPREAD_M, CLUTTER_SPREAD_M)
+            yaw = _jitter(name, 2, 0.0, 360.0)
+            tilt = _jitter(name, 3, -6.0, 6.0)
+            varied = tuple(scale[k] * (1.0 + _jitter(name, 4 + k, -0.12, 0.12)) for k in range(3))
+            props.append((name,
+                          (anchor[0] + dx, anchor[1], anchor[2] + dz),
+                          (tilt, yaw, 0.0),
+                          mesh, varied, mat))
+
+    for name, pos, mesh, scale, mat in CLUTTER_FLOOR:
+        yaw = _jitter(name, 0, 0.0, 360.0)
+        # Floor props lie at a lazier angle than shelf stock — they were dropped, not set down.
+        tilt_x = _jitter(name, 1, -14.0, 14.0)
+        tilt_z = _jitter(name, 2, -14.0, 14.0)
+        varied = tuple(scale[k] * (1.0 + _jitter(name, 3 + k, -0.12, 0.12)) for k in range(3))
+        props.append((name, pos, (tilt_x, yaw, tilt_z), mesh, varied, mat))
+
+    return props
 
 
 def build():
@@ -720,8 +894,12 @@ def build():
         "  cameraPivot: {fileID: %d}\n"
         "  lookSensitivity: 0.1\n"
         "  pitchClampDegrees: 85\n"
-        "  interactRange: 3\n"
-        "  interactMask:\n    serializedVersion: 2\n    m_Bits: 4294967295\n" % cam_tr)
+        "  interactRange: %s\n"
+        "  interactMask:\n    serializedVersion: 2\n    m_Bits: 4294967295\n"
+        "  showInteractionRing: 1\n"
+        "  interactionRingMaterial: {fileID: 2100000, guid: %s, type: 2}\n"
+        % (cam_tr, f(SCAVENGE_INTERACTION_RANGE),
+           guid_for("Material::" + RANGE_RING_MATERIAL_NAME)))
 
     # -- ScavengeController: routes pickups into InventoryManager / CrewManager.
     ctrl_go, _ = sb.obj("Scavenge_Controller", parent=sysg)
@@ -754,6 +932,49 @@ def build():
                f(SCAVENGE_TIMER_CRITICAL_THRESHOLD),
                f(SCAVENGE_TIMER_SECONDS)))
 
+    # -- Dust field: builds its own ParticleSystem at runtime (see ScavengeDustField's header for
+    # why the system is not serialized here). Starts at the player spawn so frame one is already
+    # dusty; the component re-centres it on the camera from LateUpdate onward.
+    dust_go, _ = sb.obj("Scavenge_Dust_Field", parent=sysg, pos=PLAYER_SPAWN)
+    sb.mono(dust_go, "ScavengeDustField",
+            "Assembly-CSharp::OblastZero.Gameplay.ScavengeDustField",
+            "  dustMaterial: {fileID: 2100000, guid: %s, type: 2}\n"
+            "  tint: {r: %s, g: %s, b: %s, a: %s}\n"
+            "  sizeMin: 0.02\n"
+            "  sizeMax: 0.05\n"
+            "  lifetimeMin: %s\n"
+            "  lifetimeMax: %s\n"
+            "  driftMin: %s\n"
+            "  driftMax: %s\n"
+            "  lateralDrift: 0.06\n"
+            "  boxSize: {x: %s, y: %s, z: %s}\n"
+            "  emissionRatePerSecond: %s\n"
+            "  maxParticles: %d\n"
+            "  followTarget: {fileID: %d}\n"
+            "  followStepMetres: 4\n"
+            % (guid_for("Material::" + DUST_MATERIAL_NAME),
+               f(DUST_TINT[0]), f(DUST_TINT[1]), f(DUST_TINT[2]), f(DUST_TINT[3]),
+               f(DUST_LIFETIME[0]), f(DUST_LIFETIME[1]),
+               f(DUST_DRIFT[0]), f(DUST_DRIFT[1]),
+               f(DUST_BOX[0]), f(DUST_BOX[1]), f(DUST_BOX[2]),
+               f(DUST_EMISSION_PER_SECOND), DUST_MAX_PARTICLES, cam_tr))
+
+    # -- Emission VFX: post-processing escalation, camera shake and the flash overlay. Owns a runtime
+    # Volume that outranks the scene's, so ScavengeVolumeProfile.asset is never written to at play time.
+    vfx_go, _ = sb.obj("Scavenge_Emission_VFX", parent=sysg)
+    sb.mono(vfx_go, "EmissionVfxController",
+            "Assembly-CSharp::OblastZero.Gameplay.EmissionVfxController",
+            "  warningVignetteBoost: 0.14\n"
+            "  criticalVignetteBoost: 0.34\n"
+            "  warningPulseHz: 1\n"
+            "  criticalPulseHz: 4\n"
+            "  criticalSaturationDrop: -45\n"
+            "  criticalPostExposure: 0.2\n"
+            "  criticalColorFilter: {r: 1, g: 0.62, b: 0.55, a: 1}\n"
+            "  flashPeakAlpha: 0.6\n"
+            "  flashFadeSeconds: 0.2\n"
+            "  fovPunchSeconds: 0.3\n")
+
     # -- Bunker door trigger, spanning the stair mouth inside the headhouse.
     trig_go, _ = sb.obj("Bunker_Entrance_Trigger", parent=sysg, pos=(44, 1.4, 27))
     sb.box_collider(trig_go, is_trigger=True, size=(6, 3.6, 2.6))
@@ -773,39 +994,54 @@ def build():
     # match a 5 cm-thick folder would make it nearly unclickable under time pressure.
     pick = group("=== PICKUPS ===")
     archetype_census = {}
+    tilted = 0
     for data_id, kind, qty, dur, contam, pos, yaw, mat in PICKUPS:
         is_crew = kind == CREW
         name = ("Crew_" if is_crew else "Pickup_") + data_id
 
         archetype = "Crew" if is_crew else va.derive(ITEM_CATEGORIES.get(data_id), data_id)
-        mesh, scale = va.SHAPES[archetype]
+        mesh, base_scale = va.SHAPES[archetype]
         archetype_census[archetype] = archetype_census.get(archetype, 0) + 1
+
+        # Deterministic tilt + scale spread, seeded from this object's name. Breaks the clone-army
+        # look without touching the authored positions, which the gates below have already proved
+        # clear of geometry and which the depot's 60-second pacing was tuned against.
+        tilt_x, tilt_z, scale = pickup_variation(name, base_scale, is_crew)
+        rot = (tilt_x, yaw, 58 if is_crew else tilt_z)
+        if tilt_x or tilt_z:
+            tilted += 1
 
         # Half-extents in world units, accounting for non-unit primitive meshes: a Cylinder
         # or Capsule mesh is 2 units tall, so its Y half-extent is the Y scale, not half of it.
         base = BOX_LOCAL[mesh]
         half = tuple(scale[i] * base[i] / 2.0 for i in range(3))
+        # Then grown to the tilted box's true world footprint, so the gates judge the object as it
+        # actually sits rather than as it would sit level.
+        world_half = rotated_half_extents(half, rot)
 
         # The manifest's Y values were authored against the old 0.34 cube resting on a surface.
         # Keep each pickup's BOTTOM where it was and let the silhouette change above it —
         # otherwise a flattened document hovers 14 cm in the air and the support check fails.
-        drop = LEGACY_PICKUP_HALF_Y - half[1]
+        # world_half, not half: a tilted crate's lowest corner is below its level base, and using
+        # the un-tilted figure here is what would push that corner through the shelf.
+        drop = LEGACY_PICKUP_HALF_Y - world_half[1]
         pos = (pos[0], pos[1] - drop, pos[2]) if not is_crew else pos
 
         if is_crew:
-            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 58), scale=scale)
+            go, _ = sb.obj(name, parent=pick, pos=pos, rot=rot, scale=scale)
             sb.mesh_renderer(go, mesh, mat, cast_shadows=True)
             sb.capsule_collider(go, is_trigger=True, radius=0.62, height=2.3)
             placed.append((name, pos, (0.62, 0.72, 0.62), True))
         else:
-            go, _ = sb.obj(name, parent=pick, pos=pos, rot=(0, yaw, 0), scale=scale)
+            go, _ = sb.obj(name, parent=pick, pos=pos, rot=rot, scale=scale)
             sb.mesh_renderer(go, mesh, mat, cast_shadows=False)
             # Collider size is LOCAL, so a fixed number would scale with the mesh and give a
             # 1.6 m trigger on a rifle and a 0.3 m one on a can. Divide out the scale to keep
-            # every pickup the same size to the crosshair.
+            # every pickup the same size to the crosshair — including the ±10% spread, or a
+            # small can would be measurably harder to hit than a large one.
             sb.box_collider(go, is_trigger=True,
                             size=tuple(PICKUP_TRIGGER_WORLD_M / s for s in scale))
-            placed.append((name, pos, half, False))
+            placed.append((name, pos, world_half, False))
 
         sb.mono(go, "ScavengePickup", "Assembly-CSharp::OblastZero.Gameplay.ScavengePickup",
                 "  kind: %d\n"
@@ -814,8 +1050,36 @@ def build():
                 "  durabilityOverride: %d\n"
                 "  contamination: %s\n" % (kind, data_id, qty, dur, f(contam)))
 
+        # Hover highlight + world label. The label floats above the object's origin, so a crew capsule
+        # (0.86 tall, and slumped) needs more clearance than a document lying flat on a shelf.
+        sb.mono(go, "PickupHoverHighlight",
+                "Assembly-CSharp::OblastZero.Gameplay.PickupHoverHighlight",
+                "  highlightEmission: {r: 0.3, g: 0.32, b: 0.38, a: 1}\n"
+                "  labelHeight: %s\n"
+                "  labelCharacterSize: 0.035\n" % f(1.35 if is_crew else 0.55))
+
     print("pickup silhouettes: " + ", ".join(
         "%s x%d" % (k, v) for k, v in sorted(archetype_census.items())))
+    print("placement variety: %d of %d pickups knocked askew, all %d scaled ±%d%%"
+          % (tilted, len(PICKUPS), len(PICKUPS), int(PICKUP_SCALE_SPREAD * 100)))
+
+    # ══ CLUTTER ═════════════════════════════════════════════════════════════════════════
+    # Non-pickup dressing: companion stock beside real pickups so the loot reads as clusters
+    # rather than as one-of-each, plus items that have ended up on the floor.
+    #
+    # These carry no collider and no ScavengePickup, which is what makes them safe. Every pickup
+    # position in the manifest has been proved clear of geometry, supported, reachable AND
+    # escapable, and the depot's route timings were tuned against those exact coordinates — so the
+    # brief's "move pickups into shared anchor positions with ±0.3 m offsets" is the one instruction
+    # here that would have put verified gameplay geometry at risk for a purely visual gain. Adding
+    # companions next to the pickups produces the same clusters on screen, more objects rather than
+    # fewer, and cannot bury a pickup, unseat it from its shelf, or seal a route.
+    clutter = group("=== CLUTTER ===")
+    for cname, cpos, cyaw, cmesh, cscale, cmat in build_clutter():
+        cgo, _ = sb.obj(cname, parent=clutter, pos=cpos, rot=cyaw, scale=cscale, static=True)
+        sb.mesh_renderer(cgo, cmesh, cmat, cast_shadows=False)
+    print("clutter: %d non-pickup props in %d clusters + floor scatter"
+          % (len(build_clutter()), len(CLUTTER_CLUSTERS)))
 
     return sb, sun_light_id, solids, placed
 
@@ -1046,6 +1310,8 @@ def verify(scene_text):
     known = set(SCRIPT_GUIDS.values()) | {"0000000000000000e000000000000000",
                                           "0000000000000000f000000000000000"}
     known |= {guid_for("Material::" + n) for n in MATERIALS}
+    known |= {guid_for("Material::" + n)
+              for n in (DUST_MATERIAL_NAME, RANGE_RING_MATERIAL_NAME)}
     known.add(guid_for("VolumeProfile::Scavenge"))
     for g in guids - known:
         problems.append("unrecognised guid %s" % g)
@@ -1169,6 +1435,19 @@ def main():
               "  userData: \n  assetBundleName: \n  assetBundleVariant: \n"
               % guid_for("Material::" + name))
     print("wrote %d URP Lit materials -> %s" % (len(MATERIALS), MATERIAL_DIR))
+
+    # The dust material is a separate emitter (URP Particles/Unlit, transparent) and lands in the
+    # same folder so CLAUDE.md §14's restore command still covers everything this script rewrites.
+    for name, tint in ((DUST_MATERIAL_NAME, DUST_TINT),
+                       (RANGE_RING_MATERIAL_NAME, RANGE_RING_TINT)):
+        write("%s/%s.mat" % (MATERIAL_DIR, name), particle_material_yaml(name, tint))
+        write("%s/%s.mat.meta" % (MATERIAL_DIR, name),
+              "fileFormatVersion: 2\nguid: %s\nNativeFormatImporter:\n"
+              "  externalObjects: {}\n  mainObjectFileID: 2100000\n"
+              "  userData: \n  assetBundleName: \n  assetBundleVariant: \n"
+              % guid_for("Material::" + name))
+    print("wrote 2 URP Particles/Unlit materials -> %s/{%s,%s}.mat"
+          % (MATERIAL_DIR, DUST_MATERIAL_NAME, RANGE_RING_MATERIAL_NAME))
 
     # Volume profile
     write(VOLUME_PROFILE_PATH, volume_profile_yaml())
