@@ -367,7 +367,10 @@ namespace OblastZero.Gameplay
             if (_inFlight.TryGetValue(key, out pending)) return pending;
 
             pending = LoadTemplateAsync(key, cancellationToken);
-            _inFlight[key] = pending;
+            // Only park a task that actually suspended. The missing-TextAsset path returns before its
+            // first await, so the task is already complete and its finally-block has run — storing it
+            // would leave a permanently-cached failure that no later call could retry past.
+            if (!pending.IsCompleted) _inFlight[key] = pending;
             return pending;
         }
 
