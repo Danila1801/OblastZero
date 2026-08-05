@@ -125,7 +125,7 @@ namespace OblastZero.Gameplay
 
             if (pool.Count == 0 || totalWeight <= 0f)
             {
-                Debug.Log("[EventEngine] No eligible events for the current state.");
+                ReportEmptyPool(regionSet);
                 return null;
             }
 
@@ -141,6 +141,45 @@ namespace OblastZero.Gameplay
             Debug.Log($"[EventEngine] Presenting '{chosen.id}' (pool {pool.Count}, weight {chosen.baseWeight:0.##}/{totalWeight:0.##}).");
             EventPresented?.Invoke(chosen);
             return chosen;
+        }
+
+        /// <summary>
+        /// Explains an empty selection pool instead of stating it.
+        ///
+        /// "No eligible events" is a legitimate result on a quiet day, and for a long time it was logged as one
+        /// routine line. That made it indistinguishable from the pathological case: a caller that passes no
+        /// region tags rejects every event carrying <c>regionTagsAny</c>, and since all shipped events carry
+        /// them, the whole narrative layer went dark for entire runs while the console said something that
+        /// read like normal operation. A blackout across a corpus this large is never quiet news, so it is
+        /// reported as an error naming the cause, while a genuinely narrow day stays a Log line.
+        /// </summary>
+        private void ReportEmptyPool(HashSet<string> regionSet)
+        {
+            int corpus = _db.AllEvents?.Count ?? 0;
+
+            if (regionSet == null && corpus > 0)
+            {
+                int tagged = 0;
+                foreach (var evt in _db.AllEvents)
+                {
+                    if (evt == null) continue;
+                    var tags = evt.prerequisites.regionTagsAny;
+                    if (tags != null && tags.Count > 0) tagged++;
+                }
+
+                if (tagged > 0)
+                {
+                    Debug.LogError($"[EventEngine] No events eligible and NO region tags were supplied, while " +
+                                   $"{tagged} of {corpus} events require one. Every tagged event is rejected on a " +
+                                   "null tag set, so this selects nothing every time it is called. The caller must " +
+                                   "pass its active tags (bunker days use RegionTags.BunkerPhaseActive).");
+                    return;
+                }
+            }
+
+            Debug.Log($"[EventEngine] No eligible events for the current state " +
+                      $"(corpus {corpus}, day {_run.currentDay}, " +
+                      $"tags {(regionSet == null ? "none" : string.Join("/", regionSet))}).");
         }
 
         /// <summary>First queued follow-up that still exists and hasn't been completed (non-destructive).</summary>
