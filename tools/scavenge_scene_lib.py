@@ -24,19 +24,33 @@ SCRIPT_GUIDS = {
     "ScavengeHUD":              "dd3cbf194b2223e4bb413132b96e7089",
     "FluorescentFlicker":       "4c0db41a545e64afcab7ef35b065ae47",
     "ScavengePropDresser":      "c713638314d9e0c8e4973ae8a8f1a24f",
+    "ScavengeDustField":        "1f8d9943febaff2bbd912c1614f130a2",
+    # Unity was open when this one landed and minted its own GUID before tools/author_script_metas.py
+    # could, so the value here is Unity's, not the derived one. The Editor's identity always wins once
+    # it exists — rewriting the .meta to match a table would orphan every reference already made to it.
+    # assert_script_guids() caught the mismatch on the first generation attempt, which is the whole
+    # reason that gate exists (CLAUDE.md §14: a wrong GUID is a component that runs no code, silently).
+    "PickupHoverHighlight":     "fb6bb5a39b1cbe3498e90ab89a8dcf3e",
+    "EmissionVfxController":    "6a3cdde8fc6fa9988f912247232ee2f4",
     # URP / SRP core components
     "UniversalAdditionalCameraData": "a79441f348de89743a2939f4d699eac1",
     "UniversalAdditionalLightData":  "474bcb49853aa07438625e644c072ee6",
     "Volume":                        "172515602e62fb746b5d573b38a5fe58",
     "VolumeProfile":                 "d7fd9488000d3734a9e00ee676215985",
-    # URP post-processing overrides
-    "Vignette":         "899c54efeace73346a0a16faa3afe726",
-    "ColorAdjustments": "66f335fb1ffd8684294ad653bf1c7564",
-    "FilmGrain":        "29fa0085f50d5e54f8144f766051a691",
-    "Tonemapping":      "97c23e3b12dc18c42a140437e53d3951",
+    # URP post-processing overrides. Harvested out of Assets/Settings/DefaultVolumeProfile.asset and
+    # SampleSceneProfile.asset — URP 17.4 ships builtin (no Library/PackageCache copy), so the
+    # package .cs.meta files this table is normally read from are not on disk at all.
+    "Vignette":                  "899c54efeace73346a0a16faa3afe726",
+    "ColorAdjustments":          "66f335fb1ffd8684294ad653bf1c7564",
+    "FilmGrain":                 "29fa0085f50d5e54f8144f766051a691",
+    "Tonemapping":               "97c23e3b12dc18c42a140437e53d3951",
+    "Bloom":                     "0b2db86121404754db890f4c8dfe81b2",
+    "DepthOfField":              "c01700fd266d6914ababb731e09af2eb",
+    "ShadowsMidtonesHighlights": "558a8e2b6826cf840aae193990ba9f2e",
 }
 
 URP_LIT_SHADER_GUID = "933532a4fcc9baf4fa0491de14d08ed7"
+URP_PARTICLES_UNLIT_SHADER_GUID = "0406db5a14f94604a8c57ccfbc9f3b46"
 
 # Unity built-in primitive meshes (verified against real package assets, not assumed).
 BUILTIN_MESH_GUID = "0000000000000000e000000000000000"
@@ -56,6 +70,7 @@ def guid_for(name):
 PROJECT_SCRIPTS = (
     "ScavengePlayerController", "ScavengeController", "ScavengePickup",
     "BunkerEntranceTrigger", "ScavengeHUD", "FluorescentFlicker", "ScavengePropDresser",
+    "ScavengeDustField", "PickupHoverHighlight", "EmissionVfxController",
 )
 
 _ASSETS_ROOT = os.path.join(
@@ -244,13 +259,131 @@ Material:
            base=col(base), emis=col(emis))
 
 
+# Airborne dust. Alpha-blended rather than additive: additive motes over the depot's near-black
+# shadows read as glowing sparks, and dust catches light, it does not emit it. Blend factors are the
+# literal URP values for Transparent + Alpha (SrcAlpha / OneMinusSrcAlpha, ZWrite off, Cull off so a
+# view-aligned billboard is visible from either side).
+DUST_MATERIAL_NAME = "M_Dust"
+
+# The interaction-range ring under the player. Same shader family as the dust, so there is exactly one
+# transparent-particle surface in the build for PickupVfx to borrow for its bursts.
+RANGE_RING_MATERIAL_NAME = "M_RangeRing"
+
+
+def particle_material_yaml(name, base_color):
+    """
+    An unlit transparent particle material for ScavengeDustField.
+
+    Kept separate from material_yaml() because that emitter is hardwired to URP Lit / Opaque: it
+    writes RenderType Opaque, queue 2000, _ZWrite 1 and no transparency keyword. Reusing it and
+    patching properties afterwards is how a "transparent" material ends up rendering as opaque
+    quads — the keyword and the stringTagMap have to agree with the blend factors or the surface
+    silently falls back.
+    """
+    tex = "\n".join(
+        "    - %s:\n        m_Texture: {fileID: 0}\n"
+        "        m_Scale: {x: 1, y: 1}\n        m_Offset: {x: 0, y: 0}" % t
+        for t in ("_BaseMap", "_BumpMap", "_EmissionMap", "_MainTex"))
+
+    return """%%YAML 1.1
+%%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: %(name)s
+  m_Shader: {fileID: 4800000, guid: %(shader)s, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - SHADOWCASTER
+  - DepthOnly
+  - DepthNormals
+  - MOTIONVECTORS
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+%(tex)s
+    m_Ints: []
+    m_Floats:
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendOp: 0
+    - _CameraFadingEnabled: 0
+    - _ColorMode: 0
+    - _Cull: 0
+    - _Cutoff: 0.5
+    - _DistortionEnabled: 0
+    - _DstBlend: 10
+    - _DstBlendAlpha: 10
+    - _FlipbookBlending: 0
+    - _QueueOffset: 0
+    - _SoftParticlesEnabled: 0
+    - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
+    - _Surface: 1
+    - _ZWrite: 0
+    m_Colors:
+    - _BaseColor: %(base)s
+    - _Color: %(base)s
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
+""" % dict(name=name, shader=URP_PARTICLES_UNLIT_SHADER_GUID, tex=tex, base=col(base_color))
+
+
 VOLUME_PROFILE_PATH = "Assets/Settings/ScavengeVolumeProfile.asset"
+
+# Focus plane and lens for the depth-of-field override, in metres / millimetres / f-stop.
+#
+# These are named here rather than inlined because they are the one post-processing setting with a
+# gameplay cost: the depot is a 60-second read-the-room sprint, and a shallow plane hides the very
+# pickups and doorways the player is scanning for. At 35 mm / f2.8 focused at 5 m the acceptably
+# sharp band runs roughly 3.7 m to 7.6 m, so the bunker door at the far end of the yard is soft.
+# That is the brief's intent ("background shelves blur slightly, frames the player's attention") but
+# it is deliberately a one-line change: raise DOF_APERTURE to f8 for a ~2.7 m-to-infinity band, or
+# set DOF_MODE to 1 (Gaussian) with a far start if the blur ever reads as fog rather than as focus.
+DOF_MODE = 2            # 0 Off, 1 Gaussian, 2 Bokeh (physical — honours focal length + aperture)
+DOF_FOCUS_DISTANCE_M = 5.0
+DOF_FOCAL_LENGTH_MM = 35.0
+DOF_APERTURE_FSTOP = 2.8
 
 
 def volume_profile_yaml():
-    """Desaturated, green-grey, vignetted, grainy — the bible's 'тяжесть' (heaviness)."""
+    """
+    Desaturated, green-grey, vignetted, grainy — the bible's 'тяжесть' (heaviness).
+
+    Four overrides (Tonemapping, ColorAdjustments, Vignette, FilmGrain) predate this pass and are
+    reproduced byte-for-byte. Their values were deliberately NOT retuned to the numbers quoted in
+    the Phase 3 brief: that brief asks for contrast +10 / saturation -15 / exposure -0.3, which are
+    each *weaker* than what already shipped here (contrast 8 / saturation -32 / exposure -0.35), so
+    applying them would have lifted the grade back toward neutral and undone the look.
+
+    Three are new: Bloom (fluorescent tubes read as light sources), DepthOfField, and
+    ShadowsMidtonesHighlights, which supplies the warm-highlight / cold-shadow split the brief asked
+    ColorCurves for. ColorCurves stores four TextureCurves as serialized AnimationCurve keyframe
+    arrays; hand-authoring those blind is a large unverifiable payload for an effect three simple
+    Vector4s reproduce exactly. Ambient occlusion is absent on purpose — in URP it is a
+    ScriptableRendererFeature, not a VolumeComponent, and it is already enabled on
+    Assets/Settings/PC_Renderer.asset (intensity 0.4, radius 0.3).
+    """
     ids = {"Tonemapping": 4820001, "ColorAdjustments": 4820002,
-           "Vignette": 4820003, "FilmGrain": 4820004}
+           "Vignette": 4820003, "FilmGrain": 4820004,
+           "Bloom": 4820005, "DepthOfField": 4820006,
+           "ShadowsMidtonesHighlights": 4820007}
 
     def header(kind, fid):
         return ("--- !u!114 &%d\nMonoBehaviour:\n"
@@ -305,6 +438,52 @@ def volume_profile_yaml():
                "  texture:\n" + ov(False, "{fileID: 0}") +
                "    dimension: 1\n")
 
+    # Bloom. Threshold is above 1.0 on purpose: the grade already sits at -0.35 exposure, so only the
+    # emissive fixture tubes (m_EmissionColor 1.45,1.50,1.25) and the bunker sign clear it. A
+    # threshold of 0.9 would have bloomed the galvanised steel and the grain spill too, which reads
+    # as haze rather than as a working light. Tint is cold white so the halo stays fluorescent.
+    out.append(header("Bloom", ids["Bloom"]) +
+               "  skipIterations:\n" + ov(True, "1") +
+               "  threshold:\n" + ov(True, "1.05") +
+               "  intensity:\n" + ov(True, "0.5") +
+               "  scatter:\n" + ov(True, "0.62") +
+               "  clamp:\n" + ov(False, "65472") +
+               "  tint:\n" + ov(True, "{r: 0.909, g: 0.909, b: 0.941, a: 1}") +
+               "  highQualityFiltering:\n" + ov(True, "1") +
+               "  downscale:\n" + ov(False, "0") +
+               "  maxIterations:\n" + ov(False, "6") +
+               "  dirtTexture:\n" + ov(False, "{fileID: 0}") +
+               "    dimension: 1\n" +
+               "  dirtIntensity:\n" + ov(False, "0") +
+               "\n")
+
+    out.append(header("DepthOfField", ids["DepthOfField"]) +
+               "  mode:\n" + ov(True, f(DOF_MODE)) +
+               "  gaussianStart:\n" + ov(False, "10") +
+               "  gaussianEnd:\n" + ov(False, "30") +
+               "  gaussianMaxRadius:\n" + ov(False, "1") +
+               "  highQualitySampling:\n" + ov(False, "0") +
+               "  focusDistance:\n" + ov(True, f(DOF_FOCUS_DISTANCE_M)) +
+               "  aperture:\n" + ov(True, f(DOF_APERTURE_FSTOP)) +
+               "  focalLength:\n" + ov(True, f(DOF_FOCAL_LENGTH_MM)) +
+               "  bladeCount:\n" + ov(False, "5") +
+               "  bladeCurvature:\n" + ov(False, "1") +
+               "  bladeRotation:\n" + ov(False, "0") +
+               "\n")
+
+    # The warm-light / cold-shadow split that gives the depot its only two temperatures. Vector4
+    # channels are (r, g, b, exposure-ish bias); shadows lean blue, highlights lean toward the
+    # fixtures' amber, midtones stay neutral so skin and concrete do not tint.
+    out.append(header("ShadowsMidtonesHighlights", ids["ShadowsMidtonesHighlights"]) +
+               "  shadows:\n" + ov(True, "{x: 0.92, y: 0.97, z: 1.12, w: 0}") +
+               "  midtones:\n" + ov(True, "{x: 1, y: 1, z: 1, w: 0}") +
+               "  highlights:\n" + ov(True, "{x: 1.08, y: 1.02, z: 0.9, w: 0}") +
+               "  shadowsStart:\n" + ov(True, "0") +
+               "  shadowsEnd:\n" + ov(True, "0.32") +
+               "  highlightsStart:\n" + ov(True, "0.5") +
+               "  highlightsEnd:\n" + ov(True, "1") +
+               "\n")
+
     out.append("--- !u!114 &11400000\nMonoBehaviour:\n"
                "  m_ObjectHideFlags: 0\n"
                "  m_CorrespondingSourceObject: {fileID: 0}\n"
@@ -319,7 +498,8 @@ def volume_profile_yaml():
                "  components:\n%s"
                % (SCRIPT_GUIDS["VolumeProfile"],
                   "".join("  - {fileID: %d}\n" % ids[k]
-                          for k in ("Tonemapping", "ColorAdjustments", "Vignette", "FilmGrain"))))
+                          for k in ("Tonemapping", "ColorAdjustments", "Vignette", "FilmGrain",
+                                    "Bloom", "DepthOfField", "ShadowsMidtonesHighlights"))))
 
     return "\n".join(out)
 
