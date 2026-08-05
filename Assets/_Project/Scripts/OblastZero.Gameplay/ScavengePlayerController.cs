@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using OblastZero.Core;
+using OblastZero.Services;
 
 namespace OblastZero.Gameplay
 {
@@ -11,6 +12,11 @@ namespace OblastZero.Gameplay
     /// continuous center-screen look-raycast (drives the HUD prompt via <see cref="ScavengeTargetChangedEvent"/>),
     /// and an interact key that grabs whatever the crosshair is currently on. Driven by the new Input System
     /// (device polling — no action asset required).
+    ///
+    /// Also owns the two things that hang off that same raycast: the hover highlight on whatever the
+    /// crosshair is currently on (<see cref="PickupHoverHighlight"/>), and the ground ring showing how
+    /// far the player's reach extends. Both are presentation, but both are driven by state only this
+    /// class knows, so they live here rather than re-running the raycast somewhere else.
     ///
     /// Requires Active Input Handling = "Input System Package (New)" or "Both" (Project Settings → Player).
     /// </summary>
@@ -26,24 +32,71 @@ namespace OblastZero.Gameplay
         [Tooltip("The camera transform (a child of this object). Auto-bound to Camera.main if left empty.")]
         [SerializeField] private Transform cameraPivot;
         [SerializeField] private float lookSensitivity = 0.1f;
+
+        [Tooltip("Gamepad right-stick look speed, in degrees per second at full deflection. Applied " +
+                 "with Time.deltaTime; mouse delta is not, because it is already a per-frame quantity.")]
+        [SerializeField] private float stickLookDegreesPerSecond = 220f;
         [SerializeField] private float pitchClampDegrees = 85f;
 
         [Header("Interaction")]
-        [SerializeField] private float interactRange = 3f;
+        [Tooltip("Crosshair reach in metres. Mirrors BalanceConstants.SCAVENGE_INTERACTION_RANGE.")]
+        [SerializeField] private float interactRange = BalanceConstants.SCAVENGE_INTERACTION_RANGE;
         [SerializeField] private LayerMask interactMask = ~0;
+
+        [Header("Range Ring")]
+        [Tooltip("Draw a ground ring at the interaction radius under the player.")]
+        [SerializeField] private bool showInteractionRing = true;
+
+        [Tooltip("Transparent unlit material for the ring. Generated as M_RangeRing by " +
+                 "tools/generate_scavenge_scene.py; the ring is skipped when this is empty.")]
+        [SerializeField] private Material interactionRingMaterial;
 
         /// <summary>Raised when the player presses interact while looking at a pickup in range.</summary>
         public event Action<ScavengePickup> PickupRequested;
 
+        /// <summary>Crosshair reach in metres, as the raycast actually uses it.</summary>
+        public float InteractRange => interactRange;
+
+        /// <summary>
+        /// Raised when the player presses the pause action. The owning phase state decides what a
+        /// pause means — this controller does not open menus and never touches Time.timeScale.
+        /// </summary>
+        public event Action PauseRequested;
+
+        /// <summary>
+        /// While true the controller ignores movement, look and interact. The phase state sets it for
+        /// the duration of the pause overlay. It is a flag rather than <c>enabled = false</c> because
+        /// disabling the component would run OnDisable, which unlocks the cursor and clears the look
+        /// target — both of which must survive a pause so resuming puts the player back where they were.
+        /// </summary>
+        public bool InputSuspended { get; set; }
+
         private CharacterController _controller;
+        private PreferencesService _preferences;
         private float _pitch;
         private float _verticalVelocity;
         private ScavengePickup _lookTarget;
+        private PickupHoverHighlight _hovered;
 
         private void Awake()
         {
             _controller = GetComponent<CharacterController>();
             if (cameraPivot == null && Camera.main != null) cameraPivot = Camera.main.transform;
+
+            // Bindings are resolved through the service on every read rather than cached as keys, so a
+            // rebind made in the pause overlay takes effect the moment the overlay closes.
+            if (!ServiceLocator.TryGet<PreferencesService>(out _preferences) || _preferences == null)
+            {
+                Debug.LogWarning("[ScavengePlayerController] No PreferencesService registered — using " +
+                                 "standard-issue key bindings.");
+            }
+
+            // Footsteps are an implementation detail of moving, not something to wire in the scene: the
+            // component reads this object's CharacterController and has no designer-facing state the
+            // controller does not already own.
+            if (GetComponent<FootstepAudio>() == null) gameObject.AddComponent<FootstepAudio>();
+
+            if (showInteractionRing) BuildInteractionRing();
         }
 
         private void OnEnable() => SetCursorLocked(true);
@@ -57,40 +110,107 @@ namespace OblastZero.Gameplay
                 _lookTarget = null;
                 EventBus.Raise(new ScavengeTargetChangedEvent { HasTarget = false, Verb = string.Empty });
             }
+            // And drop the highlight, or the pickup keeps its emissive boost into the next phase.
+            ClearHover();
         }
 
         private void Update()
         {
             var keyboard = Keyboard.current;
-            if (keyboard == null) return; // no keyboard bound (e.g., old input backend) — fail safe
+            var gamepad = Gamepad.current;
 
-            HandleLook(Mouse.current);
-            HandleMovement(keyboard);
+            // Pause is read even while suspended: it is how a player closes the overlay with the same key
+            // or button that opened it.
+            if (PausePressed(keyboard, gamepad)) PauseRequested?.Invoke();
+            if (InputSuspended) return;
+
+            // A pad-only player has neither keyboard nor mouse. Neither device may be assumed present.
+            if (keyboard == null && gamepad == null) return;
+
+            HandleLook(Mouse.current, gamepad);
+            HandleMovement(keyboard, gamepad);
             UpdateLookTarget();
 
-            if (keyboard.eKey.wasPressedThisFrame) TryInteract();
-            if (keyboard.escapeKey.wasPressedThisFrame)
-                SetCursorLocked(Cursor.lockState != CursorLockMode.Locked);
+            if (InteractPressed(keyboard, gamepad)) TryInteract();
         }
 
-        private void HandleLook(Mouse mouse)
+        // ── Input reading ────────────────────────────────────────────────────
+        // Devices are polled directly rather than through an .inputactions asset. That is the pattern this
+        // controller already used, and it is what lets the rebinding screen work against a plain Key enum
+        // instead of runtime rebinding overrides on an action map — much the simpler of the two for seven
+        // fixed actions.
+
+        /// <summary>The key currently bound to an action, or its shipped default without preferences.</summary>
+        private Key BoundKey(OblastAction action)
+            => _preferences != null
+                ? _preferences.Current.GetBinding(action)
+                : InputBindingTable.DefaultFor(action);
+
+        /// <summary>True while the key bound to <paramref name="action"/> is held.</summary>
+        private bool Held(Keyboard keyboard, OblastAction action)
         {
-            if (mouse == null || cameraPivot == null) return;
+            if (keyboard == null) return false;
+            Key key = BoundKey(action);
+            return key != Key.None && keyboard[key].isPressed;
+        }
 
-            Vector2 delta = mouse.delta.ReadValue() * lookSensitivity;
+        /// <summary>True on the frame the key bound to <paramref name="action"/> goes down.</summary>
+        private bool Pressed(Keyboard keyboard, OblastAction action)
+        {
+            if (keyboard == null) return false;
+            Key key = BoundKey(action);
+            return key != Key.None && keyboard[key].wasPressedThisFrame;
+        }
+
+        private bool InteractPressed(Keyboard keyboard, Gamepad gamepad)
+            => Pressed(keyboard, OblastAction.Interact) ||
+               (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame);
+
+        private bool PausePressed(Keyboard keyboard, Gamepad gamepad)
+            => Pressed(keyboard, OblastAction.Pause) ||
+               (gamepad != null && gamepad.startButton.wasPressedThisFrame);
+
+        private void HandleLook(Mouse mouse, Gamepad gamepad)
+        {
+            if (cameraPivot == null) return;
+
+            Vector2 delta = Vector2.zero;
+
+            // Mouse delta is already a per-frame pixel count, so it must NOT be scaled by deltaTime; stick
+            // input is a position in [-1,1] and must be, or look speed becomes frame-rate dependent. Getting
+            // this backwards is the classic pad-look bug: fine at 60 fps, spinning at 144.
+            if (mouse != null) delta += mouse.delta.ReadValue() * lookSensitivity;
+            if (gamepad != null)
+                delta += gamepad.rightStick.ReadValue() * (stickLookDegreesPerSecond * Time.deltaTime);
+
+            if (delta == Vector2.zero) return;
+
             transform.Rotate(Vector3.up, delta.x);
-
             _pitch = Mathf.Clamp(_pitch - delta.y, -pitchClampDegrees, pitchClampDegrees);
             cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
         }
 
-        private void HandleMovement(Keyboard keyboard)
+        private void HandleMovement(Keyboard keyboard, Gamepad gamepad)
         {
-            float x = (keyboard.dKey.isPressed ? 1f : 0f) - (keyboard.aKey.isPressed ? 1f : 0f);
-            float z = (keyboard.wKey.isPressed ? 1f : 0f) - (keyboard.sKey.isPressed ? 1f : 0f);
+            float x = (Held(keyboard, OblastAction.MoveRight) ? 1f : 0f) -
+                      (Held(keyboard, OblastAction.MoveLeft) ? 1f : 0f);
+            float z = (Held(keyboard, OblastAction.MoveForward) ? 1f : 0f) -
+                      (Held(keyboard, OblastAction.MoveBackward) ? 1f : 0f);
+
+            bool sprinting = Held(keyboard, OblastAction.Sprint);
+
+            if (gamepad != null)
+            {
+                // The stick ADDS to the keyboard rather than replacing it, so a player using both is not
+                // fighting their own input. ClampMagnitude below keeps the sum at or under full speed.
+                Vector2 stick = gamepad.leftStick.ReadValue();
+                x += stick.x;
+                z += stick.y;
+                if (gamepad.buttonEast.isPressed) sprinting = true;
+            }
 
             Vector3 horizontal = Vector3.ClampMagnitude(transform.right * x + transform.forward * z, 1f);
-            float speed = keyboard.leftShiftKey.isPressed ? sprintSpeed : walkSpeed;
+            float speed = sprinting ? sprintSpeed : walkSpeed;
 
             if (_controller.isGrounded && _verticalVelocity < 0f) _verticalVelocity = -2f;
             _verticalVelocity += gravity * Time.deltaTime;
@@ -99,7 +219,11 @@ namespace OblastZero.Gameplay
             _controller.Move(motion * Time.deltaTime);
         }
 
-        /// <summary>Per-frame raycast from the crosshair; raises an event when the target changes so the HUD updates.</summary>
+        /// <summary>
+        /// Per-frame raycast from the crosshair. Raises an event when the target changes so the HUD
+        /// updates, and moves the hover highlight with it. The early return on an unchanged target is
+        /// what keeps this to one highlight transition per change instead of one per frame.
+        /// </summary>
         private void UpdateLookTarget()
         {
             ScavengePickup target = RaycastPickup();
@@ -111,6 +235,93 @@ namespace OblastZero.Gameplay
                 HasTarget = target != null,
                 Verb = target != null ? target.InteractionVerb : string.Empty
             });
+
+            SetHover(target != null ? target.GetComponent<PickupHoverHighlight>() : null);
+        }
+
+        private void SetHover(PickupHoverHighlight next)
+        {
+            if (ReferenceEquals(next, _hovered)) return;
+            if (_hovered != null) _hovered.OnHoverEnd();
+            _hovered = next;
+            if (_hovered != null) _hovered.OnHoverStart();
+        }
+
+        private void ClearHover()
+        {
+            if (_hovered == null) return;
+            _hovered.OnHoverEnd();
+            _hovered = null;
+        }
+
+        /// <summary>
+        /// A flat ring on the ground at the interaction radius. The mesh is generated rather than
+        /// authored so the radius always matches <see cref="interactRange"/> — a prefab quad scaled to
+        /// fit would silently lie the moment the reach is retuned.
+        ///
+        /// It hangs off the player root and is deliberately not parented to the camera, so it does not
+        /// pitch with mouse look. Y sits just above the floor plane to stay out of z-fighting.
+        /// </summary>
+        private void BuildInteractionRing()
+        {
+            if (interactionRingMaterial == null)
+            {
+                Debug.LogWarning("[ScavengePlayerController] No interaction ring material assigned — " +
+                                 "skipping the range ring.");
+                return;
+            }
+
+            var go = new GameObject("Interaction_Range_Ring");
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            go.transform.localRotation = Quaternion.identity;
+
+            var renderer = go.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = interactionRingMaterial;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+
+            go.AddComponent<MeshFilter>().sharedMesh =
+                BuildRingMesh(interactRange - 0.06f, interactRange, 64);
+        }
+
+        /// <summary>An annulus in the XZ plane, wound so it faces +Y.</summary>
+        private static Mesh BuildRingMesh(float innerRadius, float outerRadius, int segments)
+        {
+            segments = Mathf.Max(8, segments);
+            var vertices = new Vector3[segments * 2];
+            var triangles = new int[segments * 6];
+
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = i / (float)segments * Mathf.PI * 2f;
+                float cos = Mathf.Cos(angle);
+                float sin = Mathf.Sin(angle);
+                vertices[i * 2] = new Vector3(cos * innerRadius, 0f, sin * innerRadius);
+                vertices[i * 2 + 1] = new Vector3(cos * outerRadius, 0f, sin * outerRadius);
+            }
+
+            for (int i = 0; i < segments; i++)
+            {
+                int a = i * 2;
+                int b = i * 2 + 1;
+                int c = ((i + 1) % segments) * 2;
+                int d = ((i + 1) % segments) * 2 + 1;
+
+                triangles[i * 6] = a;
+                triangles[i * 6 + 1] = c;
+                triangles[i * 6 + 2] = b;
+                triangles[i * 6 + 3] = b;
+                triangles[i * 6 + 4] = c;
+                triangles[i * 6 + 5] = d;
+            }
+
+            var mesh = new Mesh { name = "InteractionRangeRing" };
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         private void TryInteract()
