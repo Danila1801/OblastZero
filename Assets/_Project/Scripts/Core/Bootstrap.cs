@@ -40,11 +40,22 @@ namespace OblastZero.Core
             {
                 Instantiate(gameManagerPrefab);
                 Debug.Log("[Bootstrap] GameManager prefab instantiated.");
+                return;
             }
+
+            // No prefab is the normal case in _Bootstrap.unity: the GameManager is authored directly into the
+            // scene there, so it boots itself. Bootstrap still has to run in that scene for the Steam layer,
+            // and it runs first (execution order -2000 vs -1000) — which means GameManager.Instance is still
+            // null at this point even though the component is sitting right there in the hierarchy. Checking
+            // the scene rather than the singleton is what tells the two situations apart; without it, adding
+            // Bootstrap to the scene reports "Game cannot start" on every boot of a game that starts fine.
+            var sceneManager = FindAnyObjectByType<GameManager>(FindObjectsInactive.Include);
+            if (sceneManager != null)
+                Debug.Log($"[Bootstrap] GameManager authored in the scene ('{sceneManager.gameObject.name}') — " +
+                          "it self-initializes; no prefab needed.");
             else
-            {
-                Debug.LogError("[Bootstrap] No GameManager prefab assigned in Inspector. Game cannot start.");
-            }
+                Debug.LogError("[Bootstrap] No GameManager prefab assigned and none present in the scene. " +
+                               "Game cannot start.");
         }
 
         /// <summary>
