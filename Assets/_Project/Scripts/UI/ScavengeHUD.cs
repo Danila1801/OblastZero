@@ -1,11 +1,13 @@
 // Assets/_Project/Scripts/UI/ScavengeHUD.cs
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using OblastZero.Core;
 using OblastZero.Data;
+using OblastZero.Services;
 
 namespace OblastZero.UI
 {
@@ -43,6 +45,9 @@ namespace OblastZero.UI
         [Tooltip("Seconds the 'TOO HEAVY' refusal notice stays on screen.")]
         [SerializeField] private float refusalNoticeSeconds = 1.6f;
 
+        [Tooltip("Seconds the load bar stays red after a refusal before easing back to its normal tint.")]
+        [SerializeField] private float loadFlashSeconds = 0.3f;
+
         private TextMeshProUGUI _countdown;
         private TextMeshProUGUI _prompt;
         private TextMeshProUGUI _grabbedBody;
@@ -58,6 +63,7 @@ namespace OblastZero.UI
         private float _refusalHideAt = -1f;
         private float _loadKg;
         private float _capacityKg = BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG;
+        private float _loadFlashUntil = -1f;
 
         private void Awake() => BuildUI();
 
@@ -101,6 +107,14 @@ namespace OblastZero.UI
                 _refusalHideAt = -1f;
                 if (_refusal != null) _refusal.gameObject.SetActive(false);
             }
+
+            // Ease the load bar out of its refusal flash. Repainting only while the flash is live keeps
+            // this off the hot path for the other 59 seconds of the phase.
+            if (_loadFlashUntil > 0f)
+            {
+                if (Time.unscaledTime >= _loadFlashUntil) _loadFlashUntil = -1f;
+                SetLoad(_loadKg, _capacityKg);
+            }
         }
 
         // ---- Event handlers ----
@@ -125,7 +139,12 @@ namespace OblastZero.UI
             // The pickup stayed on the floor. Say why in one line, in the Oblast's register.
             var db = GameManager.Instance != null ? GameManager.Instance.Database : null;
             string name = ResolveItemName(db, e.ItemDataId);
-            ShowRefusal($"OVER CAPACITY — {name} ({e.ItemWeightKg:0.#} kg) NOT LOGGED");
+            // Numbers are formatted here, invariantly, and passed in as strings. Leaving a "{1:0.#}"
+            // specifier inside a translated template hands every translator a chance to break number
+            // formatting in a way that only shows up as a FormatException at runtime.
+            ShowRefusal(LocalizedStrings.Get(UIStringKeys.ScavengeOverCapacity,
+                                             name, e.ItemWeightKg.ToString("0.#", CultureInfo.InvariantCulture)));
+            _loadFlashUntil = Time.unscaledTime + loadFlashSeconds;
             SetLoad(e.CurrentKg, e.CapacityKg);
         }
 
@@ -145,7 +164,40 @@ namespace OblastZero.UI
         {
             if (_prompt == null) return;
             _prompt.gameObject.SetActive(show);
-            if (show) _prompt.text = $"[E] {(string.IsNullOrEmpty(verb) ? "Take" : verb)}";
+            if (!show) return;
+
+            // The key cap comes from the player's own binding, not from a hardcoded "E". A player who
+            // rebound Interact and still reads "[E] Take" on every pickup has been told the wrong thing by
+            // the game itself, which is worse than no prompt at all.
+            _prompt.text = LocalizedStrings.Get(UIStringKeys.ScavengePrompt, InteractKeyCap(), LocalizeVerb(verb));
+        }
+
+        /// <summary>
+        /// What to print in the prompt's brackets. Falls back to the shipped default when preferences are
+        /// unavailable — the prompt must still say something usable in a scene run without a full boot.
+        /// </summary>
+        private static string InteractKeyCap()
+        {
+            var key = ServiceLocator.TryGet<PreferencesService>(out var prefs) && prefs != null
+                ? prefs.Current.GetBinding(OblastAction.Interact)
+                : InputBindingTable.DefaultFor(OblastAction.Interact);
+            return InputBindingTable.DisplayName(key);
+        }
+
+        /// <summary>
+        /// Maps the pickup's interaction verb onto a localization key. The verb arrives from
+        /// ScavengePickup as an English word because that is what the component's serialized field holds;
+        /// anything unrecognised falls through as-is rather than being dropped, so a pickup that invents a
+        /// new verb still labels itself.
+        /// </summary>
+        private static string LocalizeVerb(string verb)
+        {
+            if (string.IsNullOrEmpty(verb)) return LocalizedStrings.Get(UIStringKeys.ScavengeVerbTake);
+            if (verb.Equals("Take", System.StringComparison.OrdinalIgnoreCase))
+                return LocalizedStrings.Get(UIStringKeys.ScavengeVerbTake);
+            if (verb.Equals("Rescue", System.StringComparison.OrdinalIgnoreCase))
+                return LocalizedStrings.Get(UIStringKeys.ScavengeVerbRescue);
+            return verb;
         }
 
         /// <summary>Reads the live load straight off the manager, so the HUD is correct on first frame.</summary>
@@ -171,9 +223,20 @@ namespace OblastZero.UI
                        : fraction >= loadWarnFraction ? warnColor
                        : normalColor;
 
+            // A refusal drives the bar hard red and lets it fall back. The blend, rather than a hard
+            // swap, is what makes it read as the bar reacting instead of as the load having changed —
+            // the load has NOT changed, which is the entire point of the message.
+            if (_loadFlashUntil > 0f && loadFlashSeconds > 0f)
+            {
+                float remaining = Mathf.Clamp01((_loadFlashUntil - Time.unscaledTime) / loadFlashSeconds);
+                tint = Color.Lerp(tint, dangerColor, remaining);
+            }
+
             if (_loadLabel != null)
             {
-                _loadLabel.text = $"{_loadKg:0.0} / {_capacityKg:0.#} KG";
+                _loadLabel.text = LocalizedStrings.Get(UIStringKeys.ScavengeLoadValue,
+                    _loadKg.ToString("0.0", CultureInfo.InvariantCulture),
+                    _capacityKg.ToString("0.#", CultureInfo.InvariantCulture));
                 _loadLabel.color = tint;
             }
 
@@ -203,7 +266,7 @@ namespace OblastZero.UI
 
             if (run == null)
             {
-                _grabbedBody.text = "<i>nothing yet</i>";
+                _grabbedBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.ScavengeGrabbedEmpty)}</i>";
                 return;
             }
 
@@ -229,11 +292,13 @@ namespace OblastZero.UI
             foreach (var c in run.RescuedCrew)
             {
                 string name = ResolveCrewName(db, c.crewDataId);
-                sb.AppendLine($"{name}  <color=#8FD3FF>(crew)</color>");
+                sb.AppendLine($"{name}  <color=#8FD3FF>{LocalizedStrings.Get(UIStringKeys.ScavengeCrewTag)}</color>");
             }
 
             string text = sb.ToString().TrimEnd();
-            _grabbedBody.text = string.IsNullOrEmpty(text) ? "<i>nothing yet</i>" : text;
+            _grabbedBody.text = string.IsNullOrEmpty(text)
+                ? $"<i>{LocalizedStrings.Get(UIStringKeys.ScavengeGrabbedEmpty)}</i>"
+                : text;
         }
 
         private static string ResolveItemName(GameDatabase db, string id)
@@ -287,7 +352,7 @@ namespace OblastZero.UI
             var subLabel = CreateText("CountdownLabel", root, 22f, FontStyles.Normal, TextAlignmentOptions.Center);
             SetTop(subLabel.rectTransform, new Vector2(0f, -168f), new Vector2(600f, 30f));
             subLabel.color = new Color(1f, 1f, 1f, 0.55f);
-            subLabel.text = "SECONDS TO REACH THE BUNKER";
+            subLabel.text = LocalizedStrings.Get(UIStringKeys.ScavengeCountdownLabel);
 
             // Interaction prompt — just below the crosshair, hidden until a target is in view.
             _prompt = CreateText("Prompt", root, 30f, FontStyles.Bold, TextAlignmentOptions.Center);
@@ -299,24 +364,26 @@ namespace OblastZero.UI
             var header = CreateText("GrabbedHeader", root, 24f, FontStyles.Bold, TextAlignmentOptions.BottomLeft);
             SetBottomLeft(header.rectTransform, new Vector2(40f, 312f), new Vector2(440f, 30f));
             header.color = new Color(1f, 1f, 1f, 0.85f);
-            header.text = "GRABBED";
+            header.text = LocalizedStrings.Get(UIStringKeys.ScavengeGrabbedHeader);
 
             _grabbedBody = CreateText("GrabbedBody", root, 22f, FontStyles.Normal, TextAlignmentOptions.BottomLeft);
             SetBottomLeft(_grabbedBody.rectTransform, new Vector2(40f, 96f), new Vector2(460f, 214f));
             _grabbedBody.color = new Color(1f, 1f, 1f, 0.8f);
-            _grabbedBody.text = "<i>nothing yet</i>";
+            _grabbedBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.ScavengeGrabbedEmpty)}</i>";
 
             // Carry load — under the grabbed list. The cap is the whole decision in Phase A, so it gets
             // a bar the player can read at a glance while sprinting, not just a number.
             var loadHeader = CreateText("LoadHeader", root, 20f, FontStyles.Bold, TextAlignmentOptions.BottomLeft);
             SetBottomLeft(loadHeader.rectTransform, new Vector2(40f, 64f), new Vector2(200f, 26f));
             loadHeader.color = new Color(1f, 1f, 1f, 0.85f);
-            loadHeader.text = "LOAD";
+            loadHeader.text = LocalizedStrings.Get(UIStringKeys.ScavengeLoadHeader);
 
             _loadLabel = CreateText("LoadValue", root, 20f, FontStyles.Bold, TextAlignmentOptions.BottomRight);
             SetBottomLeft(_loadLabel.rectTransform, new Vector2(240f, 64f), new Vector2(260f, 26f));
             _loadLabel.color = normalColor;
-            _loadLabel.text = $"0.0 / {(float)BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG:0.#} KG";
+            _loadLabel.text = LocalizedStrings.Get(UIStringKeys.ScavengeLoadValue, "0.0",
+                ((float)BalanceConstants.SCAVENGE_MAX_CARRY_WEIGHT_KG)
+                    .ToString("0.#", CultureInfo.InvariantCulture));
 
             var track = CreateImage(root, "LoadBarTrack", new Color(1f, 1f, 1f, 0.18f));
             SetBottomLeft(track.rectTransform, new Vector2(40f, 44f), new Vector2(460f, 10f));
@@ -339,7 +406,7 @@ namespace OblastZero.UI
             var emission = CreateText("Emission", root, 64f, FontStyles.Bold, TextAlignmentOptions.Center);
             SetCenter(emission.rectTransform, new Vector2(0f, 130f), new Vector2(1000f, 100f));
             emission.color = dangerColor;
-            emission.text = "THE EMISSION HITS";
+            emission.text = LocalizedStrings.Get(UIStringKeys.ScavengeEmission);
             emission.gameObject.SetActive(false);
             _emissionLabel = emission.gameObject;
         }

@@ -23,6 +23,32 @@ namespace OblastZero.Core
         /// <summary>If true, consumables (food, water, meds) are wiped on death regardless of salvage rate.</summary>
         public const bool CONSUMABLES_LOST_ON_DEATH = true;
 
+        // ─── Meta-progression: Salvage Tokens ───────────────────────────────────
+        // The between-run currency. Awarded by RunSummary.SalvageTokensAwarded, spent in the Supply Office
+        // against MetaUnlockCatalog. The whole catalogue costs 275 tokens; the numbers below are set so that
+        // reaching the day-15 endgame tenure pays roughly 30 from days alone, putting the cheap unlocks
+        // inside one good run and the catalogue inside something under ten. Always something in reach.
+
+        /// <summary>Tokens per day survived. The backbone of the award — tenure is the thing runs are scored on.</summary>
+        public const float TOKENS_PER_DAY_SURVIVED = 2f;
+
+        /// <summary>
+        /// Tokens per recovered item. Deliberately a fraction: a haul should reward, not dominate. The count
+        /// this multiplies is already salvage-adjusted (33% on a wipe, 100% on a win), so the death penalty
+        /// flows through here rather than being applied a second time.
+        /// </summary>
+        public const float TOKENS_PER_ITEM_RECOVERED = 0.5f;
+
+        /// <summary>
+        /// Tokens per point of faction reputation, summed across all three factions. Negative standing
+        /// subtracts, so a run that burned every bridge is paid less than one that stayed quiet — but the
+        /// total award floors at zero, so it can never go negative.
+        /// </summary>
+        public const float TOKENS_PER_REPUTATION_POINT = 0.1f;
+
+        /// <summary>Flat bonus for a run that reached any of the four endings.</summary>
+        public const int TOKENS_VICTORY_BONUS = 50;
+
         // ─── Scavenge Phase (3D, Phase A) ───────────────────────────────────────
         public const float SCAVENGE_TIMER_SECONDS = 60f;
         public const float SCAVENGE_TIMER_WARNING_THRESHOLD = 15f;  // UI flashes red below this
@@ -42,6 +68,38 @@ namespace OblastZero.Core
         /// </summary>
         public const int   SCAVENGE_MIN_CARRY_WEIGHT_KG = 8;
         public const float SCAVENGE_PICKUP_LERP_DURATION = 0.25f;   // SmoothDamp time for instant-pickup visual
+        /// <summary>
+        /// How far the crosshair reaches to grab a pickup, in metres. This is the shipped value that
+        /// Scavenge.unity already serializes onto ScavengePlayerController and that the depot's shelf
+        /// depths were laid out against — it is recorded here so the hover-highlight and the range ring
+        /// read the same number the raycast does, not so the reach can be quietly retuned. Changing it
+        /// changes which shelf items can be taken from the aisle.
+        /// </summary>
+        public const float SCAVENGE_INTERACTION_RANGE = 3f;
+
+        // ─── Emission VFX (3D, Phase A) ─────────────────────────────────────────────────
+        // The escalation thresholds are SCAVENGE_TIMER_WARNING_THRESHOLD and
+        // SCAVENGE_TIMER_CRITICAL_THRESHOLD above; EmissionVfxController reads those directly rather
+        // than declaring its own copies, so the siren, the HUD colour and the screen effects can never
+        // disagree about when the panic starts.
+
+        /// <summary>Seconds remaining at which camera shake begins. Later than the visual warning.</summary>
+        public const float EMISSION_VFX_SHAKE_SECONDS = 10f;
+
+        /// <summary>Camera shake amplitude in metres at the moment shake begins.</summary>
+        public const float EMISSION_VFX_SHAKE_MIN_METRES = 0.02f;
+
+        /// <summary>Camera shake amplitude in metres at zero seconds remaining.</summary>
+        public const float EMISSION_VFX_SHAKE_MAX_METRES = 0.08f;
+
+        /// <summary>Per-frame probability of a white flash frame at the warning threshold.</summary>
+        public const float EMISSION_VFX_FLASH_CHANCE_AT_WARNING = 0.02f;
+
+        /// <summary>Per-frame probability of a white flash frame at the critical threshold.</summary>
+        public const float EMISSION_VFX_FLASH_CHANCE_AT_CRITICAL = 0.15f;
+
+        /// <summary>Field of view the camera punches to when the emission lands, in degrees.</summary>
+        public const float EMISSION_VFX_FOV_PUNCH_DEGREES = 75f;
 
         // ─── Bunker Phase (2D, Phase B) ─────────────────────────────────────────
         public const int   BUNKER_DAY_LENGTH_SECONDS = 0;           // 0 = turn-based, no real-time
@@ -102,6 +160,13 @@ namespace OblastZero.Core
         public const string SAVE_FOLDER_NAME = "Saves";
         public const string PROFILE_SAVE_FILE = "profile.json";
         public const string EXPEDITION_SAVE_FILE = "expedition.json";
+        /// <summary>
+        /// Third channel: device-local player preferences (volume, display, key bindings, language).
+        /// Separate from the profile channel because preferences describe the MACHINE, not the player's
+        /// progression — putting them in the profile would push one machine's resolution and rebinds onto
+        /// every other machine through Steam Cloud. See <c>PlayerPreferencesData</c>.
+        /// </summary>
+        public const string PREFERENCES_SAVE_FILE = "preferences.json";
         public const string SAVE_BACKUP_SUFFIX = ".bak";
         public const int    MAX_SAVE_SLOTS = 3;
 
