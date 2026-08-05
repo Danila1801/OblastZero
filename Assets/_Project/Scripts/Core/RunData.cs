@@ -74,6 +74,18 @@ namespace OblastZero.Core
         /// <summary>Added to every crew member's maximum sanity for this run.</summary>
         public int crewMaxSanityBonus;
 
+        /// <summary>
+        /// Times a Drowned Census-Taker (MTN-Β-04/DC) has completed an entry for this run. Stacks; the
+        /// health and sanity it costs are already applied to the operator's <see cref="CrewInstance"/>,
+        /// so this is the tally rather than the effect.
+        ///
+        /// <para>It lives on the run rather than on the mutant because registrations must outlast the
+        /// scavenge scene, which is destroyed at the transition cutscene, and must survive save/load,
+        /// which a static counter would not. A save written before this field existed deserializes to
+        /// 0 — correct for a run that predates the mutant layer.</para>
+        /// </summary>
+        public int registrationCount;
+
         // RNG (seed + stream counter so a run is fully reproducible from its seed)
         public int rngSeed;
         public int rngStreamCounter;
@@ -104,6 +116,19 @@ namespace OblastZero.Core
         /// reading for every item collected before the anomaly layer shipped.</para>
         /// </summary>
         public bool isDefective;
+
+        /// <summary>
+        /// True when The Editor (MTN-Ψ-09/ED) struck this stack's line off the manifest. The item
+        /// still works — the bible's Editor corrects paperwork, it does not sabotage equipment — but
+        /// the inventory shows [REDACTED] where the name was, so the player knows they are carrying
+        /// something and not what.
+        ///
+        /// <para>Separate from <see cref="isDefective"/> and deliberately not part of stack identity:
+        /// a redacted stack and a clean one of the same item are the same goods, and keeping them
+        /// apart would leak the answer by letting the player count the rows. A save written before
+        /// this field existed deserializes to false.</para>
+        /// </summary>
+        public bool isRedacted;
     }
 
     /// <summary>A concrete crew member instance. instanceId persists if the same member is recruited again.</summary>

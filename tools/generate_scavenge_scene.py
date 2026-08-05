@@ -23,6 +23,7 @@ Run from the project root:  python tools/generate_scavenge_scene.py
 
 import os
 import re
+import struct
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -230,6 +231,25 @@ ANOMALY_ZONES = [
      "Assembly-CSharp::OblastZero.Gameplay.Anomalies.BacklogAnomaly",
      (40.5, 2.0, 5.0), (6.0, 4.0, 5.5),
      "  timeDilationFactor: 0.02\n"),
+]
+
+# ─── Mutant spawn points (bible §5 / BESTIARY.md "MUTANTS") ─────────────────────────────
+#
+# Four corners of the open yard, on ground the walkability flood-fill already proves is standable
+# and connected. They are all >= 25 m from the SW spawn and none sits on the direct route to the
+# bunker, so a Census-Taker is something the player becomes aware of rather than something that
+# appears on top of them.
+#
+# MutantSpawner rejects any point within 18 m of the player at spawn time and falls back to the
+# navigation grid if all four are rejected, so these are a preference rather than a contract. The
+# depot's own threat profile places zero Census-Takers (wrong region for them, per the bible), so
+# at this site the points go unused -- but they ship regardless, so raising the depot's threat is
+# one number in ScavengeSiteCatalog and not a scene regeneration.
+MUTANT_SPAWN_POINTS = [
+    (-46.0, 0.15, -4.0),    # west yard, behind the silo line
+    (34.0, 0.15, -8.0),     # east yard, by the dock ramp
+    (-30.0, 0.15, 24.0),    # north-west, deep in the silo base
+    (18.0, 0.15, 30.0),     # north-east, far end of the warehouse floor
 ]
 
 # The Backlog's haze child. Sized from the zone's own trigger at runtime (BacklogAnomaly.Awake), so
@@ -1001,6 +1021,37 @@ def build():
                f(SCAVENGE_TIMER_CRITICAL_THRESHOLD),
                f(SCAVENGE_TIMER_SECONDS)))
 
+    # -- Hazard read-outs: what is following you, what is being written down, what the room is
+    # doing to time. A second self-building canvas rather than more fields on ScavengeHUD, because
+    # these are exceptional by construction -- most runs show none of them -- and a scene can carry
+    # the base HUD without the hazard layer.
+    hazard_go, _ = sb.obj("Scavenge_Hazard_HUD", parent=sysg)
+    sb.mono(hazard_go, "ScavengeHazardHUD", "Assembly-CSharp::OblastZero.UI.ScavengeHazardHUD",
+            "  registrationNoticeSeconds: 4\n"
+            "  editNoticeSeconds: 3.5\n"
+            "  glitchSeconds: 0.9\n")
+
+    # -- Mutant spawner. Reads the run's site from ScavengeSiteCatalog and spawns to its threat
+    # profile, so the depot's zero Census-Takers and the Reservoir's two are one declaration in the
+    # catalogue rather than a decision re-made in every scene generator.
+    #
+    # Spawn points are the four yard corners, all well clear of the SW spawn and of the direct route,
+    # so a figure is something the player notices rather than something that materialises on them.
+    # At the depot none of them are used -- CensusTakerCount is 0 there -- but they ship anyway, so a
+    # threat retune is a number in the catalogue and not a scene regeneration.
+    spawner_go, spawner_tr = sb.obj("Mutant_Spawner", parent=sysg)
+    spawn_point_ids = []
+    for idx, point in enumerate(MUTANT_SPAWN_POINTS):
+        _, point_tr = sb.obj("Mutant_Spawn_%d" % (idx + 1), parent=spawner_tr, pos=point)
+        spawn_point_ids.append(point_tr)
+
+    sb.mono(spawner_go, "MutantSpawner",
+            "Assembly-CSharp::OblastZero.Gameplay.Mutants.MutantSpawner",
+            "  spawnPoints:\n%s"
+            "  minimumSpawnDistance: 18\n"
+            "  playerWaitTimeout: 10\n"
+            % "".join("  - {fileID: %d}\n" % tid for tid in spawn_point_ids))
+
     # -- Dust field: builds its own ParticleSystem at runtime (see ScavengeDustField's header for
     # why the system is not serialized here). Starts at the player spawn so frame one is already
     # dusty; the component re-centres it on the camera from LateUpdate onward.
@@ -1217,6 +1268,68 @@ def _column_span(solid, x, z):
     return lo, hi
 
 
+NAV_GRID_DIR = "Assets/Data/Resources/Nav"
+
+# Resources key the runtime loads by. No extension: Resources.Load<TextAsset> takes the path
+# without one, and the file must be .bytes on disk for Unity to import it as a TextAsset at all.
+NAV_GRID_RESOURCE = "navgrid_scavenge"
+NAV_GRID_MAGIC = b"OZNAV1\0\0"
+
+# Sentinel written for a cell the Census-Taker may not stand on: solid, unsupported, or walkable
+# but cut off from the spawn island. Chosen as int16 min so it can never collide with a real
+# height: the level's vertical extent is a few metres, encoded in centimetres.
+NAV_IMPASSABLE = -32768
+
+
+class NavGrid(object):
+    """
+    The walkability height-field, packaged for export.
+
+    Deliberately a dumb record rather than a second implementation of the flood-fill: it holds
+    exactly what verify_reachability already computed, so the grid the Census-Taker walks on and
+    the grid that decides whether the level ships can never be two different answers.
+    """
+
+    def __init__(self, x0, z0, step, nx, nz, height, walk, reachable):
+        self.x0, self.z0, self.step = x0, z0, step
+        self.nx, self.nz = nx, nz
+        self.height, self.walk, self.reachable = height, walk, reachable
+
+    def passable_count(self):
+        return sum(1 for i in range(self.nx) for j in range(self.nz)
+                   if self.walk[i][j] and self.reachable[i][j])
+
+    def to_bytes(self):
+        """
+        Little-endian binary, in the order a reader consumes it:
+
+            magic      8 bytes  "OZNAV1\\0\\0"
+            originX    float32  world X of cell (0, *)
+            originZ    float32  world Z of cell (*, 0)
+            step       float32  metres per cell
+            nx, nz     int32    grid dimensions
+            cells      int16 x (nx*nz), row-major over x then z, height in centimetres,
+                                NAV_IMPASSABLE for cells the agent may not occupy
+
+        Heights are centimetres rather than floats: it halves the file, it is exact for a level
+        authored on a 0.5 m grid, and an integer encoding cannot introduce a platform-dependent
+        float formatting difference into a byte-deterministic pipeline.
+        """
+        out = bytearray(NAV_GRID_MAGIC)
+        out += struct.pack("<fffii", self.x0, self.z0, self.step, self.nx, self.nz)
+
+        for i in range(self.nx):
+            for j in range(self.nz):
+                if not (self.walk[i][j] and self.reachable[i][j]):
+                    out += struct.pack("<h", NAV_IMPASSABLE)
+                    continue
+                # Clamped so a freak height cannot alias onto the sentinel.
+                cm = int(round(self.height[i][j] * 100.0))
+                out += struct.pack("<h", max(NAV_IMPASSABLE + 1, min(32767, cm)))
+
+        return bytes(out)
+
+
 def verify_reachability(solids, placed, spawn, bunker_xz, step=0.5):
     """Flood-fill a walkability height-field from the player spawn and confirm the bunker
     trigger and every pickup are actually reachable. Without a live Editor this is the only
@@ -1362,7 +1475,20 @@ def verify_reachability(solids, placed, spawn, bunker_xz, step=0.5):
             problems.append("cannot reach the bunker after taking %s — dead end" % name)
 
     reachable = sum(1 for i in range(nx) for j in range(nz) if from_spawn[i][j])
-    return problems, reachable * step * step
+
+    # The same field, handed on as the runtime navigation grid. This is the whole reason the
+    # Drowned Census-Taker needs no baked NavMesh: the flood-fill above already models the real
+    # CharacterController (h 1.8 / r 0.35 / step 0.32) against the real level geometry, and it has
+    # a negative control proving it detects a sealed route. A NavMesh would be a second, differently
+    # derived answer to the same question, obtainable only from an interactive Editor bake -- a
+    # manual step in an otherwise headless, byte-deterministic pipeline, and one that could silently
+    # disagree with the gate that already decides whether the level is playable.
+    #
+    # Only cells reachable from spawn are exported. An island of walkable floor behind a sealed wall
+    # is walkable and useless: a stalker spawned or pathing into it could never reach the player, and
+    # would stand there looking broken.
+    grid = NavGrid(x0, z0, step, nx, nz, height, walk, from_spawn)
+    return problems, reachable * step * step, grid
 
 
 def verify_placement(solids, placed):
@@ -1578,6 +1704,117 @@ def verify_anomaly_zones():
     return problems
 
 
+def verify_nav_grid(grid, blob, spawn, bunker_xz):
+    """
+    Independent post-check on the exported navigation grid.
+
+    Deliberately re-parses the *bytes*, not the Python object, and runs its own A* over them. The
+    grid the C# will actually read is the byte blob; checking the in-memory object would prove only
+    that the object is fine and leave every encoding bug — wrong endianness, wrong stride, an off-by-
+    one in the row-major order — to be discovered as a Census-Taker walking through a wall.
+
+    Three properties, each of which has been a real failure mode in this pipeline:
+      1. The header round-trips and the payload is exactly nx*nz int16s.
+      2. Spawn and the bunker door both land on passable cells. A grid whose origin or stride is
+         wrong still parses; it just describes a different level.
+      3. The bunker is reachable from spawn by A* over the decoded cells. This is the property the
+         stalker depends on, and it is not implied by (2).
+    """
+    problems = []
+
+    if not blob.startswith(NAV_GRID_MAGIC):
+        return ["magic bytes missing"]
+
+    x0, z0, step, nx, nz = struct.unpack_from("<fffii", blob, len(NAV_GRID_MAGIC))
+    head = len(NAV_GRID_MAGIC) + struct.calcsize("<fffii")
+    expected = head + nx * nz * 2
+
+    if len(blob) != expected:
+        problems.append("payload is %d bytes, expected %d for %dx%d cells"
+                        % (len(blob), expected, nx, nz))
+        return problems
+    if (nx, nz) != (grid.nx, grid.nz):
+        problems.append("header says %dx%d, grid is %dx%d" % (nx, nz, grid.nx, grid.nz))
+    if abs(step - grid.step) > 1e-6:
+        problems.append("header step %s != grid step %s" % (step, grid.step))
+
+    cells = struct.unpack_from("<%dh" % (nx * nz), blob, head)
+
+    def passable(i, j):
+        return 0 <= i < nx and 0 <= j < nz and cells[i * nz + j] != NAV_IMPASSABLE
+
+    def cell_of(x, z):
+        return int(round((x - x0) / step)), int(round((z - z0) / step))
+
+    def nearest_passable(x, z, radius_m=2.5):
+        ci, cj = cell_of(x, z)
+        r = int(radius_m / step)
+        best = None
+        for di in range(-r, r + 1):
+            for dj in range(-r, r + 1):
+                if not passable(ci + di, cj + dj):
+                    continue
+                d = di * di + dj * dj
+                if best is None or d < best[0]:
+                    best = (d, ci + di, cj + dj)
+        return None if best is None else (best[1], best[2])
+
+    start = nearest_passable(spawn[0], spawn[2])
+    goal = nearest_passable(bunker_xz[0], bunker_xz[1])
+
+    if start is None:
+        problems.append("no passable cell within 2.5 m of the player spawn %s" % (spawn,))
+    if goal is None:
+        problems.append("no passable cell within 2.5 m of the bunker door %s" % (bunker_xz,))
+    if problems:
+        return problems
+
+    # Breadth-first is sufficient and cheaper than A* for a pure connectivity proof; the C# side
+    # uses A* because it wants a short path, not merely any path.
+    seen = bytearray(nx * nz)
+    seen[start[0] * nz + start[1]] = 1
+    queue = [start]
+    head_i = 0
+    while head_i < len(queue):
+        i, j = queue[head_i]
+        head_i += 1
+        if (i, j) == goal:
+            break
+        for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            ni, nj = i + di, j + dj
+            if not passable(ni, nj) or seen[ni * nz + nj]:
+                continue
+            seen[ni * nz + nj] = 1
+            queue.append((ni, nj))
+
+    if not seen[goal[0] * nz + goal[1]]:
+        problems.append("bunker door is not reachable from spawn across the exported grid")
+
+    # 4. Every mutant spawn point must be on a passable, spawn-connected cell. MutantSpawner falls
+    #    back to the navigation grid when a point is rejected, so a bad point is not fatal — which is
+    #    exactly why it needs a gate. It would go silently unused, and the level would quietly place
+    #    its stalkers somewhere nobody chose.
+    for idx, point in enumerate(MUTANT_SPAWN_POINTS):
+        pi, pj = cell_of(point[0], point[2])
+        if passable(pi, pj):
+            continue
+        if nearest_passable(point[0], point[2], radius_m=1.5) is not None:
+            problems.append("mutant spawn point %d %s is not on a passable cell "
+                            "(walkable ground is nearby, so it is probably a small offset)"
+                            % (idx + 1, point))
+        else:
+            problems.append("mutant spawn point %d %s is inside geometry or cut off from spawn"
+                            % (idx + 1, point))
+
+    return problems
+
+
+def write_bytes(path, blob):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as fh:
+        fh.write(blob)
+
+
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as fh:
@@ -1671,13 +1908,36 @@ def main():
         raise SystemExit("pickup placement check failed (%d problems)" % len(place_problems))
     print("placement check: all %d pickups clear of geometry and supported" % len(placed))
 
-    reach_problems, area = verify_reachability(solids, placed, PLAYER_SPAWN, (44.0, 27.0))
+    reach_problems, area, nav_grid = verify_reachability(
+        solids, placed, PLAYER_SPAWN, (44.0, 27.0))
     if reach_problems:
         for p in reach_problems:
             print("  FAIL " + p)
         raise SystemExit("reachability check failed (%d problems)" % len(reach_problems))
     print("reachability check: bunker + all %d pickups reachable from spawn "
           "(%.0f m2 walkable)" % (len(placed), area))
+
+    # Navigation grid for the Drowned Census-Taker (MTN-B-04/DC). Same field the gate above just
+    # used, so the stalker cannot path anywhere the level does not consider walkable. Shipped as
+    # .bytes under Resources because a .bin in a Resources folder is not a TextAsset and
+    # Resources.Load<TextAsset> returns null for it -- the same trap documented for the GLB props
+    # in docs/PROP_PIPELINE.md, which cost a session there and is cheap to avoid here.
+    nav_bytes = nav_grid.to_bytes()
+    write_bytes("%s/%s" % (NAV_GRID_DIR, NAV_GRID_RESOURCE + ".bytes"), nav_bytes)
+    write("%s/%s.bytes.meta" % (NAV_GRID_DIR, NAV_GRID_RESOURCE),
+          "fileFormatVersion: 2\nguid: %s\nTextScriptImporter:\n"
+          "  externalObjects: {}\n  userData: \n"
+          "  assetBundleName: \n  assetBundleVariant: \n"
+          % guid_for("NavGrid::" + NAV_GRID_RESOURCE))
+    print("nav grid: %d x %d cells @ %.2f m, %d passable, %d bytes -> %s/%s.bytes"
+          % (nav_grid.nx, nav_grid.nz, nav_grid.step, nav_grid.passable_count(),
+             len(nav_bytes), NAV_GRID_DIR, NAV_GRID_RESOURCE))
+
+    nav_problems = verify_nav_grid(nav_grid, nav_bytes, PLAYER_SPAWN, (44.0, 27.0))
+    if nav_problems:
+        raise SystemExit("nav grid check FAILED:\n  " + "\n  ".join(nav_problems))
+    print("nav grid check: header round-trips, spawn and bunker both passable, "
+          "bunker reachable by A* over the exported bytes")
 
     write(SCENE_PATH, scene_text)
     write(SCENE_PATH + ".meta",

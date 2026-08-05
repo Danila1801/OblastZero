@@ -39,6 +39,9 @@ SCRIPT_GUIDS = {
     "BacklogAnomaly":           "4090922ea27bb9e40a0b1ad0d30d896e",
     "AnomalyAudioCue":          "cf169464cd33cfc428bca99b7a844f54",
     "BacklogMotes":             "922909b762c153644e158b2f9a3af7df",
+    # Phase A mutants (bible SS5 / BESTIARY.md).
+    "MutantSpawner":            "853026c49a3417ff0aa31e8d29876f17",
+    "ScavengeHazardHUD":        "510ffb7fd5c4c648ebd6676e95ba1836",
     # URP / SRP core components
     "UniversalAdditionalCameraData": "a79441f348de89743a2939f4d699eac1",
     "UniversalAdditionalLightData":  "474bcb49853aa07438625e644c072ee6",
@@ -79,7 +82,7 @@ PROJECT_SCRIPTS = (
     "BunkerEntranceTrigger", "ScavengeHUD", "FluorescentFlicker", "ScavengePropDresser",
     "ScavengeDustField", "PickupHoverHighlight", "EmissionVfxController",
     "CarbonCopyAnomaly", "InterviewAnomaly", "BacklogAnomaly", "AnomalyAudioCue",
-    "BacklogMotes",
+    "BacklogMotes", "MutantSpawner", "ScavengeHazardHUD",
 )
 
 _ASSETS_ROOT = os.path.join(
