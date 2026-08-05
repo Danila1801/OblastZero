@@ -141,7 +141,16 @@ namespace OblastZero.UI
                 colorMultiplier = 1f,
                 fadeDuration = 0.08f
             };
+            // Click before the callback: several of these callbacks tear their own screen down, and a
+            // listener registered after would be destroyed along with it before it ever fired.
+            button.onClick.AddListener(OblastUIAudio.PlayClick);
             if (onClick != null) button.onClick.AddListener(() => onClick());
+
+            // Hover/click sound for every button in the game, added here rather than screen by screen:
+            // this factory is the single construction site for buttons (MainMenuUI, RunSetupUI,
+            // RunSummaryUI, EventModalUI all route through it), so wiring audio once means a screen
+            // added later cannot forget it.
+            OblastUIAudio.AttachHover(button.gameObject);
 
             // Hairline along the top edge — reads as a stamped form field rather than a game button.
             var edge = Rect(image.transform, "Edge", Hairline);

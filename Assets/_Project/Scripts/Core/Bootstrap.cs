@@ -1,11 +1,12 @@
 using UnityEngine;
+using OblastZero.Gameplay;
 using OblastZero.Steam;
 
 namespace OblastZero.Core
 {
     /// <summary>
     /// Scene entry point. Place on a GameObject in _Bootstrap.unity.
-    /// Brings up Steam (if available) and then triggers GameManager initialization on Awake.
+    /// Brings up Steam and audio (if available) and then triggers GameManager initialization on Awake.
     /// </summary>
     [DefaultExecutionOrder(-2000)]
     public class Bootstrap : MonoBehaviour
@@ -21,6 +22,10 @@ namespace OblastZero.Core
         [Tooltip("Disable to skip Steam initialization entirely (useful for isolated tests).")]
         [SerializeField] private bool initializeSteam = true;
 
+        [Tooltip("Disable to boot silent. The AudioManager bakes ~5 MB of PCM on startup; turning it " +
+                 "off is the fast path for a headless or automated run.")]
+        [SerializeField] private bool initializeAudio = true;
+
         private void Awake()
         {
             Debug.Log("[Bootstrap] ──────────────────────────────────────────");
@@ -29,6 +34,7 @@ namespace OblastZero.Core
             Debug.Log("[Bootstrap] ──────────────────────────────────────────");
 
             InitializeSteamLayer();
+            InitializeAudioLayer();
 
             if (GameManager.Instance != null)
             {
@@ -56,6 +62,24 @@ namespace OblastZero.Core
             else
                 Debug.LogError("[Bootstrap] No GameManager prefab assigned and none present in the scene. " +
                                "Game cannot start.");
+        }
+
+        /// <summary>
+        /// Boots the AudioManager before the GameManager, for the same reason the Steam bridge goes
+        /// first: it subscribes to GameStateChangedEvent to drive ambience and music, and the state
+        /// machine raises the very first one of those during GameManager initialization. Booting it
+        /// afterwards would mean the main menu comes up silent until the second transition.
+        /// </summary>
+        private void InitializeAudioLayer()
+        {
+            if (!initializeAudio)
+            {
+                Debug.Log("[Bootstrap] Audio initialization disabled via Inspector — booting silent.");
+                return;
+            }
+
+            AudioManager.EnsureExists();
+            Debug.Log("[Bootstrap] AudioManager up.");
         }
 
         /// <summary>
