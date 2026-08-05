@@ -244,7 +244,11 @@ namespace OblastZero.UI
             _repBody.text = "<i>—</i>";
 
             // End Day — bottom right button.
-            _endDayButton = CreateButton("EndDayButton", root, "END DAY  ▸", out _endDayLabel);
+            // "»" not "▸": the shipped LiberationSans SDF atlas is 250 glyphs and carries no Geometric Shapes
+            // block, so U+25B8 fell through to the tofu box on every frame of every run. Latin-1 punctuation
+            // is present, so anything from that range renders. Verify new glyphs against the font atlas before
+            // using them — TMP only warns once per text object and the box reads as a font bug, not a typo.
+            _endDayButton = CreateButton("EndDayButton", root, "END DAY  »", out _endDayLabel);
             var brt = (RectTransform)_endDayButton.transform;
             brt.anchorMin = brt.anchorMax = new Vector2(1f, 0f);
             brt.pivot = new Vector2(1f, 0f);
