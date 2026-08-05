@@ -139,8 +139,16 @@ namespace OblastZero.Gameplay
 
             // Seed size and reference point from the actual renderer bounds before computing thresholds;
             // this is the same measurement Unity itself uses, so the two cannot disagree.
+            //
+            // The seed thresholds must already be strictly descending even though they are placeholders.
+            // SetLODs validates ordering on every call, not just the final one, so seeding every level with
+            // the same value made Unity log a threshold-ordering warning on each prop that carried more than
+            // one LOD — a real complaint about this call, not about the computed thresholds below, which is
+            // why the warning survived a correct-looking threshold loop. 1/(i+2) gives 0.5, 0.333, 0.25, …:
+            // descending by construction and never zero, for any level count.
             var seedLods = new LOD[present.Count];
-            for (int i = 0; i < present.Count; i++) seedLods[i] = new LOD(0.01f, levels[present[i]].ToArray());
+            for (int i = 0; i < present.Count; i++)
+                seedLods[i] = new LOD(1f / (i + 2f), levels[present[i]].ToArray());
             group.SetLODs(seedLods);
             group.RecalculateBounds();
 

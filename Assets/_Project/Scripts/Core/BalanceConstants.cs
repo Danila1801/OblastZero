@@ -70,6 +70,34 @@ namespace OblastZero.Core
         /// <summary>Upper bound for any tracked faction's reputation.</summary>
         public const int REPUTATION_MAX = 100;
 
+        /// <summary>
+        /// Reputation at or above which a faction's endgame branch opens. Bible §3 (reputation thresholds):
+        /// "Going above +60 with any faction unlocks that faction's endgame branch."
+        /// </summary>
+        public const int ENDGAME_REPUTATION_THRESHOLD = 60;
+
+        /// <summary>
+        /// Reputation at or below which a faction treats the player as hunted. Bible §3: "Going below −60
+        /// with any faction unlocks 'hunted' status." Read by the neutral ending, which requires that the
+        /// player has antagonised nobody, not merely that they joined nobody.
+        /// </summary>
+        public const int HUNTED_REPUTATION_THRESHOLD = -60;
+
+        // ─── Victory Conditions ─────────────────────────────────────────────────
+        /// <summary>
+        /// Days that must be survived before any faction endgame can fire. Bible §3 puts the alignment
+        /// pivot at day fifteen ("in good standing with at most one faction at a time after day fifteen"),
+        /// so a run cannot be won on reputation alone before the tenure exists to justify it.
+        /// </summary>
+        public const int ENDGAME_MIN_TENURE_DAYS = 15;
+
+        /// <summary>
+        /// Days that must be survived for the neutral ending. Longer than the faction tenure on purpose:
+        /// bible §6.3 calls Independent a "rare neutral-ending branch", and refusing every faction means
+        /// refusing their supply lines, so the price of independence is time.
+        /// </summary>
+        public const int INDEPENDENT_MIN_TENURE_DAYS = 25;
+
         // ─── Save System ────────────────────────────────────────────────────────
         public const string SAVE_FOLDER_NAME = "Saves";
         public const string PROFILE_SAVE_FILE = "profile.json";

@@ -108,6 +108,7 @@ namespace OblastZero.Gameplay
             if (followUp != null)
             {
                 Debug.Log($"[EventEngine] Presenting queued follow-up '{followUp.id}'.");
+                MarkPending(followUp.id);
                 EventPresented?.Invoke(followUp);
                 return followUp;
             }
@@ -126,6 +127,7 @@ namespace OblastZero.Gameplay
             if (pool.Count == 0 || totalWeight <= 0f)
             {
                 ReportEmptyPool(regionSet);
+                MarkPending(null);
                 return null;
             }
 
@@ -139,8 +141,69 @@ namespace OblastZero.Gameplay
             }
 
             Debug.Log($"[EventEngine] Presenting '{chosen.id}' (pool {pool.Count}, weight {chosen.baseWeight:0.##}/{totalWeight:0.##}).");
+            MarkPending(chosen.id);
             EventPresented?.Invoke(chosen);
             return chosen;
+        }
+
+        // ─── Pending-event persistence ──────────────────────────────────────────────
+
+        /// <summary>
+        /// Records which event is awaiting a choice on the run itself, so the autosave that fires on the day
+        /// tick carries it. Null clears it.
+        ///
+        /// <para>The engine is the owner: it is already the single writer of
+        /// <see cref="RunData.CompletedEventIds"/> and <see cref="RunData.QueuedEventIds"/>, and a pending
+        /// event is the same class of state. Putting it on <c>BunkerPhaseController</c> instead would put a
+        /// second writer on RunData's event fields, against the standing rule that each field has one owner.</para>
+        /// </summary>
+        private void MarkPending(string eventId)
+        {
+            if (_run == null) return;
+            _run.pendingEventId = eventId;
+        }
+
+        /// <summary>
+        /// Re-presents the event a reloaded run was holding open, or null when it was holding none.
+        ///
+        /// <para>Deliberately draws no randomness. That is the entire fix: <see cref="SelectNextEvent"/>
+        /// advances the RNG stream, so re-selecting on resume handed the player a *different* event and made
+        /// quit-and-reload a free re-roll on any prompt they did not like. Restoring by id reproduces the
+        /// event they were actually looking at and leaves <see cref="RunData.rngStreamCounter"/> alone.</para>
+        ///
+        /// <para>Fires <see cref="EventPresented"/> so the modal re-opens through the same path a fresh
+        /// presentation uses; the UI cannot tell the two apart, which is what it should not have to.</para>
+        /// </summary>
+        public ExpeditionEventData RestorePendingEvent()
+        {
+            if (!Ready(nameof(RestorePendingEvent))) return null;
+
+            string id = _run.pendingEventId;
+            if (string.IsNullOrEmpty(id)) return null;
+
+            // An event already resolved cannot be pending. Reachable if a save was written between the
+            // resolution and the clear, or if content was renumbered under an existing save.
+            if (_run.CompletedEventIds.Contains(id))
+            {
+                Debug.LogWarning($"[EventEngine] Pending event '{id}' is already in CompletedEventIds — " +
+                                 "clearing it rather than re-presenting a resolved event.");
+                MarkPending(null);
+                return null;
+            }
+
+            var evt = _db.GetEvent(id);
+            if (evt == null)
+            {
+                Debug.LogWarning($"[EventEngine] Pending event '{id}' is not in the database (content changed " +
+                                 "since the save?). Clearing it; the next day advance draws normally.");
+                MarkPending(null);
+                return null;
+            }
+
+            Debug.Log($"[EventEngine] Restored pending event '{id}' from the save — no RNG draw, " +
+                      $"stream still at {_run.rngStreamCounter}.");
+            EventPresented?.Invoke(evt);
+            return evt;
         }
 
         /// <summary>
@@ -280,9 +343,11 @@ namespace OblastZero.Gameplay
 
             ApplyOutcome(outcome, actingCrewInstanceId, ref res);
 
-            // Book-keeping: this event is now spent; drop any queued copy so a follow-up won't re-fire.
+            // Book-keeping: this event is now spent; drop any queued copy so a follow-up won't re-fire, and
+            // clear the pending marker so a save taken from here forward does not re-present it.
             if (!_run.CompletedEventIds.Contains(evt.id)) _run.CompletedEventIds.Add(evt.id);
             _run.QueuedEventIds.Remove(evt.id);
+            if (_run.pendingEventId == evt.id) MarkPending(null);
 
             EventResolved?.Invoke(res);
             return res;

@@ -91,17 +91,28 @@ namespace OblastZero.Core
                 return;
             }
 
+            // Stamp the format before writing, so the version on disk always describes the shape on disk.
+            // Doing it here rather than in the RunData initializer is what lets a legacy save deserialize to
+            // 0 and be recognised as legacy.
+            run.saveFormatVersion = RunDataMigrator.CurrentVersion;
+
             if (BalanceConstants.VERBOSE_SAVE_LOGGING)
             {
-                Debug.Log($"[SaveService] Saving expedition (day={run.currentDay}, runId={run.runId})");
+                Debug.Log($"[SaveService] Saving expedition (day={run.currentDay}, runId={run.runId}, " +
+                          $"v{run.saveFormatVersion}, pendingEvent={run.pendingEventId ?? "none"})");
             }
 
             AtomicWrite(ExpeditionPath, run, isProfile: false);
         }
 
+        /// <summary>
+        /// Loads the current run and brings it up to the current save format. Migration happens here rather
+        /// than at the call site because every consumer of a loaded run needs it, and a caller that forgot
+        /// would get a run that looks fine and behaves subtly wrong.
+        /// </summary>
         public RunData LoadExpedition()
         {
-            return LoadJson<RunData>(ExpeditionPath, hasBackup: false);
+            return RunDataMigrator.Migrate(LoadJson<RunData>(ExpeditionPath, hasBackup: false));
         }
 
         public bool HasExpeditionSave() => File.Exists(ExpeditionPath);

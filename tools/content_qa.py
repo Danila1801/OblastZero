@@ -183,6 +183,10 @@ _FORMULA_TOKEN_RE = re.compile(
 
 SENTENCE_ENDERS = (".", "!", "?", '"', ":", ";", "—", "-", "(", "[")
 
+# Articles. A capitalized one before a tier-2 term is a determiner, not evidence
+# of a proper name — see _is_named_entity_use.
+ARTICLES = frozenset({"the", "a", "an"})
+
 
 # ---------------------------------------------------------------------------
 # Reporting data
@@ -250,6 +254,13 @@ def _is_named_entity_use(value: str, match: re.Match) -> bool:
     title-cased phrase. That clears "Military plates," (sentence-initial),
     "military protocol" (lowercase) and "Issued Military Kit" (title case), while
     still tripping on "the Military sealed the road".
+
+    A capitalized ARTICLE before the term does not count as title case. "The" in
+    "The Zone does not permit departures." is a determiner, not part of a name,
+    and that sentence is the single most canonical infringing form there is — it
+    shipped in a victory narrative and this rule used to clear it, because "The"
+    is capitalized. Only the preceding-word test is relaxed; the following-word
+    test still suppresses genuine names like "The Lens Assembly".
     """
     tok = match.group(0)
     if not tok[:1].isupper():
@@ -260,7 +271,8 @@ def _is_named_entity_use(value: str, match: re.Match) -> bool:
         return False        # sentence-initial: capitalization carries no meaning
 
     prev_word = re.search(r"([A-Za-z0-9'\-]+)\s*$", before)
-    if prev_word and prev_word.group(1)[:1].isupper():
+    if (prev_word and prev_word.group(1)[:1].isupper()
+            and prev_word.group(1).lower() not in ARTICLES):
         return False        # inside a Title Cased Phrase
 
     after = value[match.end():].lstrip()
@@ -595,6 +607,14 @@ MUST_CATCH = [
                 "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
     ("ip_ctx", {"id": "evt_x", "title": "t", "narrativeText": "He signed with Duty last spring.",
                 "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    # A capitalized article before the term is a determiner, not title case. This
+    # exact sentence shipped in a victory narrative and this gate used to clear it.
+    ("ip_ctx", {"id": "evt_x", "title": "t",
+                "narrativeText": "The Zone does not permit departures.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
+    ("ip_ctx", {"id": "evt_x", "title": "t",
+                "narrativeText": "A Military detachment was registered at the gate.",
+                "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
     ("phrase", {"id": "evt_x", "title": "t", "narrativeText": "An eerie silence over the yard.",
                 "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
     ("phrase", {"id": "evt_x", "title": "t", "narrativeText": "Twisted metal everywhere.",
@@ -621,6 +641,10 @@ MUST_NOT_CATCH = [
                              "narrativeText": "The sentry signals: military vehicle approaching.",
                              "prerequisites": {}, "baseWeight": 1.0, "choices": []}),
     ("title-cased item name", {"id": "item_x", "displayName": "Issued Military Kit"}),
+    # A real name that happens to start with an article stays clean, because the
+    # word AFTER the term is capitalized. This is why only the preceding-word
+    # test was relaxed for articles.
+    ("article + title-cased name", {"id": "item_x", "displayName": "The Lens Assembly"}),
     ("in-voice duty usage", {"id": "evt_x", "title": "t",
                              "narrativeText": "He is on duty until the shift register says otherwise.",
                              "prerequisites": {}, "baseWeight": 1.0, "choices": []}),

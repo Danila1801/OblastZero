@@ -13,6 +13,14 @@ namespace OblastZero.Core
     [Serializable]
     public class RunData
     {
+        /// <summary>
+        /// Save-format revision this run was written at. Stamped by <c>SaveService.SaveExpedition</c> and read
+        /// by <c>RunDataMigrator</c> on load. A save written before the field existed deserializes to 0,
+        /// which is exactly how the migrator recognises a legacy file — do not give this a nonzero
+        /// initializer.
+        /// </summary>
+        public int saveFormatVersion;
+
         public string runId;
         public DateTime runStartedUtc;
         public int currentDay;
@@ -28,6 +36,19 @@ namespace OblastZero.Core
         public List<ActiveExpedition> ExpeditionsInFlight = new();
         public List<string> CompletedEventIds = new();
         public List<string> QueuedEventIds = new();
+
+        /// <summary>
+        /// The event currently awaiting the player's choice, or null when none is. Owned by
+        /// <c>EventEngine</c> alongside the two lists above.
+        ///
+        /// <para>Serialized because the bunker turn holds an event open across an arbitrary amount of wall
+        /// time: the day advance presents it, the player answers whenever they answer, and the autosave that
+        /// fires on the day tick lands in between. Without this field a run quit at an open event came back
+        /// with the prompt gone and the RNG stream already advanced past it, so the reload silently drew a
+        /// different event — a re-roll the player could farm by quitting on any outcome they disliked.
+        /// Restoring by id costs no RNG draw, which is the whole point.</para>
+        /// </summary>
+        public string pendingEventId;
 
         // Faction reputation
         public int repScaleSociety;
