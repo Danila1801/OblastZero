@@ -12,7 +12,7 @@ namespace OblastZero.Core.States
             "No buses. No protocols. No one is coming.\n\n" +
             "You rig the hatch and go vertical. The surface wind tastes like metal and ash. " +
             "Your crew walks toward the horizon, carrying what matters.\n\n" +
-            "The Zone does not permit departures. But you have learned to ask permission " +
+            "The Oblast does not permit departures. But you have learned to ask permission " +
             "in a language it understands.";
     }
 }

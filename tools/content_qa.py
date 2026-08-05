@@ -130,6 +130,14 @@ CONTEXTUAL_IP_TERMS = [
     "Military", "Duty", "Freedom", "Monolith", "Bandits", "Ecologists",
     "Mercenaries", "Loners", "Controller", "Chimera", "Boar", "Flesh",
     "Lens", "Owl", "Beard", "Hawaiian", "Garry", "Strider", "Barge", "Scar",
+    # "the Zone" is the franchise's name for the setting and the single most
+    # identifiable term of all — but "zone" is also ordinary English ("the
+    # contaminated zone", "zone of exclusion"), so it belongs in tier 2 and
+    # fails only on named-entity use. Added after two shipped victory-screen
+    # narratives were found saying "the Zone" where the setting is the Oblast;
+    # they were prose in C# rather than in content JSON, which this scanner
+    # does not read at all -- see the note in scan_prose about that gap.
+    "Zone",
 ]
 
 # ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 namespace OblastZero.Core.States
 {
-    /// <summary>Adaptation ending: Kafedra / Psi Syndicate transcendence.</summary>
+    /// <summary>Adaptation ending: Kafedra transcendence.</summary>
     public class RunVictoryAdaptationState : RunEndVictoryStateBase
     {
         public override string StateId => "RunVictory_Adaptation";
@@ -12,6 +12,6 @@ namespace OblastZero.Core.States
             "The Reality Field does not fight you. It inhales.\n\n" +
             "Your crew stands at the chamber's edge. The mutation is painless. " +
             "Already your thoughts synchronize with something vast and patient.\n\n" +
-            "You are no longer leaving the Zone. The Zone is becoming you.";
+            "You are no longer leaving the Oblast. The Oblast is becoming you.";
     }
 }
