@@ -86,6 +86,38 @@ namespace OblastZero.Core
         /// </summary>
         public int registrationCount;
 
+        // ─── Artifact state (bible artifacts table / ArtifactSystem) ────────────
+        // Three of the four bible artifacts have effects that outlive the moment they are used, so
+        // that state has to live on the run: it must survive the autosave that fires on every day
+        // tick, and it must die with the run rather than leaking into the next one. Fields written
+        // before these existed deserialize to false / 0 / null, which reads correctly as "no artifact
+        // has been used".
+
+        /// <summary>
+        /// True when a Margin Note is filed against the next event resolution, which will then draw
+        /// twice and keep the better result.
+        /// </summary>
+        public bool marginNoteArmed;
+
+        /// <summary>
+        /// Day the last Margin Note was filed, or 0 when none has been. The bible allows one per
+        /// in-game week; <c>ArtifactSystem</c> compares this against the current day.
+        /// </summary>
+        public int marginNoteLastUsedDay;
+
+        /// <summary>
+        /// True when a Stamped Tongue override is on file. The next Scale Society event resolves as a
+        /// success regardless of the roll, and the override is spent doing it.
+        /// </summary>
+        public bool stampedTongueArmed;
+
+        /// <summary>
+        /// Instance id of the crew member carrying a Notarized Heart, or null. That member accumulates
+        /// radiation at <see cref="BalanceConstants.NOTARIZED_HEART_RADIATION_MULTIPLIER"/> of the
+        /// normal rate. One bearer at a time — the artifact is worn, not shared.
+        /// </summary>
+        public string notarizedHeartBearerId;
+
         // RNG (seed + stream counter so a run is fully reproducible from its seed)
         public int rngSeed;
         public int rngStreamCounter;

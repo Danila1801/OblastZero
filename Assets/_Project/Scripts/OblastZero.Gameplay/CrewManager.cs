@@ -34,6 +34,13 @@ namespace OblastZero.Gameplay
         public event Action<CrewInstance, CrewStat, int, int> CrewStatsChanged; // member, stat, oldValue, newValue
         public event Action<CrewInstance> CrewDied;
 
+        /// <summary>
+        /// Optional per-member radiation multiplier, consulted on every <see cref="ApplyRadiation"/>.
+        /// Wired by <c>GameManager</c> to <c>ArtifactSystem.RadiationMultiplierFor</c> so the Notarized
+        /// Heart applies to every radiation source without any of them knowing it exists. Null means 1.
+        /// </summary>
+        public Func<string, float> RadiationMultiplierProvider { get; set; }
+
         public CrewManager(GameDatabase db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
@@ -175,10 +182,24 @@ namespace OblastZero.Gameplay
             var data = _db.GetCrew(c.crewDataId);
             float resist = TraitEffects.RadiationResistance(c, data, _db);
 
-            int effective = Mathf.RoundToInt(amount / resist);
+            // The Notarized Heart (item_notarized_heart) halves its bearer's accumulation. Collected
+            // here rather than at each source because this method is the single place radiation enters
+            // a crew member — expeditions, events and contaminated loot all arrive through it — so one
+            // hook covers every source and none of them has to know the artifact exists.
+            //
+            // A delegate rather than a reference to ArtifactSystem: that class already takes a
+            // CrewManager, and a mutual constructor dependency has no valid construction order.
+            // GameManager sets this once both exist. Unset, it is 1 and nothing changes.
+            float artifact = RadiationMultiplierProvider != null
+                ? Mathf.Clamp(RadiationMultiplierProvider(instanceId), 0f, 1f)
+                : 1f;
+
+            int effective = Mathf.RoundToInt(amount / resist * artifact);
             int old = c.currentRadiation;
             c.currentRadiation = Mathf.Clamp(c.currentRadiation + effective, 0, 100);
-            Debug.Log($"[CrewManager] {Name(c)} radiation +{effective} -> {c.currentRadiation}/100 (resist x{resist:0.##}).");
+            Debug.Log($"[CrewManager] {Name(c)} radiation +{effective} -> {c.currentRadiation}/100 " +
+                      $"(resist x{resist:0.##}" +
+                      (artifact < 1f ? $", artifact x{artifact:0.##}" : "") + ").");
             CrewStatsChanged?.Invoke(c, CrewStat.Radiation, old, c.currentRadiation);
         }
 

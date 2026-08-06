@@ -36,6 +36,12 @@ namespace OblastZero.Gameplay
         /// </summary>
         public bool defectiveItemUsed;
 
+        /// <summary>True when a Margin Note bought this resolution a second draw.</summary>
+        public bool marginNoteRerolled;
+
+        /// <summary>True when a Stamped Tongue turned this resolution's failure into a success.</summary>
+        public bool stampedTongueOverrode;
+
         /// <summary>What the defect did, in the Oblast's own register. Empty when none was used.</summary>
         public string defectSummary;
 
@@ -81,6 +87,19 @@ namespace OblastZero.Gameplay
 
         public event Action<ExpeditionEventData> EventPresented;
         public event Action<EventResolution> EventResolved;
+
+        /// <summary>
+        /// The artifact layer, or null when none is wired. Two of the four bible artifacts modify a
+        /// resolution — the Margin Note buys a second draw, the Stamped Tongue overrides a Scale
+        /// Society failure — so the engine has to ask before it commits an outcome.
+        ///
+        /// <para>A settable property rather than a constructor argument, because
+        /// <c>ArtifactSystem</c> is constructed from the inventory and crew managers this engine also
+        /// holds, and a mutual constructor dependency has no valid ordering. Null is fully supported:
+        /// every artifact hook is guarded, so an engine built without one resolves exactly as it did
+        /// before artifacts existed. That is what keeps the smoke tests constructing it bare.</para>
+        /// </summary>
+        public ArtifactSystem Artifacts { get; set; }
 
         public EventEngine(GameDatabase db, InventoryManager inventory, CrewManager crew, FactionReputationManager rep)
         {
@@ -340,7 +359,33 @@ namespace OblastZero.Gameplay
             // Success roll — always draw so the roll is reportable and the stream advances deterministically.
             float chance = ResolveSuccessChance(choice, actingCrewInstanceId);
             float roll = _rng.NextFloat();
+
+            // Margin Note (item_margin_note): draw twice and keep the better reading. The second draw
+            // is taken unconditionally once the artifact is spent, rather than only when the first
+            // failed, so the RNG stream advances by the same amount either way and a seeded run stays
+            // reproducible regardless of which outcome the first draw happened to give.
+            bool overrideUsed = false;
+            bool rerolled = Artifacts != null && Artifacts.ConsumeMarginNoteReroll();
+            if (rerolled)
+            {
+                float second = _rng.NextFloat();
+                Debug.Log($"[EventEngine] Margin Note: first roll {roll:0.###}, second {second:0.###}; " +
+                          $"keeping {Mathf.Min(roll, second):0.###}.");
+                roll = Mathf.Min(roll, second);   // lower roll = more likely under chance = better
+            }
+
             bool success = roll < chance;
+
+            // Stamped Tongue (item_stamped_tongue): a filed override decides a Scale Society matter in
+            // the player's favour. Checked after the roll so the override is only spent when it changes
+            // something — a matter that succeeded on its own does not consume the artifact.
+            if (!success && Artifacts != null && InvolvesScaleSociety(choice) &&
+                Artifacts.ConsumeStampedTongueOverride())
+            {
+                success = true;
+                overrideUsed = true;
+            }
+
             OutcomeDelta outcome = success ? choice.successOutcome : choice.failureOutcome;
 
             Debug.Log($"[EventEngine] Resolving '{evt.id}' choice {choiceIndex}: chance={chance:0.###} roll={roll:0.###} => {(success ? "SUCCESS" : "FAILURE")}.");
@@ -351,6 +396,8 @@ namespace OblastZero.Gameplay
             res.actingCrewInstanceId = actingCrewInstanceId;
             res.chanceUsed = chance;
             res.rollValue = roll;
+            res.marginNoteRerolled = rerolled;
+            res.stampedTongueOverrode = overrideUsed;
 
             ApplyOutcome(outcome, actingCrewInstanceId, ref res);
 
@@ -362,6 +409,22 @@ namespace OblastZero.Gameplay
 
             EventResolved?.Invoke(res);
             return res;
+        }
+
+        /// <summary>
+        /// True when either branch of this choice moves Scale Society standing — the test for whether a
+        /// Stamped Tongue override applies.
+        ///
+        /// <para>Both branches are checked, not just the failure branch, because the question is
+        /// whether the <i>matter</i> is a Society matter, and an event that rewards standing on success
+        /// and does nothing on failure is still one. Testing only the branch that is about to be
+        /// applied would make the override fire on some Society events and not others, for a reason no
+        /// player could ever infer.</para>
+        /// </summary>
+        private static bool InvolvesScaleSociety(EventChoice choice)
+        {
+            return choice.successOutcome.reputationFaction == FactionId.ScaleSociety
+                || choice.failureOutcome.reputationFaction == FactionId.ScaleSociety;
         }
 
         private float ResolveSuccessChance(EventChoice choice, string actingCrewInstanceId)
