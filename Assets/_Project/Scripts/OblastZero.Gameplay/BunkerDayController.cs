@@ -45,10 +45,29 @@ namespace OblastZero.Gameplay
             _saveService = saveService;
         }
 
+        /// <summary>
+        /// Ranged missions in the field, ticked at the top of each day. Optional: a day controller
+        /// built without one runs exactly as it did before expeditions existed, which is what lets the
+        /// smoke tests construct it bare.
+        /// </summary>
+        public ExpeditionSystem.ExpeditionManager Expeditions { get; set; }
+
         public DayResult AdvanceDay()
         {
             int day = ++_run.currentDay;
             Debug.Log($"[BunkerDay] ──────── Advancing to day {day} ────────");
+
+            // 0. Expeditions in the field. Resolved first, before stores decay and before the crew is
+            //    fed, because a returning party changes both inputs: they bring stock into the larder
+            //    the decay pass is about to walk, and they rejoin the roster the ration count is about
+            //    to be computed from. Resolving them after would feed a bunker one head short and spoil
+            //    food that arrived this morning.
+            if (Expeditions != null)
+            {
+                var returned = Expeditions.TickDay();
+                for (int i = 0; i < returned.Count; i++)
+                    Debug.Log($"[BunkerDay] Expedition: {returned[i].crewInstanceId} — {returned[i].summary}");
+            }
 
             // 1. Items spoil / wear.
             _inventory.ApplyDailyDecay();

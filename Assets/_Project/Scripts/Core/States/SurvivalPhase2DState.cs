@@ -60,11 +60,17 @@ namespace OblastZero.Core
             }
 
             var dayController = new BunkerDayController(run, inventory, crew, database, new BunkerDayConfig(), saveService);
+
+            // Property rather than a constructor argument so the three smoke tests can keep building
+            // a day controller with no expedition layer at all — the day loop null-checks it.
+            dayController.Expeditions = GameManager.Instance != null ? GameManager.Instance.Expeditions : null;
             var victory = new VictoryConditionEvaluator(run, crew, reputation);
             _phase = new BunkerPhaseController(dayController, engine, crew, victory);
 
             EventBus.Subscribe<EndDayRequestedEvent>(OnEndDayRequested);
             EventBus.Subscribe<EventChoiceSelectedEvent>(OnEventChoiceSelected);
+            EventBus.Subscribe<ArtifactScreenRequestedEvent>(OnArtifactScreenRequested);
+            EventBus.Subscribe<ExpeditionScreenRequestedEvent>(OnExpeditionScreenRequested);
 
             Debug.Log($"[SurvivalPhase2D] Entered. Day {run.currentDay}, crew alive {crew.AliveCount()}, " +
                       $"bunker items {run.BunkerInventory.Count}.");
@@ -114,6 +120,9 @@ namespace OblastZero.Core
         {
             EventBus.Unsubscribe<EndDayRequestedEvent>(OnEndDayRequested);
             EventBus.Unsubscribe<EventChoiceSelectedEvent>(OnEventChoiceSelected);
+            EventBus.Unsubscribe<ArtifactScreenRequestedEvent>(OnArtifactScreenRequested);
+            EventBus.Unsubscribe<ExpeditionScreenRequestedEvent>(OnExpeditionScreenRequested);
+            CloseSideScreen();
 
             if (_sceneLoader != null) _sceneLoader.UnloadScene(BunkerSceneName); // SceneLoader guards if not loaded
             _sceneLoader = null;
@@ -123,6 +132,42 @@ namespace OblastZero.Core
         // Turn-based: no per-frame logic. (HandleTick stays the base no-op.)
 
         // ---- UI intent handlers ----
+
+        // ── Side screens (artifacts, dispatch) ───────────────────────────────
+        //
+        // Opened here rather than by the HUD, for the same reason the event modal is: the HUD raises
+        // intents and owns no game logic, and these screens write run state through their managers.
+        //
+        // One at a time, tracked in a single field. Two full-screen registers open at once would both
+        // be interactable, both be writing artifact and expedition state, and neither would be on top
+        // in any predictable way.
+        private GameObject _sideScreen;
+
+        private void OnArtifactScreenRequested(ArtifactScreenRequestedEvent _)
+        {
+            if (_sideScreen != null) return;
+            var screen = UI.ArtifactUseUI.Open(() => _sideScreen = null);
+            _sideScreen = screen != null ? screen.gameObject : null;
+        }
+
+        private void OnExpeditionScreenRequested(ExpeditionScreenRequestedEvent _)
+        {
+            if (_sideScreen != null) return;
+            var screen = UI.ExpeditionUI.Open(() => _sideScreen = null);
+            _sideScreen = screen != null ? screen.gameObject : null;
+        }
+
+        /// <summary>
+        /// Tears down an open side screen on phase exit. Without this, abandoning a run with the
+        /// artifact register open leaves a full-screen canvas over the main menu — it is spawned as a
+        /// root object, so nothing else destroys it.
+        /// </summary>
+        private void CloseSideScreen()
+        {
+            if (_sideScreen == null) return;
+            Object.Destroy(_sideScreen);
+            _sideScreen = null;
+        }
 
         private void OnEndDayRequested(EndDayRequestedEvent _)
         {
@@ -135,7 +180,14 @@ namespace OblastZero.Core
             // The tags MUST be passed. EventEngine rejects any event carrying regionTagsAny when the caller
             // supplies none, and every shipped event carries them — calling EndDay() bare selects nothing,
             // every day, for the whole run, and logs only a routine "no event this day" line while doing it.
-            BunkerTurnResult result = _phase.EndDay(RegionTags.BunkerPhaseActive);
+            // Two axes, both supplied. Proximity (BunkerPhaseActive) decides what a sealed-in crew can act
+            // on and fails closed — omitting it selects nothing. Geography (the registered site's region)
+            // tints the pool toward the district this run is operating in and fails open, so a site whose
+            // region matches no content costs flavour rather than events.
+            var oblastRegions = ScavengeSiteCatalog.RegionContextFor(
+                GameManager.Instance?.CurrentRun?.currentScavengeSiteId);
+
+            BunkerTurnResult result = _phase.EndDay(RegionTags.BunkerPhaseActive, oblastRegions);
 
             // Death is checked before victory: a run whose last crew member starved on the winning day is a
             // wipe, and every ending's prose asserts the crew survived.

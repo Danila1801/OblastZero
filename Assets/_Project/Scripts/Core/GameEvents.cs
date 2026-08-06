@@ -103,6 +103,20 @@ namespace OblastZero.Core
         public string ItemDataId;
     }
 
+    /// <summary>
+    /// A bunker item was consumed or removed from stores, carrying the category the coarse
+    /// <see cref="BunkerInventoryChangedEvent"/> does not. Raised alongside that event, not instead of it:
+    /// the HUD wants "something changed, refresh" and does not care what; anything reasoning about WHAT was
+    /// used — the no-medical-items achievement, a future consumption log — needs the category, and resolving
+    /// it from the id at every subscriber would mean each of them holding a GameDatabase reference.
+    /// </summary>
+    public struct BunkerItemConsumedEvent
+    {
+        public string ItemDataId;
+        public OblastZero.Data.ItemCategory Category;
+        public int Quantity;
+    }
+
     // ─── Bunker phase (Phase B) ───────────────────────────────────────────────
     public struct DayAdvancedEvent
     {
@@ -270,6 +284,15 @@ namespace OblastZero.Core
         public int ItemsRecovered;
         public string OutcomeSummary;
     }
+
+    /// <summary>
+    /// "ARTIFACTS" pressed on the bunker HUD. An intent, like EndDayRequestedEvent — the HUD does not
+    /// own the screen and does not know what it does; SurvivalPhase2DState opens it.
+    /// </summary>
+    public struct ArtifactScreenRequestedEvent { }
+
+    /// <summary>"DISPATCH" pressed on the bunker HUD. Opens the expedition screen.</summary>
+    public struct ExpeditionScreenRequestedEvent { }
 
     /// <summary>An artifact was consumed or spent. Raised by ArtifactSystem after the effect lands.</summary>
     public struct ArtifactUsedEvent

@@ -29,6 +29,8 @@ namespace OblastZero.Core
         private CrewManager _crew;
         private FactionReputationManager _reputation;
         private EventEngine _events;
+        private ArtifactSystem _artifacts;
+        private Gameplay.ExpeditionSystem.ExpeditionManager _expeditions;
         private ManagerEventBridge _bridge;
 
         public GameStateMachine StateMachine => stateMachine;
@@ -40,6 +42,12 @@ namespace OblastZero.Core
         public CrewManager Crew => _crew;
         public FactionReputationManager Reputation => _reputation;
         public EventEngine Events => _events;
+
+        /// <summary>The four bible artifacts and their use effects. Never null after boot.</summary>
+        public ArtifactSystem Artifacts => _artifacts;
+
+        /// <summary>Ranged crew missions from the bunker. Never null after boot.</summary>
+        public Gameplay.ExpeditionSystem.ExpeditionManager Expeditions => _expeditions;
 
         /// <summary>
         /// Outcome of the most recently ended run, captured inside <see cref="EndCurrentRun"/> while the
@@ -75,6 +83,12 @@ namespace OblastZero.Core
             var sceneLoader = gameObject.AddComponent<SceneLoader>();
             ServiceLocator.Register<ISceneLoader>(sceneLoader);
 
+            // Device-local preferences: registered before the data layer, because the data layer's first
+            // act is to load a language table and the preferences are what say which language that is.
+            var preferences = new PreferencesService(saveService);
+            ServiceLocator.Register<PreferencesService>(preferences);
+            preferences.ApplyAll();
+
             // Data layer: load the content registry, then build the run-scoped gameplay managers and
             // bridge their events onto the EventBus. Managers are bound to a run in BeginNewRun.
             InitializeDataLayer();
@@ -96,7 +110,16 @@ namespace OblastZero.Core
         {
             // Language table before content: a language load swaps the whole table, so it has to happen
             // before anything registers inline display strings while deserializing content.
-            LocalizationJsonLoader.LoadLanguage(LocalizationJsonLoader.DefaultLanguageCode);
+            //
+            // The language comes from the player's preferences when they have one, not from the default —
+            // a player who chose Russian last session should not see one English main menu before the
+            // options screen lets them choose again. PreferencesService has already validated the stored
+            // code against the tables this build actually ships.
+            string languageCode = LocalizationJsonLoader.DefaultLanguageCode;
+            if (ServiceLocator.TryGet<PreferencesService>(out var preferences) && preferences != null)
+                languageCode = preferences.Current.languageCode;
+
+            LocalizationJsonLoader.LoadLanguage(languageCode);
 
             if (gameDatabase == null)
             {
@@ -112,6 +135,18 @@ namespace OblastZero.Core
             _crew = new CrewManager(gameDatabase);
             _reputation = new FactionReputationManager();
             _events = new EventEngine(gameDatabase, _inventory, _crew, _reputation);
+
+            // The artifact layer is wired after the four managers rather than alongside them, because
+            // it is built from two of them and then hands itself back to two of them. Two of the bible
+            // artifacts change how an event resolves and one changes how radiation accumulates, so the
+            // hooks go where those things actually happen -- EventEngine and CrewManager -- rather than
+            // each caller remembering to ask. Both hooks are optional on the receiving side, so an
+            // engine or a crew manager constructed without one behaves exactly as it did before.
+            _artifacts = new ArtifactSystem(gameDatabase, _inventory, _crew);
+            _events.Artifacts = _artifacts;
+            _crew.RadiationMultiplierProvider = _artifacts.RadiationMultiplierFor;
+
+            _expeditions = new Gameplay.ExpeditionSystem.ExpeditionManager(gameDatabase, _inventory, _crew);
 
             _bridge = new ManagerEventBridge();
             _bridge.Connect(_inventory, _crew, _reputation, _events);
@@ -180,6 +215,8 @@ namespace OblastZero.Core
             _crew?.Bind(run);
             _reputation?.Bind(run);
             _events?.Bind(run);
+            _artifacts?.Bind(run);
+            _expeditions?.Bind(run);
 
             Debug.Log($"[GameManager] Managers rebound to run '{run.runId}' (day {run.currentDay}).");
         }
@@ -192,8 +229,14 @@ namespace OblastZero.Core
         /// are added to the rescued list up front, so the run always reaches the bunker with at least one
         /// living crew member — without a lead, day one is an immediate wipe.
         /// </summary>
-        public void BeginNewRun(string scavengeSiteId, int rngSeed, string leadCrewDataId = null)
+        public void BeginNewRun(string scavengeSiteId, int rngSeed, string leadCrewDataId = null,
+                                string secondCrewDataId = null)
         {
+            // The purchased-unlock effects are resolved before RunData exists, because two of them
+            // (crew stat bonuses) have to be on the run before the first crew member is created — a
+            // CrewInstance takes its starting health from the max, and the max is what the unlock raises.
+            var unlocks = MetaUnlockCatalog.AggregateFor(MetaProgress);
+
             var newRun = new RunData
             {
                 runId = System.Guid.NewGuid().ToString("N"),
@@ -205,6 +248,8 @@ namespace OblastZero.Core
                 bunkerSealed = false,
                 bunkerMorale = BalanceConstants.STARTING_BUNKER_MORALE,
                 bunkerRadiationPool = BalanceConstants.STARTING_BUNKER_RADIATION_POOL,
+                crewMaxHealthBonus = unlocks.bonusMaxCrewHealth,
+                crewMaxSanityBonus = unlocks.bonusMaxCrewSanity,
             };
 
             stateMachine.Context.CurrentRun = newRun;
@@ -215,6 +260,8 @@ namespace OblastZero.Core
             _crew?.Bind(newRun);
             _reputation?.Bind(newRun);
             _events?.Bind(newRun);
+            _artifacts?.Bind(newRun);
+            _expeditions?.Bind(newRun);
 
             // Every Blowout starts with an empty pack. The ceiling on it is the lead operator's authored
             // carry capacity, not a flat constant — without this the CARRY figure on the RunSetup roster
@@ -238,9 +285,11 @@ namespace OblastZero.Core
                     CrewMemberData leadData;
                     if (gameDatabase != null && gameDatabase.TryGetCrew(leadCrewDataId, out leadData) && leadData != null)
                     {
-                        carryCapacityKg = Mathf.Max(BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG,
-                                                    leadData.baseStats.carryCapacityKg);
-                        capacitySource = $"lead '{leadCrewDataId}' ({leadData.baseStats.carryCapacityKg:0.##} kg authored)";
+                        float authored = leadData.baseStats.carryCapacityKg;
+                        float withTraits = TraitEffects.ModifiedCarryCapacity(lead, authored, gameDatabase);
+                        carryCapacityKg = Mathf.Max(BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG, withTraits);
+                        capacitySource = $"lead '{leadCrewDataId}' ({authored:0.##} kg authored" +
+                                         (Mathf.Abs(withTraits - authored) > 0.001f ? $", {withTraits:0.##} kg after traits" : string.Empty) + ")";
                     }
                     else
                     {
@@ -248,6 +297,35 @@ namespace OblastZero.Core
                                          "falling back to the baseline scavenge capacity.");
                     }
                 }
+            }
+
+            // A second operator is a purchased unlock. Registering one without it would hand the effect out
+            // free, so the check is here rather than only on the setup screen — BeginNewRun is also reachable
+            // from debug launchers and from a future quick-start path.
+            if (!string.IsNullOrEmpty(secondCrewDataId))
+            {
+                if (!unlocks.unlockSecondOperator)
+                {
+                    Debug.LogWarning($"[GameManager] Second operator '{secondCrewDataId}' ignored — " +
+                                     "'unlock_second_operator' is not on file for this profile.");
+                }
+                else if (secondCrewDataId == leadCrewDataId)
+                {
+                    Debug.LogWarning("[GameManager] Second operator is the same person as the lead — ignored.");
+                }
+                else if (_crew?.AddRescued(secondCrewDataId) != null)
+                {
+                    Debug.Log($"[GameManager] Second operator '{secondCrewDataId}' registered. " +
+                              "Two mouths on the ration draw from day one.");
+                }
+            }
+
+            // The pack bonus applies on top of the lead's capacity, after the crew floor — a purchased
+            // frame should be worth its 20 tokens even to the operator with the smallest authored pack.
+            if (unlocks.bonusCarryWeightKg > 0f)
+            {
+                carryCapacityKg += unlocks.bonusCarryWeightKg;
+                capacitySource += $" +{unlocks.bonusCarryWeightKg:0.##} kg unlock";
             }
 
             if (_inventory != null)
@@ -258,10 +336,48 @@ namespace OblastZero.Core
                           $"floor {BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG} kg.");
             }
 
+            ApplyStartingUnlocks(unlocks);
+
             Debug.Log($"[GameManager] New run begun. id={newRun.runId} site={scavengeSiteId} seed={rngSeed} " +
-                      $"lead={leadCrewDataId ?? "(none)"}");
+                      $"lead={leadCrewDataId ?? "(none)"} second={secondCrewDataId ?? "(none)"}");
 
             EventBus.Raise(new RunStartedEvent { RunId = newRun.runId, SiteId = scavengeSiteId });
+        }
+
+        /// <summary>
+        /// Applies the purchased-unlock effects that need the managers already bound: banked stock and
+        /// opening reputation. Crew stat bonuses and the carry bonus are applied by the caller, earlier,
+        /// because they must land before the first crew member is created and before the pack is sized.
+        ///
+        /// <para>Stock goes into the Bunker channel, not the Scavenged one. A purchased ration is issued at
+        /// the bunker, not carried through the Blowout — routing it through the Scavenged channel would put
+        /// it under the carry cap and turn "three free rations" into "three kilograms less loot".</para>
+        /// </summary>
+        private void ApplyStartingUnlocks(UnlockEffect unlocks)
+        {
+            if (unlocks == null) return;
+
+            if (_inventory != null)
+            {
+                if (unlocks.bonusStartingRations > 0)
+                    _inventory.AddItem(InventoryChannel.Bunker, MetaUnlockCatalog.StartingRationItemId,
+                                       unlocks.bonusStartingRations);
+
+                if (unlocks.bonusStartingMedical > 0)
+                    _inventory.AddItem(InventoryChannel.Bunker, MetaUnlockCatalog.StartingMedicalItemId,
+                                       unlocks.bonusStartingMedical);
+            }
+
+            if (_reputation != null)
+            {
+                _reputation.ApplyDelta(FactionId.ScaleSociety, unlocks.startingRepScaleSociety);
+                _reputation.ApplyDelta(FactionId.Cordon, unlocks.startingRepCordon);
+                _reputation.ApplyDelta(FactionId.Kafedra, unlocks.startingRepKafedra);
+            }
+
+            if (unlocks.bonusMaxCrewHealth != 0 || unlocks.bonusMaxCrewSanity != 0)
+                Debug.Log($"[GameManager] Unlock stat bonuses active: +{unlocks.bonusMaxCrewHealth} max health, " +
+                          $"+{unlocks.bonusMaxCrewSanity} max sanity for every crew member this run.");
         }
 
         /// <summary>
@@ -292,12 +408,19 @@ namespace OblastZero.Core
                 ApplyDeathSalvage(run);
             }
 
-            ServiceLocator.Get<ISaveService>().SaveProfile(MetaProgress);
-
             // Snapshot the outcome while RunData still exists and the meta counters are already updated.
             // The run-end states enter after this method returns, by which point CurrentRun is null —
             // LastRunSummary is the only place these numbers survive.
+            //
+            // Order matters: the summary computes the token award from live run state, the award is credited
+            // to the profile, and only then is the profile written. Saving first — as this method used to —
+            // would persist a profile that does not yet contain the tokens the run just earned, and the only
+            // thing that would rescue them is some later save happening to fire before the process exits.
             LastRunSummary = RunSummary.FromRun(run, MetaProgress, reason, gameDatabase);
+            MetaProgress.AwardTokens(LastRunSummary.SalvageTokensAwarded);
+            LastRunSummary.SalvageTokenBalance = MetaProgress.salvageTokens;
+
+            ServiceLocator.Get<ISaveService>().SaveProfile(MetaProgress);
 
             // The run is over: its save channel should not outlive it, or the main menu would offer to
             // "resume" a run that has already been closed out.

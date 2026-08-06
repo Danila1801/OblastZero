@@ -38,6 +38,11 @@ namespace OblastZero.UI
         private TextMeshProUGUI _repBody;
         private Button _endDayButton;
         private TextMeshProUGUI _endDayLabel;
+        private Button _artifactsButton;
+        private TextMeshProUGUI _artifactsLabel;
+        private Button _dispatchButton;
+        private TextMeshProUGUI _dispatchLabel;
+        private TextMeshProUGUI _crewHeader;
         private Sprite _white;
 
         private void Awake() => BuildUI();
@@ -51,6 +56,7 @@ namespace OblastZero.UI
             EventBus.Subscribe<FactionReputationChangedEvent>(OnRepChanged);
             EventBus.Subscribe<EventPresentedEvent>(OnEventPresented);
             EventBus.Subscribe<EventResolvedEvent>(OnEventResolved);
+            LocalizedStrings.LanguageChanged += OnLanguageChanged;
             RefreshAll();
         }
 
@@ -63,6 +69,7 @@ namespace OblastZero.UI
             EventBus.Unsubscribe<FactionReputationChangedEvent>(OnRepChanged);
             EventBus.Unsubscribe<EventPresentedEvent>(OnEventPresented);
             EventBus.Unsubscribe<EventResolvedEvent>(OnEventResolved);
+            LocalizedStrings.LanguageChanged -= OnLanguageChanged;
         }
 
         // ---- Event handlers ----
@@ -76,6 +83,18 @@ namespace OblastZero.UI
         private void OnEventResolved(EventResolvedEvent e) => SetEndDayInteractable(true);
 
         private void OnEndDayClicked() => EventBus.Raise(new EndDayRequestedEvent());
+
+        /// <summary>
+        /// Re-renders in the new language. The dynamic panels come back through RefreshAll; the two
+        /// fixed labels are re-read here, because nothing else ever writes them after construction and
+        /// they would otherwise sit in the previous language for the rest of the run.
+        /// </summary>
+        private void OnLanguageChanged()
+        {
+            if (_crewHeader != null) _crewHeader.text = LocalizedStrings.Get(UIStringKeys.BunkerCrewHeader);
+            if (_endDayLabel != null) _endDayLabel.text = LocalizedStrings.Get(UIStringKeys.BunkerEndDay);
+            RefreshAll();
+        }
 
         // ---- View updates ----
 
@@ -91,7 +110,9 @@ namespace OblastZero.UI
         {
             if (_dayLabel == null) return;
             var run = GameManager.Instance != null ? GameManager.Instance.CurrentRun : null;
-            _dayLabel.text = run != null ? $"DAY {run.currentDay}" : "DAY —";
+            _dayLabel.text = run != null
+                ? LocalizedStrings.Get(UIStringKeys.BunkerDay, run.currentDay)
+                : LocalizedStrings.Get(UIStringKeys.BunkerDayUnknown);
         }
 
         private void RefreshCrew()
@@ -103,7 +124,7 @@ namespace OblastZero.UI
 
             if (run == null || run.ActiveCrew.Count == 0)
             {
-                _crewBody.text = "<i>no crew</i>";
+                _crewBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerCrewNone)}</i>";
                 return;
             }
 
@@ -113,15 +134,15 @@ namespace OblastZero.UI
                 string name = ResolveCrewName(db, c.crewDataId);
                 if (!c.isAlive)
                 {
-                    sb.AppendLine($"<color=#{ToHex(dangerColor)}>{name} — deceased</color>");
+                    sb.AppendLine($"<color=#{ToHex(dangerColor)}>{LocalizedStrings.Get(UIStringKeys.BunkerCrewDeceased, name)}</color>");
                     continue;
                 }
                 sb.AppendLine(name);
                 sb.AppendLine(
-                    $"  <color=#{ToHex(StatColor(c.currentHealth, 30))}>HP {c.currentHealth}</color>   " +
-                    $"<color=#{ToHex(StatColor(c.currentSanity, 25))}>SAN {c.currentSanity}</color>   " +
-                    $"<color=#{ToHex(StatColorInverted(c.currentFatigue, 70))}>FAT {c.currentFatigue}</color>   " +
-                    $"<color=#{ToHex(StatColorInverted(c.currentRadiation, 60))}>RAD {c.currentRadiation}</color>");
+                    $"  <color=#{ToHex(StatColor(c.currentHealth, 30))}>{LocalizedStrings.Get(UIStringKeys.BunkerStatHealth)} {c.currentHealth}</color>   " +
+                    $"<color=#{ToHex(StatColor(c.currentSanity, 25))}>{LocalizedStrings.Get(UIStringKeys.BunkerStatSanity)} {c.currentSanity}</color>   " +
+                    $"<color=#{ToHex(StatColorInverted(c.currentFatigue, 70))}>{LocalizedStrings.Get(UIStringKeys.BunkerStatFatigue)} {c.currentFatigue}</color>   " +
+                    $"<color=#{ToHex(StatColorInverted(c.currentRadiation, 60))}>{LocalizedStrings.Get(UIStringKeys.BunkerStatRadiation)} {c.currentRadiation}</color>");
             }
             _crewBody.text = sb.ToString().TrimEnd();
         }
@@ -135,7 +156,7 @@ namespace OblastZero.UI
 
             if (run == null || db == null)
             {
-                _suppliesBody.text = "<i>—</i>";
+                _suppliesBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerPlaceholder)}</i>";
                 return;
             }
 
@@ -154,20 +175,20 @@ namespace OblastZero.UI
 
             var foodColor = food <= alive ? dangerColor : (food <= alive * 3 ? warnColor : textColor);
             _suppliesBody.text =
-                $"<color=#{ToHex(foodColor)}>Rations {food}</color>  <color=#{ToHex(dimColor)}>(~{daysOfFood}d)</color>\n" +
-                $"<color=#{ToHex(dimColor)}>Stores {totalStacks} · Bunker rad {run.bunkerRadiationPool}</color>";
+                $"<color=#{ToHex(foodColor)}>{LocalizedStrings.Get(UIStringKeys.BunkerRations, food)}</color>  <color=#{ToHex(dimColor)}>{LocalizedStrings.Get(UIStringKeys.BunkerRationsDays, daysOfFood)}</color>\n" +
+                $"<color=#{ToHex(dimColor)}>{LocalizedStrings.Get(UIStringKeys.BunkerStores, totalStacks, run.bunkerRadiationPool)}</color>";
         }
 
         private void RefreshReputation()
         {
             if (_repBody == null) return;
             var run = GameManager.Instance != null ? GameManager.Instance.CurrentRun : null;
-            if (run == null) { _repBody.text = "<i>—</i>"; return; }
+            if (run == null) { _repBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerPlaceholder)}</i>"; return; }
 
             _repBody.text =
-                $"Scale Society  <color=#{ToHex(RepColor(run.repScaleSociety))}>{Signed(run.repScaleSociety)}</color>\n" +
-                $"Cordon         <color=#{ToHex(RepColor(run.repCordon))}>{Signed(run.repCordon)}</color>\n" +
-                $"Kafedra        <color=#{ToHex(RepColor(run.repKafedra))}>{Signed(run.repKafedra)}</color>";
+                $"{LocalizedStrings.Get(UIStringKeys.FactionShortScaleSociety)}  <color=#{ToHex(RepColor(run.repScaleSociety))}>{Signed(run.repScaleSociety)}</color>\n" +
+                $"{LocalizedStrings.Get(UIStringKeys.FactionShortCordon)}  <color=#{ToHex(RepColor(run.repCordon))}>{Signed(run.repCordon)}</color>\n" +
+                $"{LocalizedStrings.Get(UIStringKeys.FactionShortKafedra)}  <color=#{ToHex(RepColor(run.repKafedra))}>{Signed(run.repKafedra)}</color>";
         }
 
         private void SetEndDayInteractable(bool interactable)
@@ -222,40 +243,66 @@ namespace OblastZero.UI
             // Crew roster — left panel.
             var crewPanel = CreatePanel("CrewPanel", root, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 1f),
                                         new Vector2(40f, -120f), new Vector2(520f, 520f));
-            var crewHeader = CreateText("CrewHeader", crewPanel, 24f, FontStyles.Bold, TextAlignmentOptions.TopLeft, dimColor);
-            StretchTop(crewHeader.rectTransform, 18f, 20f, 34f);
-            crewHeader.text = "CREW";
+            _crewHeader = CreateText("CrewHeader", crewPanel, 24f, FontStyles.Bold, TextAlignmentOptions.TopLeft, dimColor);
+            StretchTop(_crewHeader.rectTransform, 18f, 20f, 34f);
+            _crewHeader.text = LocalizedStrings.Get(UIStringKeys.BunkerCrewHeader);
             _crewBody = CreateText("CrewBody", crewPanel, 22f, FontStyles.Normal, TextAlignmentOptions.TopLeft, textColor);
             StretchBelow(_crewBody.rectTransform, 18f, 62f, 18f);
-            _crewBody.text = "<i>no crew</i>";
+            _crewBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerCrewNone)}</i>";
 
             // Supplies — top-left small panel.
             var supPanel = CreatePanel("SuppliesPanel", root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
                                        new Vector2(40f, -40f), new Vector2(360f, 92f));
             _suppliesBody = CreateText("SuppliesBody", supPanel, 22f, FontStyles.Normal, TextAlignmentOptions.Left, textColor);
             StretchFill(_suppliesBody.rectTransform, 16f);
-            _suppliesBody.text = "<i>—</i>";
+            _suppliesBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerPlaceholder)}</i>";
 
             // Reputation — top-right panel.
             var repPanel = CreatePanel("RepPanel", root, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f),
                                        new Vector2(-40f, -40f), new Vector2(360f, 120f));
             _repBody = CreateText("RepBody", repPanel, 22f, FontStyles.Normal, TextAlignmentOptions.Left, textColor);
             StretchFill(_repBody.rectTransform, 16f);
-            _repBody.text = "<i>—</i>";
+            _repBody.text = $"<i>{LocalizedStrings.Get(UIStringKeys.BunkerPlaceholder)}</i>";
 
             // End Day — bottom right button.
             // "»" not "▸": the shipped LiberationSans SDF atlas is 250 glyphs and carries no Geometric Shapes
             // block, so U+25B8 fell through to the tofu box on every frame of every run. Latin-1 punctuation
             // is present, so anything from that range renders. Verify new glyphs against the font atlas before
             // using them — TMP only warns once per text object and the box reads as a font bug, not a typo.
-            _endDayButton = CreateButton("EndDayButton", root, "END DAY  »", out _endDayLabel);
+            _endDayButton = CreateButton("EndDayButton", root, LocalizedStrings.Get(UIStringKeys.BunkerEndDay), out _endDayLabel);
             var brt = (RectTransform)_endDayButton.transform;
             brt.anchorMin = brt.anchorMax = new Vector2(1f, 0f);
             brt.pivot = new Vector2(1f, 0f);
             brt.anchoredPosition = new Vector2(-40f, 40f);
             brt.sizeDelta = new Vector2(280f, 76f);
             _endDayButton.onClick.AddListener(OnEndDayClicked);
+
+            // Artifacts and Dispatch — the two bunker screens that are not the day loop. They sit left
+            // of End Day and are deliberately smaller: the day tick is the primary verb, and these are
+            // things the player does between days rather than instead of them.
+            //
+            // Both raise an intent and nothing more. The HUD does not own these screens and does not
+            // know what they do; SurvivalPhase2DState opens them, exactly as it already does for the
+            // event modal, so the UI-raises-intents rule holds for the new screens too.
+            _artifactsButton = CreateButton("ArtifactsButton", root, "ARTIFACTS", out _artifactsLabel);
+            var art = (RectTransform)_artifactsButton.transform;
+            art.anchorMin = art.anchorMax = new Vector2(1f, 0f);
+            art.pivot = new Vector2(1f, 0f);
+            art.anchoredPosition = new Vector2(-336f, 40f);
+            art.sizeDelta = new Vector2(200f, 76f);
+            _artifactsButton.onClick.AddListener(OnArtifactsClicked);
+
+            _dispatchButton = CreateButton("DispatchButton", root, "DISPATCH", out _dispatchLabel);
+            var dis = (RectTransform)_dispatchButton.transform;
+            dis.anchorMin = dis.anchorMax = new Vector2(1f, 0f);
+            dis.pivot = new Vector2(1f, 0f);
+            dis.anchoredPosition = new Vector2(-548f, 40f);
+            dis.sizeDelta = new Vector2(200f, 76f);
+            _dispatchButton.onClick.AddListener(OnDispatchClicked);
         }
+
+        private void OnArtifactsClicked() => EventBus.Raise(new ArtifactScreenRequestedEvent());
+        private void OnDispatchClicked() => EventBus.Raise(new ExpeditionScreenRequestedEvent());
 
         // ---- Construction helpers ----
 
