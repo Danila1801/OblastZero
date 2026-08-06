@@ -23,6 +23,22 @@ namespace OblastZero.Services
         /// <summary>Language shipped in the Early Access build. RU follows via localization_ru.json.</summary>
         public const string DefaultLanguageCode = "en";
 
+        /// <summary>
+        /// Languages offered in the options screen, in menu order. Adding one here is not enough on its own:
+        /// it needs a matching Resources/Locale/localization_&lt;code&gt;.json carrying every key in
+        /// <see cref="OblastZero.Core.UIStringKeys"/>, which <c>tools/localization_qa.py</c> enforces.
+        /// </summary>
+        public static readonly string[] SupportedLanguageCodes = { "en", "ru" };
+
+        /// <summary>True when a table for this code ships with the build.</summary>
+        public static bool IsSupported(string languageCode)
+        {
+            if (string.IsNullOrEmpty(languageCode)) return false;
+            foreach (var code in SupportedLanguageCodes)
+                if (string.Equals(code, languageCode, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
+
         private const string LocaleResourceFolder = "Locale";
         private const string LocaleFilePrefix = "localization_";
 
@@ -76,6 +92,10 @@ namespace OblastZero.Services
                 Debug.LogError($"[LocalizationJsonLoader] Resources/{resourcePath}.json registered no keys. " +
                                "Every localized string will render as its raw key.");
             }
+
+            // Only now, with the new table fully registered: a subscriber that rebuilt between the Clear
+            // above and RegisterAll would have drawn every label as its raw key.
+            LocalizedStrings.NotifyLanguageChanged();
 
             return count;
         }

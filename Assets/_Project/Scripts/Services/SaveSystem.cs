@@ -15,6 +15,9 @@ namespace OblastZero.Core
 
         bool HasExpeditionSave();
         void DeleteExpeditionSave();
+
+        void SavePreferences(PlayerPreferencesData preferences);
+        PlayerPreferencesData LoadPreferences();
     }
 
     /// <summary>
@@ -37,6 +40,7 @@ namespace OblastZero.Core
         private string SaveFolder => Path.Combine(Application.persistentDataPath, BalanceConstants.SAVE_FOLDER_NAME);
         private string ProfilePath => Path.Combine(SaveFolder, BalanceConstants.PROFILE_SAVE_FILE);
         private string ExpeditionPath => Path.Combine(SaveFolder, BalanceConstants.EXPEDITION_SAVE_FILE);
+        private string PreferencesPath => Path.Combine(SaveFolder, BalanceConstants.PREFERENCES_SAVE_FILE);
 
         public SaveService()
         {
@@ -113,6 +117,44 @@ namespace OblastZero.Core
         public RunData LoadExpedition()
         {
             return RunDataMigrator.Migrate(LoadJson<RunData>(ExpeditionPath, hasBackup: false));
+        }
+
+        // ─── Preferences (device-local settings) ──────────────────────────────
+
+        /// <summary>
+        /// Writes the preferences channel. Uses the same atomic-write-plus-backup path as the profile:
+        /// a torn preferences file is not a lost run, but it is a player who launches into a black screen
+        /// at an unsupported resolution with no obvious way back, which is worse to recover from.
+        /// </summary>
+        public void SavePreferences(PlayerPreferencesData preferences)
+        {
+            if (preferences == null)
+            {
+                Debug.LogError("[SaveService] SavePreferences called with null preferences.");
+                return;
+            }
+
+            if (BalanceConstants.VERBOSE_SAVE_LOGGING)
+            {
+                Debug.Log($"[SaveService] Saving preferences (lang={preferences.languageCode}, " +
+                          $"master={preferences.volumeMaster}, quality={preferences.qualityLevel}).");
+            }
+
+            AtomicWrite(PreferencesPath, preferences, isProfile: true);
+        }
+
+        /// <summary>
+        /// Reads the preferences channel, or returns shipped defaults on a first launch or a corrupt file.
+        /// Never returns null: every caller would otherwise need a defaults fallback of its own, and the
+        /// one that forgot would null-reference on the first frame of the options screen.
+        /// </summary>
+        public PlayerPreferencesData LoadPreferences()
+        {
+            var loaded = LoadJson<PlayerPreferencesData>(PreferencesPath, hasBackup: true);
+            if (loaded != null) return loaded;
+
+            Debug.Log("[SaveService] No preferences on file — issuing standard defaults.");
+            return PlayerPreferencesData.CreateDefaults();
         }
 
         public bool HasExpeditionSave() => File.Exists(ExpeditionPath);

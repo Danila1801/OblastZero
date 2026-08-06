@@ -1,0 +1,48 @@
+#!/bin/bash
+# OblastZero pre-commit hook. Installed by tools/install_hooks.sh.
+#
+# Runs ONLY the gates that finish in about a second. The dotnet compile check
+# (verify_steam_layer.py) is deliberately excluded: it takes tens of seconds, and a
+# pre-commit hook slow enough to be worth bypassing gets bypassed, at which point it
+# protects nothing. CI runs the full set on push — see .github/workflows/ci.yml.
+#
+# Each gate runs its --self-test first. The self-test is the negative control: it
+# proves the detectors still fire. A gate that silently stopped detecting anything
+# would report green forever, which is worse than no gate at all.
+#
+# Bypass deliberately with:  git commit --no-verify
+
+set -u
+
+failed=0
+
+run_gate() {
+    local label="$1"
+    shift
+    if ! output=$("$@" 2>&1); then
+        echo "[pre-commit] FAIL: ${label}"
+        echo "${output}" | tail -20
+        failed=1
+    else
+        echo "[pre-commit] ok:   ${label}"
+    fi
+}
+
+echo "[pre-commit] OblastZero fast gates"
+
+run_gate "content QA self-test"        python tools/content_qa.py --self-test
+run_gate "content QA"                  python tools/content_qa.py
+run_gate "C# string QA self-test"      python tools/csharp_string_qa.py --self-test
+run_gate "C# string QA"                python tools/csharp_string_qa.py
+run_gate "localization QA self-test"   python tools/localization_qa.py --self-test
+run_gate "localization QA"             python tools/localization_qa.py
+
+if [ "${failed}" -ne 0 ]; then
+    echo
+    echo "[pre-commit] Commit refused. Fix the above, or bypass with --no-verify if you"
+    echo "[pre-commit] know why the gate is wrong (and then fix the gate)."
+    exit 1
+fi
+
+echo "[pre-commit] All fast gates passed. Compile + drift checks run in CI on push."
+exit 0

@@ -1,0 +1,124 @@
+# .github/workflows/ci.yml
+#
+# The fast gate. Runs on every push to main and every feat/* branch, and on every PR into main.
+#
+# WHAT THIS IS NOT: it is not the Unity build. That lives in unity-ci.yml, needs a Unity licence secret,
+# and takes minutes. This job needs Python and .NET only, finishes in around a minute, and catches the
+# classes of regression that have actually bitten this project — a compile break, an IP-firewall violation,
+# a localization table that drifted from the code, a deterministic generator whose output no longer matches
+# its committed artefact.
+#
+# EVERY STEP HERE INVOKES A TOOL THAT EXISTS IN tools/ AND WAS RUN LOCALLY BEFORE BEING ADDED. A CI file
+# that references a script nobody has run is a red X on every push until someone deletes the step, which
+# teaches the team that red means nothing. If you add a gate, run it locally first.
+#
+# Each gate that ships a --self-test runs it BEFORE the real scan. The self-test is the negative control:
+# it proves the detectors still fire. Without it a gate that silently stopped detecting anything would
+# report a reassuring green forever — CLAUDE.md §12, "a gate never observed failing is decoration."
+
+name: OblastZero CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+
+# A second push to the same branch cancels the first: these gates are deterministic, so an in-flight run
+# against a superseded commit can only produce a result nobody will act on.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    name: Content, string, localization and compile gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The prop pipeline reads decimated .bytes meshes tracked in LFS. Without this the drift check
+          # compares against pointer files and fails with a message about malformed GLB headers, which
+          # sends the reader hunting a mesh bug that does not exist.
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        # numpy for the mesh decimator; PyYAML for the scene post-checks. The QA gates themselves are
+        # stdlib only, on purpose, so a dependency resolution failure can never mask a content violation.
+        run: pip install --disable-pip-version-check numpy pyyaml
+
+      # ── Content and voice ────────────────────────────────────────────────
+      - name: Content QA — self-test (negative control)
+        run: python tools/content_qa.py --self-test
+
+      - name: Content QA — schema, IP firewall, voice
+        run: python tools/content_qa.py
+
+      - name: C# string QA — self-test (negative control)
+        run: python tools/csharp_string_qa.py --self-test
+
+      - name: C# string QA — player-facing literals
+        run: python tools/csharp_string_qa.py
+
+      # ── Localization ─────────────────────────────────────────────────────
+      # The gate that makes a second language safe to ship: it fails when a key declared in UIStringKeys.cs
+      # is missing from any table, when the tables disagree, or when a translation dropped a {0}.
+      - name: Localization QA — self-test (negative control)
+        run: python tools/localization_qa.py --self-test
+
+      - name: Localization QA — key coverage and placeholder parity
+        run: python tools/localization_qa.py
+
+      # ── Deterministic artefacts ──────────────────────────────────────────
+      # These tools regenerate their output and compare. A failure means the committed artefact no longer
+      # matches the plan that produces it — someone hand-edited generated output, or changed the plan
+      # without regenerating.
+      - name: Prop decimation drift check
+        run: python tools/decimate_props.py --check
+
+      - name: Prop registry drift check
+        run: python tools/generate_prop_registry.py --check
+
+      - name: Weight balance idempotence check
+        run: python tools/rebalance_weights.py --check
+
+      - name: Reputation balance idempotence check
+        run: python tools/rebalance_reputation.py --check
+
+      - name: Event tag migration idempotence check
+        run: python tools/migrate_event_tags.py --check
+
+      # ── Prop pipeline ────────────────────────────────────────────────────
+      - name: Prop pipeline — self-test (negative control)
+        run: python tools/verify_prop_pipeline.py --self-test
+
+      - name: Prop pipeline verification
+        run: python tools/verify_prop_pipeline.py
+
+      # ── Compile ──────────────────────────────────────────────────────────
+      # verify_steam_layer.py copies Unity's generated csproj, injects any .cs files Unity has not imported
+      # yet, and builds. It needs the SDK but not the Editor and not a licence.
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Steam layer + compile verification
+        run: python tools/verify_steam_layer.py
+
+      # ── Reports (never gates) ────────────────────────────────────────────
+      # Balance analysis prints distributions and outliers. It is a judgement aid, not a rule, so it must
+      # not be able to fail the build: a designer retuning an event should not be blocked by a histogram.
+      # Its self-test IS a gate — that one checks the analyser's own maths, which can be wrong in a way
+      # that silently mis-reports the distributions a designer then tunes against.
+      - name: Balance analysis — self-test (negative control)
+        run: python tools/balance_analysis.py --self-test
+
+      - name: Balance analysis (report only)
+        run: python tools/balance_analysis.py || true
