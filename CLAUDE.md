@@ -42,16 +42,77 @@ Always-on rules for every Claude Code session in this repo. Read this first. It 
 - `StateRegistrationTool`: one-click Editor menu to register all 7 states under `GameStateMachine` — commit `23faa62`
 - **Compile blocker fixed** — commit `55ffd4a`. Steam code targeted a Facepunch 1.x API that does not exist in the shipped 2.x DLL (`Facepunch.Steamworks.*` → `Steamworks.*`), and three managed DLLs sharing one namespace were staged at once. Verified green with a real `dotnet build` of `Assembly-CSharp.csproj` (0 errors, all Steam + state types present in the output assembly).
 
-**🔜 REMAINING, in priority order:**
-1. **Editor-side wiring (must be done by hand in Unity, cannot be scripted from outside):**
-   - ~~Run the `StateRegistrationTool`~~ **no longer required, 26 Jul 2026.** `GameStateMachine.Initialize` now reconciles the scene against the code (`EnsureStatesRegistered`) and creates any missing state as a child at runtime, so a forgotten state can no longer dead-end a wipe. The state list comes from reflection over the assembly, and the Editor tool consumes the same `GameStateMachine.DiscoverStateTypes()`, so the two cannot drift. Running the tool is still *preferred* — a scene-authored state persists serialized inspector values (e.g. `TransitionCutsceneState.cutsceneSeconds`) where a runtime-created one gets field defaults — and the fallback logs a warning naming the tool whenever it steps in.
-   - Create a `SteamConfig` asset (`Assets → Create → OblastZero/Steam/Config`), set the real App ID, and call `SteamManager.Initialize(cfg)` from `Bootstrap` before `GameManager` boot. Add `SteamEventBridge` to the same GameObject.
-2. **Live Play-mode verification of the full loop with the new states**: boot → MainMenu → RunSetup → scavenge (headless) → bunker → End Day ×N → wipe → `RunFailedState` summary → back to MainMenu. Zero console errors. **This is now the top open item** — every gap below it is closed or instrumented.
-3. ~~**JSON loader verification at runtime**~~ **instrumented 26 Jul 2026.** `GameManager.InitializeDataLayer` logs `GameDatabase loaded: N items, N events, N crew, N factions` plus the localization key count, and raises a `Debug.LogError` per channel that falls under the floors in `BalanceConstants.CONTENT_MIN_EXPECTED_*` (600 items / 900 events / 1 crew / 3 factions against a shipped ~711 and ~1023). Still needs one Play-mode run to read the numbers off the console. **`LocalizedStrings` had no loader at all** — nothing ever called `Register`; `LocalizationJsonLoader` (in `OblastZero.Services`) now swaps in `Resources/Locale/localization_<code>.json`. Note the "keys render raw" symptom was a misdiagnosis: event JSON stores inline English prose in `titleKey`/`narrativeTextKey`/`choiceLabelKey`, so those already rendered as prose, and **no UI code looks up a locale key at all — all 73 keys are orphaned.** Converting the screens to `LocalizedStrings.Get` is the real remaining work.
-4. **Scavenge tuning**: the level exists and verifies clean, but it has never been played. First Play-mode pass should check pacing (direct route is ~18 s of the 60 s budget, leaving ~40 s of detour), whether the pit detour is worth its risk, and that the fluorescents read as failing rather than as strobing. ~~Carry-weight gap~~ **closed 26 Jul 2026** — see "Carry weight" below.
-5. ~~**Content QA pass**~~ **done 26 Jul 2026, zero content changes needed.** All 1020 events + 703 items are schema-valid with no IP-firewall, §7 or formula violations; no `successChanceFormula` exists in shipped content (choices use numeric `successChance`). The 87 violations the old scan reported were all scanner false positives — see "Content QA" below.
+**🔜 REMAINING, in priority order** (updated 9 Aug 2026):
+
+1. **Live Play-mode verification of the full loop — THE #1 BLOCKER, and now the only one.**
+   Boot → MainMenu → RunSetup → scavenge → bunker → End Day ×N → wipe → `RunFailedState` → MainMenu.
+   Zero console errors. The game has still never run end-to-end in Play mode. Requires the Unity MCP
+   transport fix (stdio, not HTTP Local — §11) and `Application.runInBackground = true`.
+   **Three levels now need this pass, not one.** `CensusOffice` and `Reservoir` are gate-verified but
+   have never been rendered, let alone played: every claim about them below is a claim about geometry
+   and reachability, not about how they feel.
+2. **Editor-side wiring (must be done by hand in Unity, cannot be scripted from outside):**
+   - Create a `SteamConfig` asset (`Assets → Create → OblastZero/Steam/Config`), set the real App ID,
+     and call `SteamManager.Initialize(cfg)` from `Bootstrap` before `GameManager` boot. Add
+     `SteamEventBridge` to the same GameObject. The achievement/stat wiring behind it is **complete** —
+     21 achievements and 15 stats, all fired from real gameplay events, verified 9 Aug.
+3. **Localization debt — 91 hardcoded prose literals across 5 screens.** `ArtifactUseUI` (30),
+   `InterviewSequenceUI` (30), `ExpeditionUI` (17), `ScavengeHazardHUD` (14), `OblastUIAudio` (1).
+   These render English in every language including Russian. `localization_qa.py` now measures and
+   bounds this (see "Localization" below); translating it is authoring work that has not been done.
+4. **Scavenge tuning**: three levels exist and verify clean; none has been played. First Play-mode
+   pass should check pacing, whether each site's central decision actually bites, and that the
+   fluorescents read as failing rather than as strobing.
+5. **No water audio.** `WaterVolume` changes speed and the water is visible, but there is no splash
+   or wade cue — adding one means a new DSP primitive in `ProceduralSfx` *and* its independent port
+   in `verify_procedural_sfx.py` (32/32), which is why it was not faked with an existing cue.
 6. Polish pass (audio, VFX, UX tuning), then ship Early Access.
 
+**Three scavenge sites, all built** (9 Aug 2026). The bible's three levels now exist.
+`generate_scavenge_scene.py` (Grain Depot, 423 GameObjects), `generate_census_scene.py`
+(Flooded Census Office, 286), `generate_reservoir_scene.py` (Abandoned Reservoir, 199). Each site is
+now a **PLAN ONLY** — `tools/scene_rig_lib.py` owns everything a Blowout level always has (camera
+stack, player, HUDs, anomaly volumes, mutant spawner, dust, pickup emitter) and
+`tools/scene_verify_lib.py` owns every gate. **Do not copy a generator to make a fourth site**; write
+a plan module exposing the `cfg` contract that `add_rig` reads and call the shared gates. The
+extraction was proven behaviour-preserving by regenerating `Scavenge.unity` byte-identical at every
+step — that md5 check is also what caught a name substitution reaching inside a string literal, with
+identical object and line counts.
+
+Each site's central decision, which is the thing to preserve when tuning:
+- **Grain Depot** — which ROUTE across open ground.
+- **Census Office** — whether to go DOWN. The flooded basement is a DEAD END with one ramp, so every
+  metre of water is paid for twice; that is why the good loot is down there.
+- **Reservoir** — both at once. Three crossings, each bad differently: the catwalk is dry, fast and
+  carries **no loot at all**; the service tunnel is shortest and has the Backlog in it; the basin has
+  everything worth taking under 1.4 m of water at half speed.
+
+**Player speed composes; it is not a single owner** (9 Aug 2026). `ScavengePlayerController.SpeedMultiplier`
+is now **read-only and derived**. `AnomalySpeedFactor` (owned by `BacklogAnomaly`) and
+`TerrainSpeedFactor` (owned by `WaterVolume`) are independent ratios multiplied by `ApplySpeedFactors()`,
+the single write site — the same shape as `AudioManager.ApplyBedPitches()` (§15). The old settable
+multiplier documented a rule that held only while anomalies were the sole hazard touching speed:
+wade in (0.6), cross a Backlog (0.02), walk out, and the Backlog's absolute reset to 1 left the
+player sprinting through waist-deep water for the rest of the run, permanently, nothing logged. The
+Reservoir puts a Backlog **inside** a flooded tunnel deliberately, so the two overlap by design.
+`WaterVolume` counts occupancy rather than toggling, because a large flooded room is tiled from
+several boxes and crossing an internal seam fires Exit on the old box after Enter on the new one.
+
+**Localization** (9 Aug 2026). `localization_qa.py` gained `check_screen_coverage()`. The key-based
+checks reason about KEYS and are structurally silent about a screen that declares none — from the
+tables' point of view it does not exist, which is how five screens shipped hardcoded with every gate
+green. `csharp_string_qa.py` does not close it either: hardcoded English is in-voice, so it passes
+correctly and says nothing about translation. The debt is carried as an **allowlist with exact
+counts** rather than a red build (a gate that cannot go green is a gate people learn to skip): a new
+unlocalized screen fails, and an existing one that grows fails. **The numbers may only move down.**
+
+**Meta-progression** (built 5 Aug 2026). `MetaProgressData` gained `salvageTokens` / `lifetimeSalvageTokens` / `purchasedUnlockIds` plus `IsPurchased` / `CanAfford` / `Purchase` / `AwardTokens`. `MetaUnlockCatalog` (Core) holds ten entries totalling 275 tokens; `MetaUnlockUI` (a panel spawned by `MainMenuState`, **not** a GameState — it starts no run, ends no run and loads no scene) spends them. **The catalogue carries no `purchased` flag**: it is a static process-wide table, so a mutable flag on it would be shared by every profile, would not survive a restart, and would read as purchased in a fresh profile. Ownership lives only in the saved `MetaProgressData`. Entries store `DisplayNameKey`/`DescriptionKey`, not English — the table initialises once per process while the language can change at any time. `GameManager.BeginNewRun` applies the aggregate: stat bonuses land on `RunData.crewMaxHealthBonus`/`crewMaxSanityBonus` **before the first CrewInstance exists** (starting health is the effective max, so the order is load-bearing), stock goes to the **Bunker** channel (routing it through Scavenged would put a free ration under the carry cap), and the second-operator check lives in `BeginNewRun` rather than only on the setup screen because debug launchers reach it too. **`EndCurrentRun` now computes the summary → awards tokens → *then* saves the profile.** It used to save first, which would have persisted a profile without the tokens the run just earned. Token formula constants are in `BalanceConstants` (`TOKENS_PER_DAY_SURVIVED` 2, `TOKENS_PER_ITEM_RECOVERED` 0.5, `TOKENS_PER_REPUTATION_POINT` 0.1, `TOKENS_VICTORY_BONUS` 50); the item term reads `ItemsSalvaged`, **not** `ItemsRecovered`, because those already differ by the 33% death rate and multiplying the recovered count would charge a dying run twice.
+
+**Region taxonomy — two axes, not one** (5 Aug 2026). `RegionTags` (10 proximity locales: interior / approach / remote) and the new `OblastRegions` (7 bible districts) are **orthogonal and neither derives from the other**. A crew in the kitchen block is simultaneously at `kitchen_block` and in whichever district their site sits in. **Collapsing them is a 384-event blackout** — run `python tools/migrate_event_tags.py --explain` to reproduce it: the naive replacement plan covered 3 of the 10 locales actually in use and invented 13 that do not occur, so `perimeter` (384 events), `access_road` (295), `kitchen_block` (144) and `basement_corridor` (150) would have kept vocabularies the bunker no longer passes. **The locale gate fails CLOSED; the region gate fails OPEN**, and that asymmetry is deliberate — one fail-closed content gate is all this pipeline can safely carry, so the new axis can narrow a pool but never empty one. `EventPrerequisite.oblastRegionsAny` is populated on all 1020 events by `tools/migrate_event_tags.py`, which parses the mapping out of `OblastRegions.cs` rather than mirroring it, guards on bunker-day reachability before writing, and carries two negative controls. `ScavengeSiteCatalog` now stores canonical `RegionId` (was ad-hoc display strings like "Administrative Ring") and `SurvivalPhase2DState` passes the run's site region every day, so **which site you registered for keeps tinting the narrative after the Blowout ends**.
+
+**Crew traits** (wired 5 Aug 2026). The old diagnosis "traits do nothing" was wrong and cost a session's worth of misdirected design: `CrewManager.AddRescued` already copied `startingTraits` onto instances, `EventEngine` already gated on `requiredCrewTraitIds` / per-choice `requiredTraitsAny` (**406 of the shipped choices use them**), and `CrewFormulaContext` already folded `combatResolutionBonus` into `crew.combat`. What had no consumer was the *rest* of `CrewStatModifiers`. `TraitEffects` (Gameplay) is that consumer: it reads `TraitData.modifiers` **from the database** and resolves max health, max sanity, sanity-recovery multiplier, radiation resistance and carry capacity. **It is a resolver, not a rules table** — a `switch` over hardcoded trait ids would put balance in two places, inline magic numbers against §5, and silently do nothing for every trait authored after it was written. **Combat is deliberately absent from `TraitEffects`** because `CrewFormulaContext` already applies it; a second application compounds a 20% bonus into 44%. One consumer per modifier field.
+
+**Balance — victory IS reachable** (measured 5 Aug 2026, `tools/balance_analysis.py`). The premise that the game is unwinnable was false. Pursuing a faction wins **73–88% of runs** within a 45-day horizon, median day 27–30, earliest day 15. **`ENDGAME_MIN_TENURE_DAYS` is a floor, not a deadline** — `BunkerPhaseController` checks victory after every day tick, so measuring reputation *at* day 15 answers a much harsher question than the game asks, and answering it instead is how a balance pass "fixes" content that was never broken. The +60 threshold and the day-15 floor both stay. The real defect was **spread**: Kafedra had 180 standing events but only 112 reachable on a bunker day (the generator gave the science faction remote settings), so its ending won 43.2% against ScaleSociety's 92.7%. `tools/rebalance_reputation.py` retagged 68 remote-only Kafedra events to *also* carry `perimeter` — **adding, never replacing**, since `regionTagsAny` is an ANY list — taking Kafedra to 73.0% and the spread from 49.5 points to 15.4. A residual 22-event gap remains and **needs authored content, not retagging**; `--check` reports it every run as a KNOWN GAP and exits 0, because a gate that can never go green is a gate people learn to skip.
 
 **Carry weight** (closed 26 Jul 2026). `SCAVENGE_MAX_CARRY_WEIGHT_KG` is now **15** and is enforced in `InventoryManager.AddItem` on the Scavenged channel only — the Bunker channel stays uncapped. Refusals are **all-or-nothing**: an over-cap pickup returns null, nothing partially fills, and `ScavengeController` already leaves the world object in place, so the player keeps the choice. `ScavengeLoadChangedEvent` / `ScavengePickupRejectedEvent` reach the HUD via `ManagerEventBridge`; `ScavengeHUD` draws a load bar and a refusal notice. **The cap is now per-crew (26 Jul 2026).** `GameManager.BeginNewRun` resolves the lead operator's `CrewMemberData` and assigns `baseStats.carryCapacityKg` to `InventoryManager.ScavengeCarryCapacityKg`, floored at `BalanceConstants.SCAVENGE_MIN_CARRY_WEIGHT_KG` (8) so a misauthored zero cannot produce a pack that refuses everything. Authored values were **rescaled to straddle the 15 kg baseline rather than sit above it — Marina 12 / Yuri 15 / Sasha 19** (was 22/28/34); wiring the old numbers would have handed every crew member more room than the depot was tuned against and retired the weight decision. Against the depot's 28.72 kg floor that is 42% / 52% / 66% of the loot, so the trade-off stays live across the whole roster. **Rescale both `Crew_*.asset` and `OblastZeroContentSeeder.SeedCrew` — the seeder rewrites those assets from hardcoded literals.** (It does exactly that to item weights: re-running the seeder reverts `rebalance_weights.py` on the 8 authored `.asset` items, which is why `--check` can fail with no one having touched a weight.) Item weights were rebalanced by `tools/rebalance_weights.py` (deterministic, idempotent, `--check` gate; covers **both** the 703 Resources JSON items *and* the 8 authored `.asset` items — touching only one leaves the depot half-light). Depot loot went 16.59 kg → **28.72 kg against a 15 kg cap**, so the player takes ~52% of the floor and 6 pickups cost >2 kg each.
 
@@ -68,7 +129,8 @@ Always-on rules for every Claude Code session in this repo. Read this first. It 
 - **Artifacts are armed, not applied.** `ArtifactSystem` owns the four `RunData` artifact fields; `EventEngine.Artifacts` and `CrewManager.RadiationMultiplierProvider` are optional hooks (null-safe, so the smoke tests still construct both bare). Margin Note re-rolls *forward* — reversing an applied outcome is lossy (death, clamped reputation, consumed items, an advanced RNG stream) and would mean a save system that lies.
 - **Two new generator gates, both with negative controls:** `assert_balance_mirror()` (numbers baked into the scene must equal their `BalanceConstants` counterparts — the mirror was a comment before) and `verify_anomaly_zones()` + the spawn-point check inside `verify_nav_grid()`. Scene is 423 GameObjects and still regenerates byte-identical.
 
-**Still not built:** `CensusOffice.unity` and `Reservoir.unity`. `site_census_office` was `IsBuilt = true` with `SceneName = "CensusOffice"` and no such scene — `ScavengePhase3DState` only falls back when `SceneName` is *empty*, so it passed the guard and loaded nothing. Both sites are now honestly `IsBuilt = false` with their threat profiles authored, so building either is a generator plus one flag.
+**Built 9 Aug 2026:** `CensusOffice.unity` and `Reservoir.unity` (see "Three scavenge sites" above).
+Historical note, kept because the failure mode recurs: `site_census_office` was `IsBuilt = true` with `SceneName = "CensusOffice"` and no such scene — `ScavengePhase3DState` only falls back when `SceneName` is *empty*, so it passed the guard and loaded nothing. Both sites are now honestly `IsBuilt = false` with their threat profiles authored, so building either is a generator plus one flag.
 
 **Bunker UI ↔ logic contract** (for scene/flow work): HUD raises `EndDayRequestedEvent`, `EventChoiceSelectedEvent`, `ArtifactScreenRequestedEvent` and `ExpeditionScreenRequestedEvent`; `SurvivalPhase2DState` is the ONLY subscriber that turns them into `BunkerPhaseController` calls; `SurvivalPhase2DState` is the ONLY subscriber that turns them into `BunkerPhaseController` calls. HUDs refresh off `DayAdvancedEvent`, `CrewStatChangedEvent`, `CrewDiedEvent`, `BunkerInventoryChangedEvent`, `FactionReputationChangedEvent`, `EventPresentedEvent`, `EventResolvedEvent`. Both HUDs build their own canvas on `Awake` — just add the component to a GameObject in the bunker scene.
 
