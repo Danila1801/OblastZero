@@ -93,6 +93,9 @@ jobs:
       - name: Census Office scene drift check
         run: python tools/generate_census_scene.py --check
 
+      - name: Reservoir scene drift check
+        run: python tools/generate_reservoir_scene.py --check
+
       - name: Weight balance idempotence check
         run: python tools/rebalance_weights.py --check
 

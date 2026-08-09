@@ -135,9 +135,14 @@ namespace OblastZero.Core
                 DisplayName = "Abandoned Reservoir",
                 RegionId = OblastRegions.Reservoir,
                 Summary = "Municipal basin and pump house. Catwalk over open water. Control room dry, reachable only through the flooded tunnels.",
-                IsBuilt = false,
+
+                // Built 9 Aug 2026 by tools/generate_reservoir_scene.py — 199 GameObjects, 100 x 68 m.
+                // Three crossings between the banks, each bad in a different way: the catwalk is dry,
+                // fast and carries no loot; the service tunnel is the shortest and has the Backlog in
+                // it; the basin holds everything worth taking under 1.4 m of water at half speed.
+                IsBuilt = true,
                 RequiredUnlockId = null,
-                SceneName = string.Empty,
+                SceneName = "Reservoir",
                 UnavailableReason = "Survey incomplete. The basin has not been sounded since the Blowout.",
 
                 // The bible's hunting ground: this is where the Census-Takers drowned. Highest threat

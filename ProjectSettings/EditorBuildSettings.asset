@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CensusOffice.unity
     guid: e22d24492edd8a8266906e5e04148680
+  - enabled: 1
+    path: Assets/Scenes/Reservoir.unity
+    guid: 1d4cfc3105be1347af502952a3a5a696
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
