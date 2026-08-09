@@ -446,6 +446,65 @@ def report(items, changed, cap):
         print("\nWARNING: total loot fits inside the cap — the cap does not bind. Retune the bands.")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Seeder mirror gate
+#
+# OblastZeroContentSeeder.SeedItems() recreates the eight authored .asset items from hardcoded
+# literals. Those literals are a SECOND copy of numbers this script owns, and a second copy that
+# nothing watches will drift: for several weeks the seeder held the pre-rebalance weights, so
+# running it in the Editor silently reverted all eight assets and turned --check red with nobody
+# having touched a weight. The gate blamed the assets; the cause was in the C#.
+#
+# So check the C# too. Parse the MakeItem() calls out of the seeder — never mirror the values
+# here, which would just be a third copy — and assert each literal equals what compute_weight()
+# produces for that id. Same discipline as tools/visual_archetypes.py, which parses its tables out
+# of the C# rather than restating them.
+# ─────────────────────────────────────────────────────────────────────────────
+
+SEEDER_PATH = os.path.join(
+    REPO_ROOT, "Assets", "_Project", "Scripts", "Editor", "OblastZeroContentSeeder.cs"
+)
+
+# MakeItem("Item_PryBar", "item_pry_bar", "Pry Bar", ItemCategory.Tool,
+#     2.73f, 100, 0f, ...)
+SEEDER_MAKEITEM_RE = re.compile(
+    r'MakeItem\(\s*"[^"]+"\s*,\s*"(?P<id>[^"]+)"\s*,\s*"(?P<name>[^"]+)"\s*,'
+    r'\s*ItemCategory\.(?P<category>\w+)\s*,\s*(?P<weight>-?[0-9]*\.?[0-9]+)f',
+    re.S,
+)
+
+
+def check_seeder_literals():
+    """Return a list of (id, literal, expected) for seeder weights that disagree with the model."""
+    if not os.path.exists(SEEDER_PATH):
+        # Editor-only script. Its absence is not a weight problem, so say so rather than failing
+        # the weight gate with a misleading message.
+        return None
+
+    with open(SEEDER_PATH, "r", encoding="utf-8") as handle:
+        source = handle.read()
+
+    matches = list(SEEDER_MAKEITEM_RE.finditer(source))
+    if not matches:
+        # The call shape changed and this regex now silently matches nothing. A mirror check that
+        # inspects zero items passes forever, which is the exact failure it exists to prevent.
+        raise SystemExit(
+            "SEEDER GATE BROKEN: no MakeItem(...) calls parsed out of %s.\n"
+            "The regex no longer matches the C#. Fix the regex — do not delete this gate."
+            % os.path.relpath(SEEDER_PATH, REPO_ROOT)
+        )
+
+    drift = []
+    for match in matches:
+        item_id = match.group("id")
+        literal = float(match.group("weight"))
+        expected, _ = compute_weight(item_id, match.group("name"), match.group("category"))
+        # Compare at the precision the literal is written to; the model rounds to 2 dp.
+        if abs(literal - expected) > 0.005:
+            drift.append((item_id, literal, expected))
+    return drift
+
+
 def main():
     parser = argparse.ArgumentParser(description="Rebalance Oblast Zero item weights.")
     parser.add_argument("--report", action="store_true", help="print the report, write nothing")
@@ -463,6 +522,7 @@ def main():
     report(items, changed, read_carry_cap())
 
     if args.check:
+        failed = False
         if changed:
             print("\nCHECK FAILED: %d file(s) would change:" % len(changed))
             for item in changed[:10]:
@@ -470,6 +530,24 @@ def main():
                       % (os.path.relpath(item["path"], REPO_ROOT), item["old"], item["new"]))
             if len(changed) > 10:
                 print("   ... and %d more" % (len(changed) - 10))
+            failed = True
+
+        drift = check_seeder_literals()
+        if drift is None:
+            print("\nSEEDER MIRROR: skipped — OblastZeroContentSeeder.cs not present.")
+        elif drift:
+            print("\nSEEDER MIRROR FAILED: %d hardcoded weight(s) in OblastZeroContentSeeder.cs"
+                  " disagree with the model." % len(drift))
+            for item_id, literal, expected in drift:
+                print("   %-28s seeder %.2f  ->  model %.2f" % (item_id, literal, expected))
+            print("   Running the seeder in the Editor would revert these assets and turn this")
+            print("   gate red again. Fix the literals in the C# to match the model.")
+            failed = True
+        else:
+            print("\nSEEDER MIRROR PASSED: all %d hardcoded weights agree with the model."
+                  % len(SEEDER_MAKEITEM_RE.findall(open(SEEDER_PATH, encoding='utf-8').read())))
+
+        if failed:
             return 1
         print("\nCHECK PASSED: weights on disk already match the model (script is idempotent).")
         return 0

@@ -1,0 +1,52 @@
+<!--
+  Directory.Build.targets — applies to every MSBuild project under the repo root.
+
+  WHY THIS EXISTS
+  ===============
+  Unity regenerates Assembly-CSharp.csproj (and the package csprojs beside it) whenever the asset
+  database refreshes, and it bakes ABSOLUTE paths to the Visual Studio Tools for Unity analyzers
+  into each one:
+
+      <Analyzer Include="C:\Users\<user>\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.2.2\Analyzers\Microsoft.Unity.Analyzers.dll" />
+
+  The version number is part of that path. When VS Code updates the extension — 1.2.2 to 1.3.1 on
+  this machine — the old folder is deleted, but the generated csprojs keep pointing at it until
+  Unity next regenerates them. Every `dotnet build` then dies with:
+
+      error CS0006: Metadata file '...vstuc-1.2.2\Analyzers\Microsoft.Unity.Analyzers.dll'
+                    could not be found
+
+  That is a broken TOOLCHAIN path, not broken game code, but it is indistinguishable from a real
+  compile failure in the output — which is exactly how it took down `tools/verify_steam_layer.py`,
+  the gate this project relies on to prove a compile is clean without opening the Editor. The gate
+  went red, the code was fine, and nothing in the error text says so.
+
+  It also cannot be fixed by editing the csprojs: they are generated artefacts, `*.csproj` is in
+  .gitignore, and Unity overwrites any edit on the next asset refresh. And it cannot be fixed by
+  patching only the scratch copy verify_steam_layer.py builds, because the dead reference is
+  repeated in the package csprojs that copy pulls in via <ProjectReference>.
+
+  WHAT IT DOES
+  ============
+  Drops any <Analyzer> whose file is not on disk, immediately before compilation, for every project
+  in the tree. Analyzers are advisory diagnostics — losing one degrades lint coverage in an IDE; it
+  cannot change the emitted assembly. So dropping a missing one is strictly better than failing the
+  build, and an analyzer that IS present is left completely alone.
+
+  This is deliberately scoped to *missing* files. It is not a switch that disables analyzers.
+
+  Unity does not use MSBuild to compile the game (it drives the compiler directly), so nothing here
+  affects an Editor or player build. This file only shapes `dotnet build` / IDE builds — which is
+  where the failure lives.
+-->
+<Project>
+
+  <Target Name="OblastZeroDropMissingAnalyzers" BeforeTargets="CoreCompile">
+
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="!Exists('%(Identity)')" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

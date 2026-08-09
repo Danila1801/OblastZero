@@ -101,16 +101,20 @@ jobs:
       - name: Prop pipeline verification
         run: python tools/verify_prop_pipeline.py
 
-      # ── Compile ──────────────────────────────────────────────────────────
-      # verify_steam_layer.py copies Unity's generated csproj, injects any .cs files Unity has not imported
-      # yet, and builds. It needs the SDK but not the Editor and not a licence.
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Steam layer + compile verification
-        run: python tools/verify_steam_layer.py
+      # ── Steam layer ──────────────────────────────────────────────────────
+      # --no-build is not a weakening of this gate; it is the only thing it can honestly do here.
+      # Sections 1-5 (single-DLL staging, PluginImporter metas, dead-1.x-API grep, DLL symbol
+      # existence, SteamConfig GUID wiring) read committed files and are the checks that have
+      # actually caught regressions. Sections 6-7 shell out to `dotnet build` on Unity's generated
+      # Assembly-CSharp.csproj — which is in .gitignore and therefore is NOT in a fresh checkout,
+      # and which references UnityEngine.dll from a local Editor install that a bare runner does
+      # not have. Running the full script here could only ever produce a red X for a missing
+      # generated file, which is the failure mode that teaches people to ignore CI.
+      #
+      # The compile IS covered: unity-ci.yml builds the player with a real Editor and a licence
+      # secret, and the full 39-check run is the local pre-push gate on a dev machine.
+      - name: Steam layer verification (no compile — see comment)
+        run: python tools/verify_steam_layer.py --no-build
 
       # ── Reports (never gates) ────────────────────────────────────────────
       # Balance analysis prints distributions and outliers. It is a judgement aid, not a rule, so it must

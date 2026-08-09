@@ -10,6 +10,16 @@ Checks, in order:
   6. Assembly-CSharp.csproj compiles with ZERO errors (dotnet build, project-root scratch copy).
   7. The types we care about are present in the produced assembly.
 
+Sections 1-5 read only files that are committed to the repo, so they run anywhere.
+Sections 6-7 need BOTH Unity's generated Assembly-CSharp.csproj (which is in .gitignore — Unity
+writes it on asset refresh, it is never committed) AND the Unity engine DLLs it references from the
+local Editor install. Neither exists on a bare CI runner, so `--no-build` skips them there; the
+compile itself is covered on CI by unity-ci.yml, which has an Editor and a licence.
+
+Usage:
+  python tools/verify_steam_layer.py              # all 39 checks (needs Unity installed locally)
+  python tools/verify_steam_layer.py --no-build   # sections 1-5 only, no Unity required
+
 Exit 0 = all green. Any failure prints FAIL and exits 1.
 """
 import os
@@ -19,7 +29,13 @@ import subprocess
 import sys
 from pathlib import Path
 
-PROJ = Path(r"C:\Users\danil\projects\OblastZero")
+# Derive the project root from this file's location rather than hardcoding it. The absolute path
+# that used to live here was correct on exactly one machine, which meant the CI step that invoked
+# this script could never have passed on a runner — it would have died resolving Assets/ under a
+# path that does not exist, and reported it as a Steam-layer failure.
+PROJ = Path(__file__).resolve().parent.parent
+
+NO_BUILD = "--no-build" in sys.argv
 PLUGINS = PROJ / "Assets/Plugins/Facepunch.Steamworks"
 STEAM_SRC = PROJ / "Assets/_Project/Scripts/Steam"
 DLL = PLUGINS / "Facepunch.Steamworks.Win64.dll"
@@ -67,8 +83,26 @@ asset = (PROJ / "Assets/Data/Resources/SteamConfig.asset").read_text(encoding="u
 check("asset m_Script guid matches script meta", guid in asset, f"guid={guid}")
 check("asset is under a Resources/ folder for Resources.Load", True)
 
+CSPROJ = PROJ / "Assembly-CSharp.csproj"
+
+if NO_BUILD or not CSPROJ.exists():
+    print("\n=== 6-7. dotnet build — SKIPPED ===")
+    if NO_BUILD:
+        print("  [skip] --no-build requested; sections 1-5 above are the whole run.")
+    else:
+        # Distinguish "not built here" from "the build failed". Reporting a missing generated file
+        # as a compile error is how a green project looks broken.
+        print("  [skip] Assembly-CSharp.csproj is absent. It is Unity-generated and gitignored;")
+        print("         open the project in the Editor once to emit it, or pass --no-build.")
+    print(f"\n{'=' * 46}\n{checks - len(failures)}/{checks} checks passed (compile section skipped)")
+    if failures:
+        print("FAILED:\n  - " + "\n  - ".join(failures))
+        sys.exit(1)
+    print("ALL GREEN (no compile)")
+    sys.exit(0)
+
 print("\n=== 6. dotnet build (0 errors required) ===")
-csproj = (PROJ / "Assembly-CSharp.csproj").read_text(encoding="utf-8")
+csproj = CSPROJ.read_text(encoding="utf-8")
 for gone in ("Facepunch.Steamworks.Posix", "Facepunch.Steamworks.Win32"):
     csproj = re.sub(r'[ \t]*<Reference Include="' + re.escape(gone) + r'">.*?</Reference>\r?\n',
                     "", csproj, flags=re.S)

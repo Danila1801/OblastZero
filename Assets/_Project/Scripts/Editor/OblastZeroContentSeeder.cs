@@ -92,26 +92,42 @@ namespace OblastZero.EditorTools
 
         // ---- Items ----
 
+        /// <summary>
+        /// Seeds the eight authored <c>.asset</c> items.
+        /// </summary>
+        /// <remarks>
+        /// <para><b>The weight literals below are OWNED BY <c>tools/rebalance_weights.py</c>, not by this
+        /// file.</b> That tool derives every item weight in the project — the 703 JSON items and these
+        /// eight — from one deterministic category+id rule set, so the Collapsed Grain Depot's loot floor
+        /// stays tuned against the 15 kg carry cap.</para>
+        /// <para>These literals used to hold the pre-rebalance values, which made running this seeder a
+        /// silent revert: it rewrote all eight assets from the numbers below, and
+        /// <c>rebalance_weights.py --check</c> went red the next time anyone ran it, with no one having
+        /// touched a weight. The gate blamed the assets; the cause was here.</para>
+        /// <para><c>rebalance_weights.py --check</c> now parses these <c>MakeItem</c> calls and fails if any
+        /// literal disagrees with the model, so the two can no longer drift apart quietly. If that check
+        /// fails, fix the number here to match the tool — never the other way round.</para>
+        /// </remarks>
         private static List<ItemData> SeedItems()
         {
             var list = new List<ItemData>
             {
                 MakeItem("Item_CannedMeat", "item_canned_meat", "Canned Meat", ItemCategory.Food,
-                    0.4f, 100, 2f, new[] { UtilityTag.Eat, UtilityTag.Trade }, false, 0f, 4, 1, 2),
+                    0.46f, 100, 2f, new[] { UtilityTag.Eat, UtilityTag.Trade }, false, 0f, 4, 1, 2),
                 MakeItem("Item_WaterFlask", "item_water_flask", "Water Flask", ItemCategory.Water,
-                    1.0f, 100, 0f, new[] { UtilityTag.Drink }, false, 0f, 3, 1, 2),
+                    0.97f, 100, 0f, new[] { UtilityTag.Drink }, false, 0f, 3, 1, 2),
                 MakeItem("Item_Bandage", "item_bandage", "Field Bandage", ItemCategory.Medical,
-                    0.1f, 100, 0f, new[] { UtilityTag.Heal }, false, 0f, 6, 2, 3),
+                    0.12f, 100, 0f, new[] { UtilityTag.Heal }, false, 0f, 6, 2, 3),
                 MakeItem("Item_ServicePistol", "item_service_pistol", "9mm Service Pistol", ItemCategory.Weapon,
-                    0.8f, 100, 0f, new[] { UtilityTag.Fight, UtilityTag.Defend, UtilityTag.Trade }, false, 0f, 30, 40, 10),
+                    0.88f, 100, 0f, new[] { UtilityTag.Fight, UtilityTag.Defend, UtilityTag.Trade }, false, 0f, 30, 40, 10),
                 MakeItem("Item_PistolAmmo", "item_pistol_ammo", "9mm Rounds", ItemCategory.Ammunition,
-                    0.02f, 100, 0f, new[] { UtilityTag.Fight }, false, 0f, 8, 10, 4),
+                    0.09f, 100, 0f, new[] { UtilityTag.Fight }, false, 0f, 8, 10, 4),
                 MakeItem("Item_PryBar", "item_pry_bar", "Pry Bar", ItemCategory.Tool,
-                    2.0f, 100, 0f, new[] { UtilityTag.Repair, UtilityTag.Fight }, false, 0f, 12, 12, 6),
+                    2.73f, 100, 0f, new[] { UtilityTag.Repair, UtilityTag.Fight }, false, 0f, 12, 12, 6),
                 MakeItem("Item_BureauDossier", "item_bureau_dossier", "Pre-Incident Bureau Dossier", ItemCategory.Document,
-                    0.2f, 100, 0f, new[] { UtilityTag.Read, UtilityTag.Trade }, false, 0f, 50, 5, 55),
+                    0.18f, 100, 0f, new[] { UtilityTag.Read, UtilityTag.Trade }, false, 0f, 50, 5, 55),
                 MakeItem("Item_ArtifactBallast", "item_artifact_ballast", "Artifact: Ballast", ItemCategory.Artifact,
-                    0.6f, 100, 0f, new[] { UtilityTag.Trade, UtilityTag.Ritual }, true, 35f, 80, 40, 90),
+                    0.44f, 100, 0f, new[] { UtilityTag.Trade, UtilityTag.Ritual }, true, 35f, 80, 40, 90),
             };
             return list;
         }
