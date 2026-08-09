@@ -71,18 +71,57 @@ namespace OblastZero.Gameplay
         public bool HasLookTarget => _lookTarget != null;
 
         /// <summary>
-        /// Scales walk and sprint speed. 1 is normal; the Backlog anomaly (ANM-Χ-21/BL) drops it to 0.02.
-        ///
-        /// <para>A multiplier rather than public base speeds. Exposing <c>walkSpeed</c>/<c>sprintSpeed</c>
-        /// for a hazard to overwrite means every hazard has to save and restore two values, and any pair of
-        /// them that overlaps restores the other's saved copy — the player walks out of one anomaly at
-        /// another's speed, permanently, with nothing logged. One multiplier has one owner at a time and
-        /// resets to a known constant.</para>
+        /// The effective walk/sprint scale actually applied to movement. Read-only — it is the product
+        /// of the independent factors below, never assigned directly.
         /// </summary>
+        /// <remarks>
+        /// <para>This used to be settable, with the rule "one multiplier has one owner at a time and
+        /// resets to a known constant." That held while anomalies were the only hazard that touched
+        /// speed. It stops holding the moment a SECOND, independent kind of slow exists — standing
+        /// water — because the two overlap by design: the Reservoir puts a Backlog anomaly in a
+        /// flooded tunnel, so a player is routinely inside both at once.</para>
+        /// <para>With a single settable multiplier, that combination is silently broken. Wade into the
+        /// basement (0.6), walk through a Backlog (0.02), walk out — and <c>BacklogAnomaly</c> restores
+        /// an absolute 1. The player is now sprinting through waist-deep water at full speed for the
+        /// rest of the run, permanently, with nothing logged. Exactly the failure the old comment
+        /// described, one level up: not two hazards of the same kind, but two kinds.</para>
+        /// <para>So the factors compose instead. Each source owns ONE named factor and never sees the
+        /// others; <see cref="ApplySpeedFactors"/> is the single write site for the product. Same shape
+        /// as <c>AudioManager.ApplyBedPitches()</c>, which composes music transpose with the Backlog's
+        /// temporal drag for the same reason — see CLAUDE.md §15.</para>
+        /// </remarks>
         public float SpeedMultiplier
         {
             get { return _speedMultiplier; }
-            set { _speedMultiplier = Mathf.Clamp(value, 0.001f, 4f); }
+        }
+
+        /// <summary>
+        /// Speed scale owned by anomalies. 1 outside any zone; the Backlog (ANM-Χ-21/BL) drops it to 0.02.
+        /// </summary>
+        public float AnomalySpeedFactor
+        {
+            get { return _anomalySpeedFactor; }
+            set { _anomalySpeedFactor = Mathf.Clamp(value, 0.001f, 4f); ApplySpeedFactors(); }
+        }
+
+        /// <summary>
+        /// Speed scale owned by the ground the player is standing in — standing water in the Census
+        /// Office basement and the Reservoir's flooded tunnels. 1 on dry footing.
+        /// </summary>
+        public float TerrainSpeedFactor
+        {
+            get { return _terrainSpeedFactor; }
+            set { _terrainSpeedFactor = Mathf.Clamp(value, 0.001f, 4f); ApplySpeedFactors(); }
+        }
+
+        /// <summary>
+        /// The only place <see cref="_speedMultiplier"/> is written. Both factors are independent ratios,
+        /// so wading through a Backlog is correctly slower than either alone, and leaving one restores
+        /// only its own contribution.
+        /// </summary>
+        private void ApplySpeedFactors()
+        {
+            _speedMultiplier = Mathf.Clamp(_anomalySpeedFactor * _terrainSpeedFactor, 0.001f, 4f);
         }
 
         /// <summary>
@@ -121,6 +160,8 @@ namespace OblastZero.Gameplay
         private ScavengePickup _lookTarget;
         private PickupHoverHighlight _hovered;
         private float _speedMultiplier = 1f;
+        private float _anomalySpeedFactor = 1f;
+        private float _terrainSpeedFactor = 1f;
         private float _nextInteractAllowedAt;
 
         private void Awake()

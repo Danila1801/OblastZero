@@ -42,6 +42,9 @@ SCRIPT_GUIDS = {
     # Phase A mutants (bible SS5 / BESTIARY.md).
     "MutantSpawner":            "853026c49a3417ff0aa31e8d29876f17",
     "ScavengeHazardHUD":        "510ffb7fd5c4c648ebd6676e95ba1836",
+    # Standing water (Census Office basement, Reservoir tunnels). Terrain, not an anomaly — it owns
+    # the player's TERRAIN speed factor, which composes with the anomaly factor instead of fighting it.
+    "WaterVolume":              "ef34ec187a86c890115008c68f03b23a",
     # URP / SRP core components
     "UniversalAdditionalCameraData": "a79441f348de89743a2939f4d699eac1",
     "UniversalAdditionalLightData":  "474bcb49853aa07438625e644c072ee6",

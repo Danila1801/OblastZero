@@ -74,7 +74,11 @@ namespace OblastZero.Gameplay.Anomalies
             _player = player != null ? player.GetComponentInParent<ScavengePlayerController>() : null;
             if (_player == null) return;
 
-            _player.SpeedMultiplier = TimeDilationFactor;
+            // The anomaly's own factor, not the effective multiplier. Standing water owns a separate
+            // one, and the Reservoir deliberately puts this anomaly in a flooded tunnel — so wading
+            // through a Backlog has to be slower than either hazard alone, and leaving it must give
+            // back only what this zone took.
+            _player.AnomalySpeedFactor = TimeDilationFactor;
             _player.InteractionDelaySeconds = BalanceConstants.BACKLOG_INTERACTION_DELAY_SECONDS;
 
             AudioManager.SetTemporalDrag(BalanceConstants.BACKLOG_AUDIO_PITCH_FACTOR);
@@ -98,7 +102,10 @@ namespace OblastZero.Gameplay.Anomalies
         {
             if (_player != null)
             {
-                _player.SpeedMultiplier = 1f;
+                // Restores this zone's contribution only. A player who wades out of a flooded tunnel
+                // keeps the water's slow, which an absolute reset to 1 used to erase for the rest of
+                // the run.
+                _player.AnomalySpeedFactor = 1f;
                 _player.InteractionDelaySeconds = 0f;
                 _player = null;
             }

@@ -221,6 +221,28 @@ namespace OblastZero.Core
         /// </summary>
         public const float BACKLOG_AUDIO_PITCH_FACTOR = 0.75f;
 
+        /// <summary>
+        /// Player speed in shallow standing water, as a fraction of normal — the Census Office basement
+        /// and the Reservoir's shallow margins. Ankle to shin deep: an obstacle you accept, not one you
+        /// route around.
+        ///
+        /// <para>0.6 against a 60-second clock means every 10 m of wading costs about 1.5 extra seconds
+        /// at a walk. The flooded rooms hold the document and medical loot precisely so that cost is a
+        /// decision rather than a tax.</para>
+        /// </summary>
+        public const float WATER_SHALLOW_SPEED_FACTOR = 0.6f;
+
+        /// <summary>
+        /// Player speed in deep standing water — the Reservoir's flooded tunnels and basin floor.
+        ///
+        /// <para>0.5, not lower. The tunnels are the Reservoir's shortcut and they already carry a
+        /// Backlog anomaly; the two compose multiplicatively (0.5 × 0.02 = 0.01), so a deeper wade
+        /// number would make the combination unsurvivable by arithmetic rather than by choice. The
+        /// composition is why this is a separate factor from the anomaly's — see
+        /// ScavengePlayerController.SpeedMultiplier.</para>
+        /// </summary>
+        public const float WATER_DEEP_SPEED_FACTOR = 0.5f;
+
         /// <summary>Seconds the screen takes to fade to black when the player sits for the Interview.</summary>
         public const float INTERVIEW_FADE_SECONDS = 1.5f;
 
