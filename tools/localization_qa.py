@@ -54,6 +54,7 @@ Stdlib only, plus content_qa.py (a sibling). Modifies nothing.
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import os
 import re
@@ -281,6 +282,108 @@ def check_voice(tables: Dict[str, Dict[str, str]]) -> Tuple[List[str], List[str]
 # ---------------------------------------------------------------------------
 # Reporting
 # ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# Screen coverage — the gap the other checks structurally cannot see
+#
+# check_coverage/parity/placeholders all reason about KEYS. They are silent about a screen that
+# declares no keys at all, because from the tables' point of view such a screen does not exist.
+# That is how five UI screens shipped as hardcoded English while every localization gate was green:
+# nothing in the pipeline asked "does this screen look up any strings?"
+#
+# csharp_string_qa.py does not close it either — that is an IP/voice gate. Hardcoded English is
+# perfectly in-voice, so it passes, correctly, and says nothing about translation.
+#
+# The debt is real and it is measured below. It is carried as an ALLOWLIST WITH EXACT COUNTS rather
+# than as a red build, because a gate that cannot go green is a gate people learn to skip
+# (CLAUDE.md, the same reasoning that made the Kafedra event gap a reported KNOWN GAP). The counts
+# are the point: a NEW unlocalized screen fails, and an existing one that GROWS fails. The only
+# direction the numbers may move without editing this table is down.
+# ─────────────────────────────────────────────────────────────────────────────
+
+UI_DIR = os.path.join(PROJECT_ROOT, "Assets", "_Project", "Scripts", "UI")
+
+# screen -> prose literals still hardcoded, as measured 9 Aug 2026. Drive these to 0 and delete
+# the entry. Do not raise a number to make the gate pass.
+UNLOCALIZED_DEBT = {
+    "ArtifactUseUI.cs": 30,
+    "ExpeditionUI.cs": 17,
+    "InterviewSequenceUI.cs": 30,
+    "OblastUIAudio.cs": 1,
+    "ScavengeHazardHUD.cs": 14,
+}
+
+_PROSE_RE = re.compile(r'"([A-Z][^"]{3,90})"')
+_TOKENISH_RE = re.compile(r'^[A-Za-z0-9_.]+$')
+
+
+def _prose_literals(source: str) -> int:
+    """Rough count of player-facing prose literals. Deliberately crude — it is a TREND gate."""
+    n = 0
+    for match in _PROSE_RE.finditer(source):
+        text = match.group(1)
+        if _TOKENISH_RE.match(text) and len(text) < 12:
+            continue
+        if _TOKENISH_RE.match(text) and " " not in text:
+            continue
+        n += 1
+    return n
+
+
+def check_screen_coverage() -> Tuple[List[str], List[str]]:
+    """Fails on a NEW unlocalized screen or on growth in a known one. Warns on the standing debt."""
+    failures: List[str] = []
+    warnings: List[str] = []
+
+    if not os.path.isdir(UI_DIR):
+        return ([f"UI source directory not found: {UI_DIR}"], [])
+
+    remaining = 0
+    for path in sorted(glob.glob(os.path.join(UI_DIR, "*.cs"))):
+        name = os.path.basename(path)
+        with open(path, "r", encoding="utf-8") as handle:
+            source = handle.read()
+
+        if "LocalizedStrings.Get" in source:
+            if name in UNLOCALIZED_DEBT:
+                failures.append(
+                    f"{name} now uses LocalizedStrings but is still listed in UNLOCALIZED_DEBT. "
+                    f"Finish it and remove the entry."
+                )
+            continue
+
+        count = _prose_literals(source)
+        if count == 0:
+            continue
+
+        budget = UNLOCALIZED_DEBT.get(name)
+        if budget is None:
+            failures.append(
+                f"{name} has {count} player-facing prose literal(s) and never calls "
+                f"LocalizedStrings.Get — a new screen that cannot be translated."
+            )
+        elif count > budget:
+            failures.append(
+                f"{name} grew from {budget} to {count} hardcoded prose literal(s). "
+                f"Localization debt may only shrink."
+            )
+        else:
+            remaining += count
+            if count < budget:
+                warnings.append(
+                    f"{name} is down to {count} hardcoded literal(s) from {budget} — "
+                    f"lower UNLOCALIZED_DEBT to lock the progress in."
+                )
+
+    if remaining:
+        warnings.append(
+            f"KNOWN GAP: {remaining} hardcoded prose literal(s) across "
+            f"{len(UNLOCALIZED_DEBT)} screen(s) are not translatable. "
+            f"These screens render English in every language."
+        )
+    return failures, warnings
+
+
+
 def run(locale_dir: str = LOCALE_DIR, keys_source: str = KEYS_SOURCE,
         quiet: bool = False) -> Tuple[List[str], List[str]]:
     """Runs every check. Returns (failures, warnings)."""
@@ -320,6 +423,13 @@ def run(locale_dir: str = LOCALE_DIR, keys_source: str = KEYS_SOURCE,
     voice_failures, voice_warnings = check_voice(tables)
     failures += voice_failures
     warnings += voice_warnings
+
+    # The check the key-based ones structurally cannot perform: does each screen look anything up?
+    coverage_failures, coverage_warnings = check_screen_coverage()
+    failures += coverage_failures
+    warnings += coverage_warnings
+    if not quiet:
+        print(f"  screen coverage: {len(UNLOCALIZED_DEBT)} screen(s) carrying localization debt")
 
     return failures, warnings
 
