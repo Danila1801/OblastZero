@@ -113,14 +113,16 @@ namespace OblastZero.Core
                 RegionId = OblastRegions.CensusDistrict,
                 Summary = "District records annex. Standing water on the lower floor. Filing remains substantially intact. Interview room sealed pending review.",
 
-                // IsBuilt was true with SceneName "CensusOffice" and no such scene in the project. That
-                // is not a harmless placeholder: ScavengePhase3DState only falls back to the depot when
-                // SceneName is *empty*, so a non-empty name for a missing scene passed the guard and
-                // loaded nothing — sixty seconds of empty room with no error. Marked honestly until the
-                // level exists; flipping IsBuilt is the last step of building it, not the first.
-                IsBuilt = false,
+                // Built 9 Aug 2026 by tools/generate_census_scene.py — 286 GameObjects, 92 x 64 m,
+                // flooded basement at -2.5 m, Interview anomaly in the sealed room off the public
+                // hall. IsBuilt was briefly true with this SceneName and no such scene on disk, which
+                // is not a harmless placeholder: ScavengePhase3DState only falls back to the depot
+                // when SceneName is *empty*, so a non-empty name for a missing scene passed the guard
+                // and loaded nothing — sixty seconds of empty room with no error. Flipping IsBuilt is
+                // the LAST step of building a level, and now the level is there.
+                IsBuilt = true,
                 RequiredUnlockId = MetaUnlockCatalog.SecondSiteUnlockId,
-                SceneName = string.Empty,
+                SceneName = "CensusOffice",
                 UnavailableReason = "Entry permit not on file. Apply at the supply office.",
 
                 CensusTakerCount = 1,

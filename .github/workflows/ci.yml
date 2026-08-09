@@ -85,6 +85,14 @@ jobs:
       - name: Prop registry drift check
         run: python tools/generate_prop_registry.py --check
 
+      # Scene generators are byte-deterministic, so --check is a real drift gate: it regenerates the
+      # level from its coordinate plan and compares. A failure means someone hand-edited generated
+      # YAML, or changed the plan and did not regenerate. The Grain Depot has no --check because
+      # regenerating it also strips Unity's importer enrichment from 24 material files (CLAUDE.md
+      # §14) — a gate that dirties the working tree to run is a gate people disable.
+      - name: Census Office scene drift check
+        run: python tools/generate_census_scene.py --check
+
       - name: Weight balance idempotence check
         run: python tools/rebalance_weights.py --check
 

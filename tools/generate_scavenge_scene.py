@@ -45,6 +45,7 @@ from scene_verify_lib import (                                      # noqa: E402
     NAV_GRID_DIR, NAV_GRID_MAGIC, NAV_IMPASSABLE, NavGrid,
     _rot_matrix, _apply, rotated_half_extents,
     verify, verify_placement, verify_reachability, verify_nav_grid,
+    load_item_categories, verify_pickup_ids, assert_balance_mirror, verify_anomaly_zones,
     write, write_bytes,
 )
 
@@ -735,77 +736,12 @@ def build():
 
 
 
-def load_item_categories():
-    """
-    id -> ItemCategory name for every item in the live database. Read from the shipped data
-    rather than restated here, so a re-categorised item changes its silhouette on the next
-    generation instead of quietly keeping the old one.
-
-    The .asset items serialize category as the enum's integer, so the ordering below must
-    match ItemCategory in ItemData.cs.
-    """
-    import glob
-    import json
-    import re
-
-    enum_order = ["Food", "Water", "Medical", "Weapon", "Ammunition",
-                  "Tool", "Document", "Artifact", "Crafting", "Special"]
-    categories = {}
-
-    for path in glob.glob("Assets/Data/Resources/Items/*.json"):
-        with open(path, encoding="utf-8") as fh:
-            data = json.load(fh)
-        if data.get("id"):
-            categories[data["id"]] = data.get("category")
-
-    for path in glob.glob("Assets/Data/Definitions/Items/*.asset"):
-        with open(path, encoding="utf-8") as fh:
-            text = fh.read()
-        m_id = re.search(r"^\s+id:\s*(\S+)", text, re.M)
-        m_cat = re.search(r"^\s+category:\s*(\d+)", text, re.M)
-        if not m_id or m_id.group(1) in categories:
-            continue
-        idx = int(m_cat.group(1)) if m_cat else -1
-        categories[m_id.group(1)] = enum_order[idx] if 0 <= idx < len(enum_order) else None
-
-    return categories
 
 
-def verify_pickup_ids():
-    """Fail loudly if a manifest id is not in the shipped item/crew database."""
-    import glob
-    import json
-
-    item_ids = set()
-    for path in glob.glob("Assets/Data/Resources/Items/*.json"):
-        with open(path, encoding="utf-8") as fh:
-            item_ids.add(json.load(fh)["id"])
-    for path in glob.glob("Assets/Data/Definitions/Items/*.asset"):
-        with open(path, encoding="utf-8") as fh:
-            for line in fh:
-                if line.startswith("  id: "):
-                    item_ids.add(line[6:].strip())
-                    break
-
-    crew_ids = set()
-    for path in glob.glob("Assets/Data/Definitions/Crew/*.asset"):
-        with open(path, encoding="utf-8") as fh:
-            for line in fh:
-                if line.startswith("  id: "):
-                    crew_ids.add(line[6:].strip())
-                    break
-
-    missing = []
-    for data_id, kind, _, _, _, _, _, _ in PICKUPS:
-        pool = crew_ids if kind == CREW else item_ids
-        if data_id not in pool:
-            missing.append("%s (%s)" % (data_id, "crew" if kind == CREW else "item"))
-    return missing, len(item_ids), len(crew_ids)
 
 
 # ─── Entry point ────────────────────────────────────────────────────────────────────────
 
-BALANCE_CONSTANTS_PATH = "Assets/_Project/Scripts/Core/BalanceConstants.cs"
 
 # The Python mirrors above, paired with the C# constant each must equal.
 BALANCE_MIRROR = {
@@ -819,69 +755,8 @@ BALANCE_MIRROR = {
 }
 
 
-def assert_balance_mirror():
-    """
-    Proves every mirrored constant still equals its BalanceConstants counterpart.
-
-    The generator serializes some balance numbers directly into the scene — the controller's
-    interaction range, the Geiger's detection radius, the Backlog's dilation factor. Those are the
-    values the scene will use forever after; the C# constants are what every other system reads.
-    When the two disagree nothing errors, because both are individually valid: the range ring draws
-    one radius and the raycast honours another, and the bug presents as "the reach feels wrong"
-    months later.
-
-    CLAUDE.md §14's rule, applied to numbers instead of GUIDs: a mirror without a gate is a
-    comment, and a comment does not survive a retune.
-    """
-    pattern = re.compile(
-        r"public\s+const\s+(?:float|int)\s+([A-Z0-9_]+)\s*=\s*(-?[0-9.]+)f?\s*;")
-
-    with open(BALANCE_CONSTANTS_PATH, encoding="utf-8") as handle:
-        declared = {m.group(1): float(m.group(2)) for m in pattern.finditer(handle.read())}
-
-    problems = []
-    for name, mirrored in BALANCE_MIRROR.items():
-        if name not in declared:
-            problems.append("%s: not declared in BalanceConstants.cs" % name)
-        elif abs(declared[name] - float(mirrored)) > 1e-6:
-            problems.append("%s: generator says %s, BalanceConstants says %s"
-                            % (name, mirrored, declared[name]))
-
-    if problems:
-        raise SystemExit("balance mirror check FAILED:\n  " + "\n  ".join(problems))
-    return "balance mirror: %d constants match BalanceConstants.cs" % len(BALANCE_MIRROR)
 
 
-def verify_anomaly_zones():
-    """
-    Proves no two anomaly volumes overlap.
-
-    AnomalyZone.ZoneAt<T> returns the first match in registration order, so two overlapping volumes
-    resolve arbitrarily — and worse, BacklogAnomaly restores the player's speed multiplier to an
-    absolute 1 on exit rather than unwinding a stack, which is only correct while zones are
-    disjoint. Nested zones would let a player walk out of the inner one and leave the outer one's
-    slow permanently cleared while still standing inside it.
-
-    Overlap is tested on the AABBs, which is exact here: the zones are axis-aligned boxes with no
-    rotation, so there is no tilted-solid false positive of the kind that forced the OBB test in
-    verify_placement().
-    """
-    problems = []
-    boxes = []
-    for name, _script, _cls, pos, size, _fields in ANOMALY_ZONES:
-        half = (size[0] / 2.0, size[1] / 2.0, size[2] / 2.0)
-        boxes.append((name,
-                      (pos[0] - half[0], pos[1] - half[1], pos[2] - half[2]),
-                      (pos[0] + half[0], pos[1] + half[1], pos[2] + half[2])))
-
-    for i in range(len(boxes)):
-        for j in range(i + 1, len(boxes)):
-            name_a, min_a, max_a = boxes[i]
-            name_b, min_b, max_b = boxes[j]
-            if all(min_a[k] < max_b[k] and min_b[k] < max_a[k] for k in range(3)):
-                problems.append("%s overlaps %s" % (name_a, name_b))
-
-    return problems
 
 
 
@@ -892,7 +767,7 @@ def main():
     if not os.path.isdir("Assets/Scenes"):
         raise SystemExit("run this from the project root (Assets/Scenes not found)")
 
-    missing, n_items, n_crew = verify_pickup_ids()
+    missing, n_items, n_crew = verify_pickup_ids(PICKUPS, CREW)
     if missing:
         raise SystemExit("pickup ids not in the database: " + ", ".join(missing))
     print("database check: %d item ids, %d crew ids, all %d pickup ids resolve"
@@ -908,12 +783,12 @@ def main():
 
     # Gate: balance numbers serialized into the scene must equal the C# constants everything else
     # reads. A drifted mirror produces two internally-consistent halves that disagree with each other.
-    print(assert_balance_mirror())
+    print(assert_balance_mirror(BALANCE_MIRROR))
 
     # Gate: anomaly volumes must be disjoint. AnomalyZone.ZoneAt takes the first match and
     # BacklogAnomaly restores speed to an absolute 1 on exit, both of which are only correct while
     # no two zones overlap.
-    overlaps = verify_anomaly_zones()
+    overlaps = verify_anomaly_zones(ANOMALY_ZONES)
     if overlaps:
         raise SystemExit("anomaly zones overlap:\n  " + "\n  ".join(overlaps))
     print("anomaly check: %d zones, none overlapping" % len(ANOMALY_ZONES))
