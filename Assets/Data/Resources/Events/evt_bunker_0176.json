@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "basement_corridor",
       "kitchen_block"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 1.8,
   "choices": [

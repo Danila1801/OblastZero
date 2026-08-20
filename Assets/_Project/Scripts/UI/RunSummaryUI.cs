@@ -59,12 +59,16 @@ namespace OblastZero.UI
         private void BuildStatRows(RunSummary summary)
         {
             float y = 0f;
-            AddRow(_statColumn, "SITE", summary.SiteName, ref y);
-            AddRow(_statColumn, "DAYS ON RECORD", summary.DaysSurvived.ToString(), ref y);
-            AddRow(_statColumn, "PERSONNEL LOST", summary.CrewLost.ToString(), ref y);
-            AddRow(_statColumn, "PERSONNEL REMAINING", summary.CrewRemaining.ToString(), ref y);
-            AddRow(_statColumn, "LINE ITEMS RECOVERED", summary.ItemsRecovered.ToString(), ref y);
-            AddRow(_statColumn, $"SALVAGE APPLIED ({summary.SalvageRatePercent}%)",
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowSite), summary.SiteName, ref y);
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowDays),
+                   summary.DaysSurvived.ToString(), ref y);
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowLost),
+                   summary.CrewLost.ToString(), ref y);
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowRemaining),
+                   summary.CrewRemaining.ToString(), ref y);
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowRecovered),
+                   summary.ItemsRecovered.ToString(), ref y);
+            AddRow(_statColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowSalvage, summary.SalvageRatePercent),
                    summary.ItemsSalvaged.ToString(), ref y);
         }
 
@@ -75,8 +79,10 @@ namespace OblastZero.UI
                 AddRow(_repColumn, entry.Key.ToUpperInvariant(), FormatRep(entry.Value), ref y);
 
             AddRule(_repColumn, ref y);
-            AddRow(_repColumn, "REGISTRATIONS FILED", summary.TotalRunsAttempted.ToString(), ref y);
-            AddRow(_repColumn, "RETURNED INTACT", summary.TotalRunsSurvived.ToString(), ref y);
+            AddRow(_repColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowFiled),
+                   summary.TotalRunsAttempted.ToString(), ref y);
+            AddRow(_repColumn, LocalizedStrings.Get(UIStringKeys.SummaryRowReturned),
+                   summary.TotalRunsSurvived.ToString(), ref y);
         }
 
         private static void AddRow(Transform parent, string label, string value, ref float y)
@@ -113,11 +119,12 @@ namespace OblastZero.UI
         private static string FormatRep(int value)
         {
             string sign = value > 0 ? "+" : string.Empty;
-            string band = value >= 50 ? "TRUSTED"
-                        : value >= 15 ? "COOPERATIVE"
-                        : value > -15 ? "NEUTRAL"
-                        : value > -50 ? "OBSTRUCTIVE"
-                        : "HOSTILE";
+            string band = LocalizedStrings.Get(
+                  value >= 50 ? UIStringKeys.RepBandTrusted
+                : value >= 15 ? UIStringKeys.RepBandCooperative
+                : value > -15 ? UIStringKeys.RepBandNeutral
+                : value > -50 ? UIStringKeys.RepBandObstructive
+                : UIStringKeys.RepBandHostile);
             return $"{sign}{value}  <color=#7A7873><size=17>{band}</size></color>";
         }
 
@@ -136,7 +143,8 @@ namespace OblastZero.UI
             var bandEdge = OblastUI.Rect(stampBand.transform, "Edge", OblastUI.Hairline);
             OblastUI.StretchTop(bandEdge.rectTransform, 1f);
 
-            _verdict = OblastUI.Label(_root, "Verdict", "CASE FILED", 78f, FontStyles.Bold,
+            _verdict = OblastUI.Label(_root, "Verdict", LocalizedStrings.Get(UIStringKeys.VerdictDefault),
+                                      78f, FontStyles.Bold,
                                       TextAlignmentOptions.Center, OblastUI.Danger);
             OblastUI.StretchBand(_verdict.rectTransform, 96f, 90f);
             _verdict.characterSpacing = 12f;
@@ -147,12 +155,14 @@ namespace OblastZero.UI
             _caption.characterSpacing = 4f;
 
             // ── Two record columns ───────────────────────────────────────────
-            var leftHeading = OblastUI.Label(_root, "LeftHeading", "EXPEDITION RECORD", 24f, FontStyles.Bold,
+            var leftHeading = OblastUI.Label(_root, "LeftHeading", LocalizedStrings.Get(UIStringKeys.SummaryLeftHeading),
+                                             24f, FontStyles.Bold,
                                              TextAlignmentOptions.TopLeft, OblastUI.Stamp);
             OblastUI.TopLeft(leftHeading.rectTransform, new Vector2(240f, -292f), new Vector2(640f, 30f));
             leftHeading.characterSpacing = 5f;
 
-            var rightHeading = OblastUI.Label(_root, "RightHeading", "STANDING WITH FACTIONS", 24f, FontStyles.Bold,
+            var rightHeading = OblastUI.Label(_root, "RightHeading", LocalizedStrings.Get(UIStringKeys.SummaryRightHeading),
+                                              24f, FontStyles.Bold,
                                               TextAlignmentOptions.TopLeft, OblastUI.Stamp);
             OblastUI.TopLeft(rightHeading.rectTransform, new Vector2(1040f, -292f), new Vector2(640f, 30f));
             rightHeading.characterSpacing = 5f;
@@ -172,10 +182,12 @@ namespace OblastZero.UI
             OblastUI.BottomCenter(_closingLine.rectTransform, new Vector2(0f, 152f), new Vector2(1440f, 44f));
 
             TextMeshProUGUI ackLabel;
-            var ack = OblastUI.Button(_root, "AcknowledgeButton", "RETURN TO MAIN MENU", 24f,
+            var ack = OblastUI.Button(_root, "AcknowledgeButton", LocalizedStrings.Get(UIStringKeys.SummaryReturn), 24f,
                                       () => AcknowledgeRequested?.Invoke(), out ackLabel);
             OblastUI.BottomCenter(ack.GetComponent<RectTransform>(), new Vector2(0f, 62f), new Vector2(440f, 74f));
             ackLabel.characterSpacing = 5f;
+
+            ControllerNavigationUI.Attach(_root.gameObject, ack);
 
             Debug.Log("[RunSummaryUI] Summary screen built.");
         }

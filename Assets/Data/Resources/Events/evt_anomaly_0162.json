@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "perimeter",
       "drainage_tunnel"
+    ],
+    "oblastRegionsAny": [
+      "reservoir"
     ]
   },
   "baseWeight": 1.36,

@@ -36,6 +36,7 @@ namespace OblastZero.Core
         private PauseMenuUI _pause;
         private OptionsUI _options;
         private ScavengePlayerController _player;
+        private FirstRunTooltips _guidance;
 
         /// <summary>
         /// Resolved on entry and remembered for the matching unload. Read from the catalogue rather than
@@ -69,6 +70,7 @@ namespace OblastZero.Core
                                  "(the timer still runs, so the phase resolves headless).");
 
             BuildPauseOverlay();
+            _guidance = FirstRunTooltips.ShowScavengeControls(transform);
 
             Debug.Log($"[ScavengePhase3D] The Blowout begins. {BalanceConstants.SCAVENGE_TIMER_SECONDS:0}s " +
                       "to grab what you can and reach the bunker.");
@@ -100,6 +102,12 @@ namespace OblastZero.Core
             EventBus.Unsubscribe<ReachBunkerEvent>(OnReachBunker);
 
             TearDownPauseOverlay();
+
+            if (_guidance != null)
+            {
+                _guidance.Close();
+                _guidance = null;
+            }
 
             // Unload before the cutscene commits the haul: RunData already holds everything picked up,
             // so tearing down the level cannot cost the player anything. SceneLoader guards the

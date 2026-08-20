@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using OblastZero.Core;
 using OblastZero.Data;
+using OblastZero.Gameplay;
 
 namespace OblastZero.UI
 {
@@ -44,6 +45,23 @@ namespace OblastZero.UI
         private string _selectedCrewId;
         private int _seed;
 
+        /// <summary>
+        /// Which site ids the player may actually register for, as decided by the state. Null means "the
+        /// state did not say", which is read as every built site being open — the permissive reading, because
+        /// a setup screen that greys everything is indistinguishable from a broken one.
+        ///
+        /// <para>An id set rather than a MetaProgressData: availability depends on the profile's purchases,
+        /// and a screen in OblastZero.UI does not read profiles. The state answers the question; the screen
+        /// only asks whether an id is in the answer.</para>
+        /// </summary>
+        private HashSet<string> _availableSiteIds;
+
+        /// <summary>
+        /// Content index, supplied by the state so trait ids on the roster can be resolved to names. Null is
+        /// tolerated — the trait line is then omitted rather than rendered as raw ids.
+        /// </summary>
+        private GameDatabase _database;
+
         private void Awake() => BuildChrome();
 
         // ── Population ───────────────────────────────────────────────────────
@@ -53,9 +71,15 @@ namespace OblastZero.UI
         /// The first selectable site and the first crew member are pre-selected so CONFIRM is reachable
         /// immediately — a registration form that starts invalid is a form nobody finishes.
         /// </summary>
-        public void Populate(IReadOnlyList<ScavengeSite> sites, IReadOnlyList<CrewMemberData> crew, int seed)
+        public void Populate(IReadOnlyList<ScavengeSite> sites, IReadOnlyList<CrewMemberData> crew, int seed,
+                             IReadOnlyCollection<string> availableSiteIds = null,
+                             GameDatabase database = null)
         {
             _seed = seed;
+            _availableSiteIds = availableSiteIds != null
+                ? new HashSet<string>(availableSiteIds)
+                : null;
+            _database = database;
             UpdateSeedLabel();
 
             BuildSiteCards(sites);
@@ -78,7 +102,7 @@ namespace OblastZero.UI
 
             if (sites == null || sites.Count == 0)
             {
-                OblastUI.Label(_siteColumn, "NoSites", "NO SITES CLEARED FOR ENTRY", 22f, FontStyles.Italic,
+                OblastUI.Label(_siteColumn, "NoSites", LocalizedStrings.Get(UIStringKeys.RunSetupNoSites), 22f, FontStyles.Italic,
                                TextAlignmentOptions.TopLeft, OblastUI.TextFaint);
                 return;
             }
@@ -92,16 +116,20 @@ namespace OblastZero.UI
                 var site = sites[i];
                 string id = site.Id;
 
+                bool available = IsSiteAvailable(site);
+
                 var card = SelectableCard.Create(_siteColumn, $"Site_{id}", new Vector2(0f, -y),
-                                                 new Vector2(720f, cardHeight), site.IsAvailable,
+                                                 new Vector2(720f, cardHeight), available,
                                                  () => SelectSite(id));
 
                 card.Title.text = site.DisplayName.ToUpperInvariant();
                 card.Detail.text = site.Summary;
-                card.Status.text = site.IsAvailable ? site.RegionTag.ToUpperInvariant() : "PENDING SURVEY";
-                card.Status.color = site.IsAvailable ? OblastUI.TextDim : OblastUI.Danger;
+                card.Status.text = available
+                    ? site.RegionDisplayName.ToUpperInvariant()
+                    : LocalizedStrings.Get(UIStringKeys.RunSetupPendingSurvey);
+                card.Status.color = available ? OblastUI.TextDim : OblastUI.Danger;
 
-                if (!site.IsAvailable)
+                if (!available)
                 {
                     card.Title.color = OblastUI.TextFaint;
                     card.Detail.color = OblastUI.TextFaint;
@@ -111,8 +139,18 @@ namespace OblastZero.UI
                 _siteCards.Add(card);
                 y += cardHeight + gap;
 
-                if (site.IsAvailable && _selectedSiteId == null) SelectSite(id);
+                if (available && _selectedSiteId == null) SelectSite(id);
             }
+        }
+
+        /// <summary>
+        /// Whether a site card is selectable. A site must be built at all, and must be in the set the state
+        /// handed over — see <see cref="_availableSiteIds"/> for why a null set means "all built sites".
+        /// </summary>
+        private bool IsSiteAvailable(ScavengeSite site)
+        {
+            if (site == null || !site.IsBuilt) return false;
+            return _availableSiteIds == null || _availableSiteIds.Contains(site.Id);
         }
 
         private void BuildCrewCards(IReadOnlyList<CrewMemberData> crew)
@@ -123,7 +161,7 @@ namespace OblastZero.UI
 
             if (crew == null || crew.Count == 0)
             {
-                OblastUI.Label(_crewColumn, "NoCrew", "NO PERSONNEL ON THE ROSTER", 22f, FontStyles.Italic,
+                OblastUI.Label(_crewColumn, "NoCrew", LocalizedStrings.Get(UIStringKeys.RunSetupNoCrew), 22f, FontStyles.Italic,
                                TextAlignmentOptions.TopLeft, OblastUI.TextFaint);
                 return;
             }
@@ -146,9 +184,9 @@ namespace OblastZero.UI
 
                 var stats = member.baseStats;
                 card.Detail.text =
-                    $"HEALTH <color=#C9C7C0>{stats.maxHealth}</color>   " +
-                    $"SANITY <color=#C9C7C0>{stats.maxSanity}</color>   " +
-                    $"CARRY <color=#C9C7C0>{stats.carryCapacityKg:0.#} kg</color>\n" +
+                    $"{LocalizedStrings.Get(UIStringKeys.RunSetupStatHealth)} <color=#C9C7C0>{stats.maxHealth}</color>   " +
+                    $"{LocalizedStrings.Get(UIStringKeys.RunSetupStatSanity)} <color=#C9C7C0>{stats.maxSanity}</color>   " +
+                    $"{LocalizedStrings.Get(UIStringKeys.RunSetupStatCarry)} <color=#C9C7C0>{stats.carryCapacityKg:0.#} kg</color>\n" +
                     $"<size=17>{Truncate(member.backstoryText, 128)}</size>";
 
                 _crewCards.Add(card);
@@ -185,21 +223,22 @@ namespace OblastZero.UI
             if (_validationLabel == null) return;
             if (ready)
             {
-                _validationLabel.text = "FORM COMPLETE — SUBMIT FOR ENTRY";
+                _validationLabel.text = LocalizedStrings.Get(UIStringKeys.RunSetupComplete);
                 _validationLabel.color = OblastUI.TextDim;
             }
             else
             {
                 _validationLabel.text = !siteOk
-                    ? "INCOMPLETE: NO SITE DESIGNATED"
-                    : "INCOMPLETE: NO OPERATOR ASSIGNED";
+                    ? LocalizedStrings.Get(UIStringKeys.RunSetupIncompleteSite)
+                    : LocalizedStrings.Get(UIStringKeys.RunSetupIncompleteCrew);
                 _validationLabel.color = OblastUI.Danger;
             }
         }
 
         private void UpdateSeedLabel()
         {
-            if (_seedLabel != null) _seedLabel.text = $"REQUISITION NO. {_seed:D10}";
+            if (_seedLabel != null)
+                _seedLabel.text = LocalizedStrings.Get(UIStringKeys.RunSetupSeed, _seed.ToString("D10"));
         }
 
         // ── Construction ─────────────────────────────────────────────────────
@@ -211,13 +250,13 @@ namespace OblastZero.UI
             var bg = OblastUI.Rect(_root, "Background", OblastUI.Background, raycast: true);
             OblastUI.Stretch(bg.rectTransform);
 
-            var header = OblastUI.Label(_root, "Header", "EXPEDITION REGISTRATION", 52f, FontStyles.Bold,
+            var header = OblastUI.Label(_root, "Header", LocalizedStrings.Get(UIStringKeys.RunSetupHeader), 52f, FontStyles.Bold,
                                         TextAlignmentOptions.Center, OblastUI.TextPrimary);
             OblastUI.StretchBand(header.rectTransform, 54f, 62f);
             header.characterSpacing = 10f;
 
             var sub = OblastUI.Label(_root, "HeaderSub",
-                                     "COMPLETE ALL FIELDS. INCOMPLETE FORMS ARE NOT PROCESSED.",
+                                     LocalizedStrings.Get(UIStringKeys.RunSetupSubheader),
                                      20f, FontStyles.Normal, TextAlignmentOptions.Center, OblastUI.TextFaint);
             OblastUI.StretchBand(sub.rectTransform, 118f, 26f);
             sub.characterSpacing = 5f;
@@ -226,12 +265,12 @@ namespace OblastZero.UI
             OblastUI.TopCenter(headRule.rectTransform, new Vector2(0f, -162f), new Vector2(1680f, 1f));
 
             // ── Column headings ──────────────────────────────────────────────
-            var siteHeading = OblastUI.Label(_root, "SiteHeading", "1.  SCAVENGE SITE", 26f, FontStyles.Bold,
+            var siteHeading = OblastUI.Label(_root, "SiteHeading", LocalizedStrings.Get(UIStringKeys.RunSetupSiteHeading), 26f, FontStyles.Bold,
                                              TextAlignmentOptions.TopLeft, OblastUI.Stamp);
             OblastUI.TopLeft(siteHeading.rectTransform, new Vector2(120f, -196f), new Vector2(720f, 32f));
             siteHeading.characterSpacing = 6f;
 
-            var crewHeading = OblastUI.Label(_root, "CrewHeading", "2.  ASSIGNED OPERATOR", 26f, FontStyles.Bold,
+            var crewHeading = OblastUI.Label(_root, "CrewHeading", LocalizedStrings.Get(UIStringKeys.RunSetupCrewHeading), 26f, FontStyles.Bold,
                                              TextAlignmentOptions.TopLeft, OblastUI.Stamp);
             OblastUI.TopLeft(crewHeading.rectTransform, new Vector2(900f, -196f), new Vector2(860f, 32f));
             crewHeading.characterSpacing = 6f;
@@ -246,24 +285,24 @@ namespace OblastZero.UI
             var footRule = OblastUI.Rule(_root, "FooterRule", 1680f, OblastUI.Hairline);
             OblastUI.BottomCenter(footRule.rectTransform, new Vector2(0f, 150f), new Vector2(1680f, 1f));
 
-            _seedLabel = OblastUI.Label(_root, "Seed", "REQUISITION NO. 0000000000", 20f, FontStyles.Normal,
+            _seedLabel = OblastUI.Label(_root, "Seed", LocalizedStrings.Get(UIStringKeys.RunSetupSeed, "0000000000"), 20f, FontStyles.Normal,
                                         TextAlignmentOptions.Left, OblastUI.TextFaint);
             OblastUI.BottomLeft(_seedLabel.rectTransform, new Vector2(120f, 104f), new Vector2(600f, 26f));
             _seedLabel.characterSpacing = 4f;
 
-            _validationLabel = OblastUI.Label(_root, "Validation", "INCOMPLETE: NO SITE DESIGNATED", 20f,
+            _validationLabel = OblastUI.Label(_root, "Validation", LocalizedStrings.Get(UIStringKeys.RunSetupIncompleteSite), 20f,
                                               FontStyles.Normal, TextAlignmentOptions.Left, OblastUI.Danger);
             OblastUI.BottomLeft(_validationLabel.rectTransform, new Vector2(120f, 70f), new Vector2(800f, 26f));
             _validationLabel.characterSpacing = 4f;
 
             TextMeshProUGUI cancelLabel;
-            var cancel = OblastUI.Button(_root, "CancelButton", "WITHDRAW", 24f,
+            var cancel = OblastUI.Button(_root, "CancelButton", LocalizedStrings.Get(UIStringKeys.RunSetupCancel), 24f,
                                          () => Cancelled?.Invoke(), out cancelLabel);
             OblastUI.BottomRight(cancel.GetComponent<RectTransform>(),
                                  new Vector2(-460f, 62f), new Vector2(260f, 72f));
             cancelLabel.characterSpacing = 5f;
 
-            _confirmButton = OblastUI.Button(_root, "ConfirmButton", "SUBMIT — ENTER THE OBLAST", 24f,
+            _confirmButton = OblastUI.Button(_root, "ConfirmButton", LocalizedStrings.Get(UIStringKeys.RunSetupConfirm), 24f,
                                              OnConfirm, out _confirmLabel);
             OblastUI.BottomRight(_confirmButton.GetComponent<RectTransform>(),
                                  new Vector2(-120f, 62f), new Vector2(320f, 72f));
@@ -302,20 +341,32 @@ namespace OblastZero.UI
         {
             switch (background)
             {
-                case CrewBackground.LonerScavenger:   return "LONER / SCAVENGER";
-                case CrewBackground.ExCordonSoldier:  return "EX-CORDON SOLDIER";
-                case CrewBackground.ExSocietyClerk:   return "EX-SOCIETY CLERK";
-                case CrewBackground.FieldMedic:       return "FIELD MEDIC";
-                case CrewBackground.Mechanic:         return "MECHANIC";
-                case CrewBackground.KafedraDefector:  return "KAFEDRA DEFECTOR";
-                case CrewBackground.EcologistSurvivor:return "ECOLOGIST SURVIVOR";
-                default:                              return "UNCLASSIFIED";
+                case CrewBackground.LonerScavenger:   return LocalizedStrings.Get(UIStringKeys.CrewBackgroundLoner);
+                case CrewBackground.ExCordonSoldier:  return LocalizedStrings.Get(UIStringKeys.CrewBackgroundExCordon);
+                case CrewBackground.ExSocietyClerk:   return LocalizedStrings.Get(UIStringKeys.CrewBackgroundExClerk);
+                case CrewBackground.FieldMedic:       return LocalizedStrings.Get(UIStringKeys.CrewBackgroundMedic);
+                case CrewBackground.Mechanic:         return LocalizedStrings.Get(UIStringKeys.CrewBackgroundMechanic);
+                case CrewBackground.KafedraDefector:  return LocalizedStrings.Get(UIStringKeys.CrewBackgroundKafedraDefector);
+                case CrewBackground.EcologistSurvivor:return LocalizedStrings.Get(UIStringKeys.CrewBackgroundEcologist);
+                default:                              return LocalizedStrings.Get(UIStringKeys.CrewBackgroundUnclassified);
             }
+        }
+
+        /// <summary>
+        /// The operator's traits as one line of display names. Traits are not decoration: they gate 406 of
+        /// the shipped event choices and they move carry capacity, radiation resistance, sanity recovery and
+        /// both stat ceilings, so the roster has to say which ones a candidate brings before the player
+        /// commits to them.
+        /// </summary>
+        private string TraitLine(CrewMemberData member)
+        {
+            var names = TraitEffects.StartingTraitNames(member);
+            return names.Count == 0 ? "TRAITS: NONE ON FILE" : "TRAITS: " + string.Join(", ", names).ToUpperInvariant();
         }
 
         private static string Truncate(string text, int max)
         {
-            if (string.IsNullOrEmpty(text)) return "No file on record.";
+            if (string.IsNullOrEmpty(text)) return LocalizedStrings.Get(UIStringKeys.RunSetupNoFile);
             string flat = text.Replace("\r", " ").Replace("\n", " ").Trim();
             return flat.Length <= max ? flat : flat.Substring(0, max - 1).TrimEnd() + "…";
         }

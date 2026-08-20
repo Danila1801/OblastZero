@@ -18,6 +18,7 @@ namespace OblastZero.Core.States
         public override GameState StateEnum => GameState.RunSetup;
 
         private RunSetupUI _ui;
+        private FirstRunTooltips _guidance;
 
         protected override void HandleEnter()
         {
@@ -38,7 +39,15 @@ namespace OblastZero.Core.States
             _ui.RunConfirmed += OnRunConfirmed;
             _ui.Cancelled += OnCancelPressed;
 
-            _ui.Populate(ScavengeSiteCatalog.All, AvailableCrew(gm.Database), NewSeed());
+            _ui.Populate(ScavengeSiteCatalog.All, AvailableCrew(gm.Database), NewSeed(),
+                         AvailableSiteIds(), gm.Database);
+
+            // Threshold 0: BeginNewRun has not run yet on a first registration, so the counter is still
+            // zero on this screen and one on every screen after it.
+            _guidance = FirstRunTooltips.Show(transform, 0,
+                                              UIStringKeys.FirstRunSetupSite,
+                                              UIStringKeys.FirstRunSetupCrew,
+                                              UIStringKeys.FirstRunSetupCarry);
         }
 
         protected override void HandleExit()
@@ -49,6 +58,12 @@ namespace OblastZero.Core.States
                 _ui.Cancelled -= OnCancelPressed;
                 Destroy(_ui.gameObject);
                 _ui = null;
+            }
+
+            if (_guidance != null)
+            {
+                _guidance.Close();
+                _guidance = null;
             }
 
             Debug.Log("[RunSetupState] Exited.");
@@ -80,15 +95,38 @@ namespace OblastZero.Core.States
             return roster;
         }
 
+        /// <summary>
+        /// Ids of the sites this profile may register for: built, and either ungated or already purchased.
+        /// The screen is handed the answer rather than the profile — availability is a progression question,
+        /// and OblastZero.UI does not read progression.
+        /// </summary>
+        private List<string> AvailableSiteIds()
+        {
+            var meta = Context?.MetaProgress;
+            var ids = new List<string>();
+
+            foreach (var site in ScavengeSiteCatalog.All)
+                if (ScavengeSiteCatalog.IsAvailableTo(site, meta)) ids.Add(site.Id);
+
+            if (ids.Count == 0)
+                Debug.LogError("[RunSetupState] No scavenge site is available to this profile — the setup " +
+                               "screen will grey every card and CONFIRM can never enable. The grain depot is " +
+                               "supposed to be ungated; check ScavengeSiteCatalog.");
+
+            return ids;
+        }
+
         /// <summary>A fresh run seed. Runs are reproducible from this value alone.</summary>
         private static int NewSeed() => Random.Range(1, int.MaxValue);
 
         private void OnRunConfirmed(string siteId, string leadCrewId, int seed)
         {
             var site = ScavengeSiteCatalog.Get(siteId);
-            if (site == null || !site.IsAvailable)
+            if (!ScavengeSiteCatalog.IsAvailableTo(site, Context?.MetaProgress))
             {
-                Debug.LogError($"[RunSetupState] Site '{siteId}' is not available for entry. Staying on setup.");
+                Debug.LogError($"[RunSetupState] Site '{siteId}' is not available for entry " +
+                               $"({ScavengeSiteCatalog.UnavailableReasonFor(site, Context?.MetaProgress)}). " +
+                               "Staying on setup.");
                 return;
             }
 

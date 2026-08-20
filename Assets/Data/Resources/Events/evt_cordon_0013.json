@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "perimeter",
       "forest_edge"
+    ],
+    "oblastRegionsAny": [
+      "outer_cordon"
     ]
   },
   "baseWeight": 1.44,

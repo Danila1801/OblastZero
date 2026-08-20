@@ -43,6 +43,13 @@ namespace OblastZero.Gameplay
         /// <summary>A Blowout pickup was refused for weight. Args: itemDataId, itemKg, currentKg, capacityKg.</summary>
         public event Action<string, float, float, float> ScavengePickupRejected;
 
+        /// <summary>
+        /// The content database this manager resolves item ids against. Exposed read-only so an adapter
+        /// (ManagerEventBridge) can enrich an event with an item's category without holding a second
+        /// database reference of its own, and without any caller being able to swap it.
+        /// </summary>
+        public GameDatabase Database => _db;
+
         public InventoryManager(GameDatabase db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));

@@ -19,14 +19,14 @@ RenderSettings:
   m_FogMode: 1
   m_FogDensity: 0.02
   m_LinearFogStart: 14
-  m_LinearFogEnd: 98
-  m_AmbientSkyColor: {r: 0.29, g: 0.31, b: 0.295, a: 1}
-  m_AmbientEquatorColor: {r: 0.2, g: 0.21, b: 0.2, a: 1}
-  m_AmbientGroundColor: {r: 0.1, g: 0.1, b: 0.09, a: 1}
+  m_LinearFogEnd: 145
+  m_AmbientSkyColor: {r: 0.45, g: 0.47, b: 0.45, a: 1}
+  m_AmbientEquatorColor: {r: 0.32, g: 0.33, b: 0.32, a: 1}
+  m_AmbientGroundColor: {r: 0.18, g: 0.18, b: 0.16, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -9764,7 +9764,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0.62, g: 0.66, b: 0.68, a: 1}
-  m_Intensity: 0.85
+  m_Intensity: 1.15
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -9884,7 +9884,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 14
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -10057,11 +10057,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2460}
 --- !u!1 &2462
 GameObject:
@@ -10109,7 +10109,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 14
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -10282,11 +10282,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2469}
 --- !u!1 &2471
 GameObject:
@@ -10334,7 +10334,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 12
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -10507,11 +10507,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2478}
 --- !u!1 &2480
 GameObject:
@@ -10559,7 +10559,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 12
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -10732,11 +10732,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2487}
 --- !u!1 &2489
 GameObject:
@@ -10784,7 +10784,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 18
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -10957,11 +10957,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2496}
 --- !u!1 &2498
 GameObject:
@@ -11009,7 +11009,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 18
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -11182,11 +11182,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2505}
 --- !u!1 &2507
 GameObject:
@@ -11234,7 +11234,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -11407,11 +11407,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2514}
 --- !u!1 &2516
 GameObject:
@@ -11459,7 +11459,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -11632,11 +11632,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2523}
 --- !u!1 &2525
 GameObject:
@@ -11684,7 +11684,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 11
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -11857,11 +11857,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2532}
 --- !u!1 &2534
 GameObject:
@@ -11909,7 +11909,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 11
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -12082,11 +12082,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2541}
 --- !u!1 &2543
 GameObject:
@@ -12134,7 +12134,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 14
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -12307,11 +12307,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2550}
 --- !u!1 &2552
 GameObject:
@@ -12359,7 +12359,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 14
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -12532,11 +12532,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2559}
 --- !u!1 &2561
 GameObject:
@@ -12584,7 +12584,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.86, g: 0.88, b: 0.78, a: 1}
-  m_Intensity: 2.4
+  m_Intensity: 5.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.81
@@ -12757,11 +12757,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker
   nominalIntensity: 0
-  sagFloor: 0.45
+  sagFloor: 0.62
   noiseSpeed: 7.5
-  noiseDepth: 0.35
+  noiseDepth: 0.22
   secondsBetweenDropouts: 6.5
-  dropoutDuration: 0.22
+  dropoutDuration: 0.08
   fixtureRenderer: {fileID: 2568}
 --- !u!1 &2570
 GameObject:

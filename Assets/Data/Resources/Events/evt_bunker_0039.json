@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "bunker_interior",
       "kitchen_block"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 1.9,
   "choices": [

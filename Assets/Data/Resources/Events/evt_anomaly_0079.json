@@ -11,6 +11,10 @@
     "regionTagsAny": [
       "forest_edge",
       "collapsed_building"
+    ],
+    "oblastRegionsAny": [
+      "outer_cordon",
+      "bureau_quarter"
     ]
   },
   "baseWeight": 1.79,

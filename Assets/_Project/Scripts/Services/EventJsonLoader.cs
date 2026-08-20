@@ -91,19 +91,21 @@ namespace OblastZero.Services
                     eventData.prerequisites.factionContext = faction;
                 }
 
-                // Parse region tags.
-                var regionsArray = prereqJobj["regionTagsAny"] as JArray;
-                if (regionsArray != null)
-                {
-                    eventData.prerequisites.regionTagsAny = regionsArray.ToObject<List<string>>();
-                }
-                else
-                {
-                    eventData.prerequisites.regionTagsAny = new List<string>();
-                }
+                // Proximity locales (fail-closed gate — see EventPrerequisite.regionTagsAny).
+                eventData.prerequisites.regionTagsAny = StringList(prereqJobj["regionTagsAny"] as JArray);
 
-                // TODO: requiredCrewTraitIds, requiredItemsAny when those are added to JSON schema.
-                eventData.prerequisites.requiredCrewTraitIds = new List<string>();
+                // Canonical oblast regions (fail-open gate — see EventPrerequisite.oblastRegionsAny).
+                // Absent on legacy content, which reads as an empty list and therefore matches anywhere.
+                eventData.prerequisites.oblastRegionsAny = StringList(prereqJobj["oblastRegionsAny"] as JArray);
+
+                // Event-level trait gating. Distinct from the per-choice traits parsed below: these decide
+                // whether the event is offered at all, where those decide which branches are pickable.
+                eventData.prerequisites.requiredCrewTraitIds = StringList(prereqJobj["requiredCrewTraitIds"] as JArray);
+
+                // requiredItemsAny stays empty from JSON: the field is List<ItemData> (direct SO references),
+                // and the JSON corpus addresses items by id. Resolving ids here would need the item index,
+                // which is still loading when events deserialize. Content expresses item gating through
+                // OutcomeDelta.itemsLost / lootGained instead, both of which do resolve by id.
                 eventData.prerequisites.requiredItemsAny = new List<ItemData>();
             }
 
@@ -225,6 +227,24 @@ namespace OblastZero.Services
             }
 
             return delta;
+        }
+
+        /// <summary>
+        /// A JSON array of strings as a List, never null. Absent and empty arrays both yield an empty list,
+        /// because every consumer of these fields treats "no entries" as "no constraint" and a null would
+        /// instead throw at the first foreach.
+        /// </summary>
+        private static List<string> StringList(JArray array)
+        {
+            var result = new List<string>();
+            if (array == null) return result;
+
+            foreach (var token in array)
+            {
+                var value = token?.ToString();
+                if (!string.IsNullOrEmpty(value)) result.Add(value);
+            }
+            return result;
         }
     }
 }

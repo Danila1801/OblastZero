@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "bunker_interior",
       "abandoned_school"
+    ],
+    "oblastRegionsAny": [
+      "census_district"
     ]
   },
   "baseWeight": 1.69,

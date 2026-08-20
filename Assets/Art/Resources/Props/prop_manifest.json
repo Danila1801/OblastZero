@@ -179,6 +179,32 @@
           ]
         }
       ]
+    },
+    {
+      "lods": [
+        {
+          "level": 0,
+          "triangles": 24,
+          "vertices": 16
+        },
+        {
+          "level": 1,
+          "triangles": 24,
+          "vertices": 16
+        },
+        {
+          "level": 2,
+          "triangles": 24,
+          "vertices": 16
+        }
+      ],
+      "name": "test_prop",
+      "output_bytes": 5104,
+      "resource_key": "Props/test_prop",
+      "source_bytes": 1636,
+      "source_longest_axis_m": 1.3592,
+      "source_triangles": 24,
+      "textures": []
     }
   ]
 }

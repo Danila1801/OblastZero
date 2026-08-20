@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "forest_edge",
       "access_road"
+    ],
+    "oblastRegionsAny": [
+      "outer_cordon"
     ]
   },
   "baseWeight": 0.75,

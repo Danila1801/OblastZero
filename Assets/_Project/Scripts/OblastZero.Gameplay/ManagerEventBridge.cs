@@ -37,7 +37,7 @@ namespace OblastZero.Gameplay
             _events = events;
 
             _inventory.ItemAdded += OnItemAdded;
-            _inventory.ItemRemoved += OnBunkerInventoryTouched;
+            _inventory.ItemRemoved += OnBunkerItemRemoved;
             _inventory.ItemChanged += OnBunkerInventoryTouched;
             _inventory.ItemTransferred += OnItemTransferred;
             _inventory.ScavengeLoadChanged += OnScavengeLoadChanged;
@@ -63,7 +63,7 @@ namespace OblastZero.Gameplay
             if (!_connected) return;
 
             _inventory.ItemAdded -= OnItemAdded;
-            _inventory.ItemRemoved -= OnBunkerInventoryTouched;
+            _inventory.ItemRemoved -= OnBunkerItemRemoved;
             _inventory.ItemChanged -= OnBunkerInventoryTouched;
             _inventory.ItemTransferred -= OnItemTransferred;
             _inventory.ScavengeLoadChanged -= OnScavengeLoadChanged;
@@ -98,6 +98,26 @@ namespace OblastZero.Gameplay
         {
             if (channel == InventoryChannel.Bunker)
                 EventBus.Raise(new BunkerInventoryChangedEvent { ItemDataId = inst.itemDataId });
+        }
+
+        /// <summary>
+        /// A removal from bunker stores. Raises the coarse refresh event that the HUD wants AND the typed
+        /// consumption event that anything reasoning about what was used needs — resolving the category here,
+        /// once, rather than handing every subscriber a reason to hold a GameDatabase reference.
+        /// </summary>
+        private void OnBunkerItemRemoved(ItemInstance inst, InventoryChannel channel)
+        {
+            if (channel != InventoryChannel.Bunker) return;
+
+            EventBus.Raise(new BunkerInventoryChangedEvent { ItemDataId = inst.itemDataId });
+
+            var data = _inventory != null ? _inventory.Database?.GetItem(inst.itemDataId) : null;
+            EventBus.Raise(new BunkerItemConsumedEvent
+            {
+                ItemDataId = inst.itemDataId,
+                Category = data != null ? data.category : ItemCategory.Special,
+                Quantity = inst.quantity
+            });
         }
 
         private void OnItemTransferred(ItemInstance inst, InventoryChannel from, InventoryChannel to)

@@ -111,3 +111,6 @@ Books_STALKER/
 
 # Python bytecode from the tools/ generators
 tools/__pycache__/
+
+# Unity auto-recovery scratch (generated on crash)
+/[Aa]ssets/_Recovery/

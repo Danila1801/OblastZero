@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "old_factory",
       "bunker_interior"
+    ],
+    "oblastRegionsAny": [
+      "grain_belt"
     ]
   },
   "baseWeight": 1.68,

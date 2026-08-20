@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "bunker_interior",
       "basement_corridor"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 0.92,
   "choices": [

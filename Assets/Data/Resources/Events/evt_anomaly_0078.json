@@ -11,6 +11,10 @@
     "regionTagsAny": [
       "drainage_tunnel",
       "collapsed_building"
+    ],
+    "oblastRegionsAny": [
+      "reservoir",
+      "bureau_quarter"
     ]
   },
   "baseWeight": 1.43,

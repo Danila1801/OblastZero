@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "access_road",
       "bunker_interior"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 0.92,
   "choices": [

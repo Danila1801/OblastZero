@@ -11,6 +11,9 @@
     "regionTagsAny": [
       "perimeter",
       "collapsed_building"
+    ],
+    "oblastRegionsAny": [
+      "bureau_quarter"
     ]
   },
   "baseWeight": 1.89,

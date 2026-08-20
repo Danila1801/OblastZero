@@ -95,9 +95,15 @@ namespace OblastZero.Gameplay
 
         /// <summary>
         /// Advances one bunker day, then presents the next eligible event (if any). Refuses while an event is
-        /// still pending — resolve it first. Region tags scope which location-flavoured events can fire.
+        /// still pending — resolve it first.
+        ///
+        /// <para><paramref name="regionTags"/> scopes which location-flavoured events can fire and must be
+        /// supplied: the locale gate fails closed, so omitting it selects nothing from the shipped corpus.
+        /// <paramref name="oblastRegions"/> scopes the geographic axis and is optional — that gate fails open,
+        /// so a caller that omits it simply gets the unnarrowed pool.</para>
         /// </summary>
-        public BunkerTurnResult EndDay(IReadOnlyCollection<string> regionTags = null)
+        public BunkerTurnResult EndDay(IReadOnlyCollection<string> regionTags = null,
+                                       IReadOnlyCollection<string> oblastRegions = null)
         {
             if (_pending != null)
             {
@@ -124,7 +130,7 @@ namespace OblastZero.Gameplay
                 return new BunkerTurnResult { day = day, runEnded = false, presentedEvent = null, victory = victory };
             }
 
-            var evt = _events.SelectNextEvent(regionTags);
+            var evt = _events.SelectNextEvent(regionTags, null, oblastRegions);
             _pending = evt;
 
             if (evt != null) Debug.Log($"[BunkerPhase] Day {day.newDay} presented event '{evt.id}'.");

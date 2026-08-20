@@ -35,6 +35,15 @@ namespace OblastZero.Core
         public int TotalRunsAttempted;
         public int TotalRunsSurvived;
 
+        /// <summary>
+        /// Salvage Tokens this run earned, already computed. <see cref="GameManager.EndCurrentRun"/> credits
+        /// this to the profile; the summary screen displays it.
+        /// </summary>
+        public int SalvageTokensAwarded;
+
+        /// <summary>Token balance after the award, for the summary line. Filled by GameManager after crediting.</summary>
+        public int SalvageTokenBalance;
+
         /// <summary>Faction display name → reputation. Ordered, so the column reads the same every run.</summary>
         public List<KeyValuePair<string, int>> Reputations = new List<KeyValuePair<string, int>>();
 
@@ -98,7 +107,45 @@ namespace OblastZero.Core
                 summary.TotalRunsSurvived = meta.totalRunsSurvived;
             }
 
+            summary.SalvageTokensAwarded = ComputeSalvageTokens(summary, run);
+
             return summary;
+        }
+
+        /// <summary>
+        /// The token award for a finished run: tenure, plus the haul that actually came home, plus standing,
+        /// plus a flat bonus for reaching an ending.
+        ///
+        /// <para>The haul term reads <see cref="ItemsSalvaged"/>, not <see cref="ItemsRecovered"/>. Those two
+        /// already differ by <see cref="BalanceConstants.SALVAGE_RATE_ON_DEATH"/> — 33% of the shelf on a
+        /// wipe, all of it on a win — so the death penalty arrives once, through the count. Multiplying the
+        /// recovered count and then applying the salvage rate again would charge a dying run for its losses
+        /// twice, which is the kind of double-count that reads as "meta progression feels stingy" long before
+        /// anyone finds it in the formula.</para>
+        ///
+        /// <para>Reputation sums across all three factions and may be negative — a run that antagonised
+        /// everyone is worth less than a quiet one. The total floors at zero: an award is a payment, and a
+        /// payment is never a debt.</para>
+        /// </summary>
+        private static int ComputeSalvageTokens(RunSummary summary, RunData run)
+        {
+            float tokens = summary.DaysSurvived * BalanceConstants.TOKENS_PER_DAY_SURVIVED;
+            tokens += summary.ItemsSalvaged * BalanceConstants.TOKENS_PER_ITEM_RECOVERED;
+
+            int repTotal = run.repScaleSociety + run.repCordon + run.repKafedra;
+            tokens += repTotal * BalanceConstants.TOKENS_PER_REPUTATION_POINT;
+
+            if (summary.Survived) tokens += BalanceConstants.TOKENS_VICTORY_BONUS;
+
+            int award = Mathf.Max(0, Mathf.FloorToInt(tokens));
+
+            Debug.Log($"[RunSummary] Salvage token award {award} = " +
+                      $"{summary.DaysSurvived}d x{BalanceConstants.TOKENS_PER_DAY_SURVIVED} + " +
+                      $"{summary.ItemsSalvaged} salvaged x{BalanceConstants.TOKENS_PER_ITEM_RECOVERED} + " +
+                      $"{repTotal} rep x{BalanceConstants.TOKENS_PER_REPUTATION_POINT}" +
+                      (summary.Survived ? $" + {BalanceConstants.TOKENS_VICTORY_BONUS} victory" : string.Empty) + ".");
+
+            return award;
         }
 
         private static string FactionName(GameDatabase database, FactionId id, string fallback)
@@ -108,19 +155,24 @@ namespace OblastZero.Core
             return data != null && !string.IsNullOrEmpty(data.displayName) ? data.displayName : fallback;
         }
 
+        // The three verdict lines are resolved through the localization table at snapshot time rather than
+        // stored as English. A summary is built once, inside EndCurrentRun, and then read by whichever
+        // run-end state follows — so the language in force when the run ended is the language on the screen,
+        // which is the correct behaviour for a record that is supposed to read as a filed document.
+
         private static string HeadlineFor(RunEndReason reason)
         {
             switch (reason)
             {
-                case RunEndReason.AllCrewDead:            return "REGISTRATION CLOSED";
-                case RunEndReason.BunkerBreach:           return "SITE DEREGISTERED";
-                case RunEndReason.Quit:                   return "FILE WITHDRAWN";
-                case RunEndReason.Extracted:              return "EXTRACTION LOGGED";
-                case RunEndReason.VictoryStabilization:   return "CONDITION STABILISED";
-                case RunEndReason.VictoryRelief:          return "RELIEF COLUMN ARRIVED";
-                case RunEndReason.VictoryAdaptation:      return "ADAPTATION RECORDED";
-                case RunEndReason.VictoryIndependent:     return "STATUS: INDEPENDENT";
-                default:                                  return "CASE FILED";
+                case RunEndReason.AllCrewDead:            return LocalizedStrings.Get(UIStringKeys.VerdictAllCrewDead);
+                case RunEndReason.BunkerBreach:           return LocalizedStrings.Get(UIStringKeys.VerdictBunkerBreach);
+                case RunEndReason.Quit:                   return LocalizedStrings.Get(UIStringKeys.VerdictQuit);
+                case RunEndReason.Extracted:              return LocalizedStrings.Get(UIStringKeys.VerdictExtracted);
+                case RunEndReason.VictoryStabilization:   return LocalizedStrings.Get(UIStringKeys.VerdictStabilization);
+                case RunEndReason.VictoryRelief:          return LocalizedStrings.Get(UIStringKeys.VerdictRelief);
+                case RunEndReason.VictoryAdaptation:      return LocalizedStrings.Get(UIStringKeys.VerdictAdaptation);
+                case RunEndReason.VictoryIndependent:     return LocalizedStrings.Get(UIStringKeys.VerdictIndependent);
+                default:                                  return LocalizedStrings.Get(UIStringKeys.VerdictDefault);
             }
         }
 
@@ -128,14 +180,10 @@ namespace OblastZero.Core
         {
             switch (reason)
             {
-                case RunEndReason.AllCrewDead:
-                    return "NO SURVIVING PERSONNEL AT THIS ADDRESS. FILE CLOSED PENDING NEXT OF KIN.";
-                case RunEndReason.BunkerBreach:
-                    return "SHELTER INTEGRITY LOST. THE ADDRESS IS NO LONGER LISTED.";
-                case RunEndReason.Quit:
-                    return "APPLICANT WITHDREW BEFORE THE PERIOD CLOSED. NO ADJUSTMENT MADE.";
-                default:
-                    return "EXPEDITION CONCLUDED. DOCUMENTATION WILL FOLLOW.";
+                case RunEndReason.AllCrewDead:  return LocalizedStrings.Get(UIStringKeys.VerdictSubAllCrewDead);
+                case RunEndReason.BunkerBreach: return LocalizedStrings.Get(UIStringKeys.VerdictSubBunkerBreach);
+                case RunEndReason.Quit:         return LocalizedStrings.Get(UIStringKeys.VerdictSubQuit);
+                default:                        return LocalizedStrings.Get(UIStringKeys.VerdictSubDefault);
             }
         }
 
@@ -143,14 +191,10 @@ namespace OblastZero.Core
         {
             switch (reason)
             {
-                case RunEndReason.AllCrewDead:
-                    return "\"The quota for the period was met by other means.\"";
-                case RunEndReason.BunkerBreach:
-                    return "\"Structural deviation noted. A revised floor plan has been requisitioned.\"";
-                case RunEndReason.Quit:
-                    return "\"The form was returned incomplete. This is not, in itself, an irregularity.\"";
-                default:
-                    return "\"Retain this record. It will not be issued again.\"";
+                case RunEndReason.AllCrewDead:  return LocalizedStrings.Get(UIStringKeys.VerdictCloseAllCrewDead);
+                case RunEndReason.BunkerBreach: return LocalizedStrings.Get(UIStringKeys.VerdictCloseBunkerBreach);
+                case RunEndReason.Quit:         return LocalizedStrings.Get(UIStringKeys.VerdictCloseQuit);
+                default:                        return LocalizedStrings.Get(UIStringKeys.VerdictCloseDefault);
             }
         }
     }

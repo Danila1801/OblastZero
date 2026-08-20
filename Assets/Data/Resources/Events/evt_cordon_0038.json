@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "access_road",
       "perimeter"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 1.29,
   "choices": [

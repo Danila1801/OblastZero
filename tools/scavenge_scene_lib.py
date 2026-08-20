@@ -371,10 +371,27 @@ VOLUME_PROFILE_PATH = "Assets/Settings/ScavengeVolumeProfile.asset"
 # That is the brief's intent ("background shelves blur slightly, frames the player's attention") but
 # it is deliberately a one-line change: raise DOF_APERTURE to f8 for a ~2.7 m-to-infinity band, or
 # set DOF_MODE to 1 (Gaussian) with a far start if the blur ever reads as fog rather than as focus.
+#
+# TAKEN, 11 Aug 2026. The f2.8 plane was the single largest reason the level read as unfinished on
+# the first play: in a 104x72 m site it left everything past about 7.6 m permanently soft, so the
+# yard, the silo and the bunker door were blurred the entire run and no amount of extra geometry out
+# there would have been visible. At 35 mm / f11 focused at 14 m the hyperfocal distance is about
+# 3.7 m, so the sharp band runs from roughly 1.9 m to infinity: the player's own hands stay soft,
+# everything they are actually scanning for is crisp. The framing intent is kept by the vignette and
+# the grade, which cost nothing in readability.
 DOF_MODE = 2            # 0 Off, 1 Gaussian, 2 Bokeh (physical — honours focal length + aperture)
-DOF_FOCUS_DISTANCE_M = 5.0
+DOF_FOCUS_DISTANCE_M = 14.0
 DOF_FOCAL_LENGTH_MM = 35.0
-DOF_APERTURE_FSTOP = 2.8
+DOF_APERTURE_FSTOP = 11.0
+
+# Grade values that decide how dark the level actually is. Named because the first play reported
+# "it's pretty dark", and the cause was not one setting but six multiplied: linear-space ambient,
+# no skybox, no baked GI, weak point lights, this exposure, and this vignette. Anything tuning the
+# darkness should move these two and the ambient triple in SCENE_SETTINGS together, never one alone.
+GRADE_POST_EXPOSURE = -0.05   # was -0.35, i.e. x0.78 on every pixel before the vignette
+GRADE_CONTRAST = 6.0          # was 8; high contrast crushes an already-dark low end to black
+VIGNETTE_INTENSITY = 0.20     # was 0.36
+FILM_GRAIN_INTENSITY = 0.22   # was 0.32; grain on a dark low-detail image reads as mud
 
 
 def volume_profile_yaml():
@@ -431,8 +448,8 @@ def volume_profile_yaml():
                "  maxNits:\n" + ov(False, "1000"))
 
     out.append(header("ColorAdjustments", ids["ColorAdjustments"]) +
-               "  postExposure:\n" + ov(True, "-0.35") +
-               "  contrast:\n" + ov(True, "8") +
+               "  postExposure:\n" + ov(True, f(GRADE_POST_EXPOSURE)) +
+               "  contrast:\n" + ov(True, f(GRADE_CONTRAST)) +
                "  colorFilter:\n" + ov(True, "{r: 0.85, g: 0.9, b: 0.82, a: 1}") +
                "  hueShift:\n" + ov(False, "0") +
                "  saturation:\n" + ov(True, "-32") +
@@ -441,14 +458,14 @@ def volume_profile_yaml():
     out.append(header("Vignette", ids["Vignette"]) +
                "  color:\n" + ov(True, "{r: 0.02, g: 0.025, b: 0.02, a: 1}") +
                "  center:\n" + ov(False, "{x: 0.5, y: 0.5}") +
-               "  intensity:\n" + ov(True, "0.36") +
+               "  intensity:\n" + ov(True, f(VIGNETTE_INTENSITY)) +
                "  smoothness:\n" + ov(True, "0.42") +
                "  rounded:\n" + ov(False, "0") +
                "\n")
 
     out.append(header("FilmGrain", ids["FilmGrain"]) +
                "  type:\n" + ov(True, "3") +                     # Medium1
-               "  intensity:\n" + ov(True, "0.32") +
+               "  intensity:\n" + ov(True, f(FILM_GRAIN_INTENSITY)) +
                "  response:\n" + ov(True, "0.75") +
                "  texture:\n" + ov(False, "{fileID: 0}") +
                "    dimension: 1\n")
@@ -843,14 +860,14 @@ RenderSettings:
   m_FogMode: 1
   m_FogDensity: 0.02
   m_LinearFogStart: 14
-  m_LinearFogEnd: 98
-  m_AmbientSkyColor: {r: 0.29, g: 0.31, b: 0.295, a: 1}
-  m_AmbientEquatorColor: {r: 0.2, g: 0.21, b: 0.2, a: 1}
-  m_AmbientGroundColor: {r: 0.1, g: 0.1, b: 0.09, a: 1}
+  m_LinearFogEnd: 145
+  m_AmbientSkyColor: {r: 0.45, g: 0.47, b: 0.45, a: 1}
+  m_AmbientEquatorColor: {r: 0.32, g: 0.33, b: 0.32, a: 1}
+  m_AmbientGroundColor: {r: 0.18, g: 0.18, b: 0.16, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3

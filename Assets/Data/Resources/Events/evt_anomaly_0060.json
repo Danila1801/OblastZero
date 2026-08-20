@@ -11,6 +11,10 @@
     "regionTagsAny": [
       "forest_edge",
       "drainage_tunnel"
+    ],
+    "oblastRegionsAny": [
+      "outer_cordon",
+      "reservoir"
     ]
   },
   "baseWeight": 1.61,

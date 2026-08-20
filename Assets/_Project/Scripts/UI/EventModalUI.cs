@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using OblastZero.Core;
 using OblastZero.Data;
@@ -13,6 +14,8 @@ namespace OblastZero.UI
     ///   • EventPresentedEvent → looks the event up in the GameDatabase, shows its title + narrative, and
     ///     builds one button per choice (trait-gated choices are shown disabled).
     ///   • EventResolvedEvent  → swaps the choice list for a success/failure outcome line + a Continue button.
+    /// The outcome can be acknowledged by the Continue button, by clicking anywhere on the dimmer, or with
+    /// Enter/Space/Escape, so the day never stalls on hitting one specific rectangle.
     /// Each choice button raises <see cref="EventChoiceSelectedEvent"/> — an intent SurvivalPhase2DState turns
     /// into an <see cref="EventEngine"/> resolution. This modal owns no game logic; it renders data and raises
     /// intents. Narrative/label strings resolve through <see cref="LocalizedStrings"/> (key shown until a
@@ -43,6 +46,17 @@ namespace OblastZero.UI
         private Sprite _white;
 
         private readonly List<GameObject> _choiceButtons = new();
+
+        /// <summary>
+        /// Passed to <see cref="AddFlexibleHeight"/> for a min or preferred that should NOT be forced.
+        /// Unity's <c>LayoutUtility</c> skips negative values, so the owning LayoutGroup's own measurement
+        /// is used instead. Writing a real number here on a self-sizing container is what collapsed this
+        /// modal: a LayoutElement outranks a LayoutGroup and silently wins.
+        /// </summary>
+        private const float UNSET = -1f;
+
+        /// <summary>Fixed height of the Continue button, used as both its min and its preferred.</summary>
+        private const float CONTINUE_HEIGHT = 72f;
 
         private void Awake() => BuildUI();
 
@@ -75,6 +89,38 @@ namespace OblastZero.UI
         private void OnEventResolved(EventResolvedEvent e) => ShowOutcome(e);
 
         private void OnContinueClicked() => Hide();
+
+        /// <summary>
+        /// Dismisses the modal only once an outcome is on screen. While the choices are still up the same
+        /// click must do nothing: the dimmer is a deliberate blocker there, and letting it close the modal
+        /// would silently skip the player's decision.
+        /// </summary>
+        private void DismissOutcomeIfShowing()
+        {
+            if (_overlay == null || !_overlay.activeSelf) return;
+            if (_outcomePanel == null || !_outcomePanel.activeSelf) return;
+            OblastUIAudio.PlayClick();
+            Hide();
+        }
+
+        /// <summary>
+        /// Enter, Space and Escape also acknowledge an outcome. Polls the Input System device directly
+        /// because <c>activeInputHandler</c> is 1 in ProjectSettings (new Input System only), where the
+        /// legacy <c>UnityEngine.Input</c> API throws instead of returning false.
+        /// </summary>
+        private void Update()
+        {
+            if (_outcomePanel == null || !_outcomePanel.activeSelf) return;
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
+            if (keyboard.enterKey.wasPressedThisFrame
+                || keyboard.numpadEnterKey.wasPressedThisFrame
+                || keyboard.spaceKey.wasPressedThisFrame
+                || keyboard.escapeKey.wasPressedThisFrame)
+            {
+                DismissOutcomeIfShowing();
+            }
+        }
 
         // ---- Presentation ----
 
@@ -112,11 +158,11 @@ namespace OblastZero.UI
             _outcomePanel.SetActive(true);
 
             string verdict = e.Success
-                ? $"<color=#{ToHex(successColor)}>The matter resolves in your favour.</color>"
-                : $"<color=#{ToHex(failureColor)}>It does not go as intended.</color>";
+                ? $"<color=#{ToHex(successColor)}>{LocalizedStrings.Get(UIStringKeys.EventSuccess)}</color>"
+                : $"<color=#{ToHex(failureColor)}>{LocalizedStrings.Get(UIStringKeys.EventFailure)}</color>";
             string follow = string.IsNullOrEmpty(e.FollowUpEventId)
                 ? string.Empty
-                : $"\n<color=#{ToHex(dimColor)}>The file remains open. Expect correspondence.</color>";
+                : $"\n<color=#{ToHex(dimColor)}>{LocalizedStrings.Get(UIStringKeys.EventFollowUp)}</color>";
             _outcomeText.text = verdict + follow;
         }
 
@@ -142,15 +188,20 @@ namespace OblastZero.UI
             var btn = go.GetComponent<Button>();
             btn.targetGraphic = img;
             btn.interactable = enabled;
+            if (enabled) OblastUIAudio.AttachHover(go);
 
             var text = CreateText("Label", go.transform, 24f, FontStyles.Normal, TextAlignmentOptions.Left,
                                   enabled ? textColor : dimColor);
             StretchFill(text.rectTransform, 20f, 6f);
-            text.text = enabled ? label : $"{label}  <color=#{ToHex(dimColor)}>(unavailable)</color>";
+            text.text = enabled
+                ? label
+                : $"{label}  <color=#{ToHex(dimColor)}>" +
+                  $"{LocalizedStrings.Get(UIStringKeys.EventChoiceUnavailable)}</color>";
 
             if (enabled)
             {
                 int captured = index;
+                btn.onClick.AddListener(OblastUIAudio.PlayClick);
                 btn.onClick.AddListener(() => EventBus.Raise(new EventChoiceSelectedEvent
                 {
                     ChoiceIndex = captured,
@@ -202,6 +253,14 @@ namespace OblastZero.UI
             ort.anchorMin = Vector2.zero; ort.anchorMax = Vector2.one; ort.offsetMin = Vector2.zero; ort.offsetMax = Vector2.zero;
             _overlay = overlayGO;
 
+            // Clicking the dimmer dismisses the outcome, so acknowledging a result never depends on hitting
+            // one specific rectangle. Transition is None because the target graphic here is the full-screen
+            // dimmer, and a colour tint on it would flash the whole screen on hover.
+            var overlayBtn = overlayGO.AddComponent<Button>();
+            overlayBtn.targetGraphic = overlayImg;
+            overlayBtn.transition = Selectable.Transition.None;
+            overlayBtn.onClick.AddListener(DismissOutcomeIfShowing);
+
             // Center card.
             var card = new GameObject("Card", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup));
             card.transform.SetParent(_overlay.transform, false);
@@ -221,7 +280,10 @@ namespace OblastZero.UI
 
             _narrative = CreateText("Narrative", card.transform, 24f, FontStyles.Normal, TextAlignmentOptions.TopLeft, textColor);
             _narrative.enableWordWrapping = true;
-            AddFlexibleHeight(_narrative.gameObject, 240f, 1f, flexible: 1f);
+            // Narrative is the ONLY flexible row, so every spare pixel in the fixed-height card lands here
+            // and the rows below always get their natural size. Preferred is left unset (-1) so TMP's own
+            // measured text height is used; the 120 floor keeps a short line from collapsing the block.
+            AddFlexibleHeight(_narrative.gameObject, 120f, UNSET, flexible: 1f);
 
             // Choices container (vertical list).
             var choicesGO = new GameObject("Choices", typeof(RectTransform), typeof(VerticalLayoutGroup));
@@ -231,7 +293,11 @@ namespace OblastZero.UI
             cvlg.childControlWidth = true; cvlg.childControlHeight = true;
             cvlg.childForceExpandWidth = true; cvlg.childForceExpandHeight = false;
             _choices = (RectTransform)choicesGO.transform;
-            AddFlexibleHeight(choicesGO, 0f, 1f, flexible: 0f);
+            // Min and preferred stay UNSET so this container reports the size its own VerticalLayoutGroup
+            // computes from the choice buttons. A LayoutElement outranks a LayoutGroup, so a hardcoded
+            // preferredHeight here would starve the list: it used to say 1px, and the 64px buttons then
+            // spilled below the card with a fourth choice rendering off-screen entirely.
+            AddFlexibleHeight(choicesGO, UNSET, UNSET, flexible: 0f);
 
             // Outcome panel (hidden until resolved) — text + Continue.
             var outcomeGO = new GameObject("Outcome", typeof(RectTransform), typeof(VerticalLayoutGroup));
@@ -240,14 +306,21 @@ namespace OblastZero.UI
             ovlg.spacing = 20f;
             ovlg.childControlWidth = true; ovlg.childControlHeight = true;
             ovlg.childForceExpandWidth = true; ovlg.childForceExpandHeight = false;
-            AddFlexibleHeight(outcomeGO, 0f, 1f, flexible: 1f);
+            AddFlexibleHeight(outcomeGO, UNSET, UNSET, flexible: 0f);
 
             _outcomeText = CreateText("OutcomeText", outcomeGO.transform, 26f, FontStyles.Normal, TextAlignmentOptions.TopLeft, textColor);
             _outcomeText.enableWordWrapping = true;
-            AddFlexibleHeight(_outcomeText.gameObject, 120f, 1f, flexible: 1f);
+            AddFlexibleHeight(_outcomeText.gameObject, 90f, UNSET, flexible: 0f);
 
-            _continueButton = CreateButton("Continue", outcomeGO.transform, "CONTINUE", buttonColor, out _);
-            AddFlexibleHeight(_continueButton.gameObject, 0f, 72f);
+            _continueButton = CreateButton("Continue", outcomeGO.transform,
+                                           LocalizedStrings.Get(UIStringKeys.EventContinue), buttonColor, out _);
+            // minHeight EQUALS preferredHeight so this button can never be lerped down. It used to carry
+            // min 0 / preferred 72 inside a container whose preferred was pinned to 1px, which resolved it
+            // to Lerp(0, 72, 0.0625) = 4.5px. TMP overflows its rect, so the word CONTINUE still rendered at
+            // full size over a 4.5px hitbox: the player saw a normal button, clicked it, and nothing
+            // happened until the cursor happened to land in the band. That reads as a long wait, not a
+            // missed click, which is exactly how it was reported.
+            AddFlexibleHeight(_continueButton.gameObject, CONTINUE_HEIGHT, CONTINUE_HEIGHT);
             _continueButton.onClick.AddListener(OnContinueClicked);
             _outcomePanel = outcomeGO;
 
@@ -264,6 +337,10 @@ namespace OblastZero.UI
             img.sprite = _white; img.color = color;
             var btn = go.GetComponent<Button>();
             btn.targetGraphic = img;
+            // This modal builds its own buttons rather than using OblastUI.Button, so the audio that factory
+            // wires up has to be attached here too. Without it a near-miss click produced no feedback at all.
+            btn.onClick.AddListener(OblastUIAudio.PlayClick);
+            OblastUIAudio.AttachHover(go);
             labelText = CreateText("Label", go.transform, 26f, FontStyles.Bold, TextAlignmentOptions.Center, textColor);
             StretchFill(labelText.rectTransform, 0f, 0f);
             labelText.text = label;

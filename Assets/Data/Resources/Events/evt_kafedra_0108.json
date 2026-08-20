@@ -9,8 +9,13 @@
     "minFactionRep": -14,
     "maxFactionRep": 51,
     "regionTagsAny": [
+      "abandoned_school",
       "old_factory",
-      "abandoned_school"
+      "perimeter"
+    ],
+    "oblastRegionsAny": [
+      "census_district",
+      "grain_belt"
     ]
   },
   "baseWeight": 0.8,

@@ -11,7 +11,8 @@
     "regionTagsAny": [
       "bunker_interior",
       "perimeter"
-    ]
+    ],
+    "oblastRegionsAny": []
   },
   "baseWeight": 0.63,
   "choices": [

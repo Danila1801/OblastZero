@@ -33,6 +33,34 @@ from scavenge_scene_lib import (                                    # noqa: E402
 from scene_verify_lib import rotated_half_extents                   # noqa: E402
 
 
+# ── Lighting ────────────────────────────────────────────────────────────────────────────────────
+#
+# Named here because the first play of the depot reported "it's pretty dark", and the cause was six
+# things multiplied, not one setting. Tuning any of them alone gets you almost nothing, so they are
+# grouped with the numbers they fight against. Measured on 11 Aug 2026, before this pass:
+#
+#   ambient 0.29 sRGB   -> 0.068 linear (the project is in Linear colour space, and a mid-grey sRGB
+#                          ambient is about a quarter of what the number looks like)
+#   x floor albedo 0.26 -> about 5% grey on screen for any surface not in a light cone
+#   x postExposure      -0.35 = x0.78 globally  (see GRADE_POST_EXPOSURE in scavenge_scene_lib)
+#   x vignette          0.36 toward near-black at the frame edge
+#   x SSAO              0.4 in every crease (PC_Renderer.asset, a renderer feature not a volume one)
+#   and 33% of the map is under a roof, where the directional light contributes nothing at all.
+#
+# The point lights are the only illumination in that roofed third. At the old 2.4 intensity, from
+# 6.5 m up, they delivered roughly 0.07 at floor level, cast no shadows, and dropped to zero for
+# 0.22 s at random. Raising intensity is cheap; enabling shadows on 15 point lights is not, and this
+# is a 60-second panic sequence, so intensity and ambient carry the fix instead.
+SUN_INTENSITY = 1.15          # was 0.85
+FIXTURE_INTENSITY = 5.2       # was 2.4
+
+# Flicker shaping. The fixtures should read as failing, not as strobing: a 0.22 s full blackout in
+# the only light source in a room is not a flicker, it is the player going blind twice a minute.
+FLICKER_SAG_FLOOR = 0.62      # was 0.45, the dimmest a sagging tube goes
+FLICKER_NOISE_DEPTH = 0.22    # was 0.35
+FLICKER_DROPOUT_SECONDS = 0.08  # was 0.22
+
+
 def jitter(seed_text, index, lo, hi):
     """
     Deterministic value in [lo, hi] from a name and a channel index.
@@ -89,25 +117,29 @@ def add_rig(sb, group, solid, placed, cfg):
     sun_go, _ = sb.obj("Overcast_Sun", parent=lights, pos=(0, 24, 0), rot=(52, -34, 0))
     # Soft shadows on the one directional light; every point light below casts none.
     sun_light_id = sb.light(sun_go, kind=1, color=(0.62, 0.66, 0.68, 1),
-                            intensity=0.85, shadows=2, bounce=0.6)
+                            intensity=SUN_INTENSITY, shadows=2, bounce=0.6)
 
     for name, x, y, z, rng in cfg.FIXTURES:
         fx_go, fx_tr = sb.obj(name, parent=lights, pos=(x, y, z))
         sb.light(fx_go, kind=2, color=(0.86, 0.88, 0.78, 1),
-                 intensity=2.4, rng=rng, shadows=0, bounce=0.4)
+                 intensity=FIXTURE_INTENSITY, rng=rng, shadows=0, bounce=0.4)
         tube_go, _ = sb.obj(name + "_Tube", parent=fx_tr, pos=(0, 0.16, 0),
                             scale=(0.3, 0.14, 2.4), static=True)
         sb.mesh_renderer(tube_go, "Cube", "M_Fixture_Tube", cast_shadows=False)
         tube_renderer_id = sb._go_components[tube_go][-1]
+        flicker_fields = (
+            "  nominalIntensity: 0\n"
+            "  sagFloor: {sag}\n"
+            "  noiseSpeed: 7.5\n"
+            "  noiseDepth: {depth}\n"
+            "  secondsBetweenDropouts: 6.5\n"
+            "  dropoutDuration: {dropout}\n"
+            "  fixtureRenderer: {{fileID: {renderer}}}\n"
+        ).format(sag=FLICKER_SAG_FLOOR, depth=FLICKER_NOISE_DEPTH,
+                 dropout=FLICKER_DROPOUT_SECONDS, renderer=tube_renderer_id)
         sb.mono(fx_go, "FluorescentFlicker",
                 "Assembly-CSharp::OblastZero.Gameplay.FluorescentFlicker",
-                "  nominalIntensity: 0\n"
-                "  sagFloor: 0.45\n"
-                "  noiseSpeed: 7.5\n"
-                "  noiseDepth: 0.35\n"
-                "  secondsBetweenDropouts: 6.5\n"
-                "  dropoutDuration: 0.22\n"
-                "  fixtureRenderer: {fileID: %d}\n" % tube_renderer_id)
+                flicker_fields)
 
     # The one warm light in the level, over the door the whole run is pointed at. Per-site,
     # because "where is the way out" is the most site-specific fact there is — a hardcoded depot
