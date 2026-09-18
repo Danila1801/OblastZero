@@ -51,7 +51,7 @@ jobs:
       - name: Install Python dependencies
         # numpy for the mesh decimator; PyYAML for the scene post-checks. The QA gates themselves are
         # stdlib only, on purpose, so a dependency resolution failure can never mask a content violation.
-        run: pip install --disable-pip-version-check numpy pyyaml
+        run: pip install --disable-pip-version-check numpy pyyaml pillow
 
       # ── Content and voice ────────────────────────────────────────────────
       - name: Content QA — self-test (negative control)
