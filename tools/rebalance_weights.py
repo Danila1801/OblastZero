@@ -25,7 +25,7 @@ A weight is a pure function of (item id, display name, category). The within-ban
 md5(item id), never from randomness or the clock, so re-running the script is a no-op: same inputs,
 byte-identical outputs. `--check` asserts exactly that and is safe to wire into CI.
 
-Writers preserve each format's existing byte layout — JSON stays CRLF with no trailing newline and
+Writers preserve each format's existing byte layout — JSON keeps its line ending, no trailing newline and
 2-space indent; .asset files get a single substituted number on their `weightKg:` line with Unity's
 trailing-zero-trimmed float formatting, so Unity does not see a spurious reimport diff.
 
@@ -253,10 +253,14 @@ def compute_weight(item_id: str, display_name: str, category: str):
 # Readers / writers — each preserves its format's existing byte layout exactly.
 # ─────────────────────────────────────────────────────────────────────────────
 
-def serialize_json_item(obj) -> bytes:
-    """Match how these files already sit on disk: 2-space indent, CRLF, no trailing newline."""
+def serialize_json_item(obj, like: bytes = b"") -> bytes:
+    """Match how the file already sits on disk: 2-space indent, no trailing newline, and the
+    file's own line ending. The repo stores LF; a Windows checkout with autocrlf shows CRLF and a
+    Linux runner shows LF. Writing one fixed ending made --check report all 703 files as changed
+    on the other platform, with identical numbers."""
     text = json.dumps(obj, indent=2, ensure_ascii=False)
-    return text.replace("\n", "\r\n").encode("utf-8")
+    newline = "\r\n" if b"\r\n" in like else "\n"
+    return text.replace("\n", newline).encode("utf-8")
 
 
 def unity_float(value: float) -> str:
@@ -327,9 +331,9 @@ def apply(items, write: bool):
         if item["kind"] == "json":
             payload = dict(item["obj"])
             payload["weightKg"] = new_weight
-            new_bytes = serialize_json_item(payload)
             with open(item["path"], "rb") as handle:
                 old_bytes = handle.read()
+            new_bytes = serialize_json_item(payload, old_bytes)
             if new_bytes != old_bytes:
                 changed.append(item)
                 if write:
